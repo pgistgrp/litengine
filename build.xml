@@ -1,0 +1,46 @@
+<project name="pgtaglib" default="build" basedir=".">
+
+
+    <property name="base" value="." />
+    <property name="src" value="${base}/src" />
+    <property name="lib" value="${base}/lib" />
+    <property name="build" value="${base}/build" />
+    <property name="conf" value="${base}/conf"/>
+    <property name="output" value="lit-engine.jar"/>
+
+
+    <path id="classpath">
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement location="${build}"/>
+    </path>
+
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${build}" />
+    </target>
+
+
+    <target name="clean" >
+        <delete file="${output}" />
+        <delete dir="${build}" />
+    </target>
+
+
+    <target name="build" depends="init">
+        <javac classpathref="classpath" srcdir="${src}" destdir="${build}" debug="on">
+            <include name="**/*.java" />
+        </javac>
+        <copy todir="${build}" >
+            <fileset dir="${src}" >
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <jar jarfile="${output}" basedir="${build}"/>
+    </target>
+
+
+</project>
+
