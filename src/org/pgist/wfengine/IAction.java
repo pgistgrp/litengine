@@ -10,7 +10,7 @@ package org.pgist.wfengine;
 public interface IAction {
     
     
-    boolean execute(FlowEnvironment env);
+    boolean execute(WorkflowEnvironment env);
     
     
 }//interface IAction

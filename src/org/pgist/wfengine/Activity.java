@@ -1,5 +1,7 @@
 package org.pgist.wfengine;
 
+import org.hibernate.Session;
+
 
 /**
  * Abstract Activity class.
@@ -7,36 +9,97 @@ package org.pgist.wfengine;
  * 
  * @author kenny
  *
+ * @hibernate.class table="litwf_activity"
  */
 public abstract class Activity {
     
     
-    protected Activity previous;
+    public final static int UNDEFINED = -99999999;
+    
+    protected Long id = null;
+    
     protected boolean automatic = false;
-    protected boolean active = false;
-    protected IAction action = null;
+    
+    protected String performerClass = null;
+    
+    protected String url = null;
     
     
-    public Activity getPrevious() {
-        return previous;
+    /**
+     * @return
+     * @hibernate.id generator-class="native"
+     */
+    public Long getId() {
+        return id;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public boolean getAutomatic() {
+        return automatic;
     }
     
     
-    public Activity setPrevious(Activity previous) {
-        this.previous = previous;
-        return this.previous;
+    public void setAutomatic(boolean automatic) {
+        this.automatic = automatic;
     }
     
     
-    public boolean getActive() {
-        return active;
+    /**
+     * @return
+     * @hibernate.property
+     */
+    public String getPerformerClass() {
+        return performerClass;
     }
     
     
-    public abstract boolean activate(FlowEnvironment env);
+    public void setPerformerClass(String performerClass) {
+        this.performerClass = performerClass;
+    }
     
     
-    public abstract void proceed();
+    /**
+     * @return
+     * @hibernate.property
+     */
+    public String getUrl() {
+        return url;
+    }
+    
+    
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    
+    
+    public int doPerform(WorkflowEnvironment env) {
+        if (performerClass==null) return UNDEFINED;
+        
+        int result = 0;
+        
+        try {
+            IPerformer performer = (IPerformer) Class.forName(performerClass).newInstance();
+            result = performer.perform(this, env);
+        } catch(Exception e) {
+            result = UNDEFINED;
+        }
+        
+        return result;
+    }//activate()
+    
+    
+    public abstract boolean activate(WorkflowEnvironment env);
+    
+    public abstract void saveState(Session session);
     
     
 }//abstract class Activity

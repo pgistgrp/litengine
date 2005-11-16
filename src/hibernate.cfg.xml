@@ -1,0 +1,28 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+
+    <session-factory>
+
+
+        <property name="show_sql">true</property>
+        <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property> 
+        <property name="connection.driver_class">org.postgresql.Driver</property> 
+        <property name="connection.url">jdbc:postgresql://localhost/wfengine</property> 
+        <property name="connection.username">pgist</property> 
+        <property name="connection.password">gz!mww@jw</property> 
+
+
+        <mapping resource="org/pgist/wfengine/WorkflowEnvironment.hbm.xml"/>
+        <mapping resource="org/pgist/wfengine/Workflow.hbm.xml"/>
+        <mapping resource="org/pgist/wfengine/Activity.hbm.xml"/>
+        
+        
+    </session-factory>
+
+
+</hibernate-configuration>
+
