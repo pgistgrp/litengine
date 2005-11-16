@@ -6,7 +6,7 @@
     <property name="lib" value="${base}/lib" />
     <property name="build" value="${base}/build" />
     <property name="conf" value="${base}/conf"/>
-    <property name="output" value="lit-engine.jar"/>
+    <property name="output" value="litwf-engine.jar"/>
 
 
     <path id="classpath">
@@ -29,16 +29,42 @@
     </target>
 
 
-    <target name="build" depends="init">
+    <target name="compile" depends="init">
         <javac classpathref="classpath" srcdir="${src}" destdir="${build}" debug="on">
             <include name="**/*.java" />
         </javac>
+    </target>
+
+
+    <target name="mapping" depends="compile" description="Hibernate Mapping Files with XDoclet">
+        <taskdef name="hibernatemapping" classname="xdoclet.modules.hibernate.HibernateDocletTask">
+            <classpath refid="classpath"/>
+        </taskdef>
+        <hibernatemapping destdir="${build}" excludedtags="@version,@author,@todo" force="true" verbose="true">
+            <fileset dir="${src}">
+                <include name="**/*.java"/>
+            </fileset>
+            <hibernate version="3.0" />
+        </hibernatemapping>
+    </target>
+
+
+    <target name="build" depends="mapping">
         <copy todir="${build}" >
             <fileset dir="${src}" >
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
-        <jar jarfile="${output}" basedir="${build}"/>
+        <jar destfile="${output}"  basedir="${build}"/>
+    </target>
+    
+    
+    <target name="schema" depends="compile, mapping">
+        <taskdef name="schema" classname="org.hibernate.tool.hbm2ddl.SchemaExportTask">
+            <classpath refid="classpath"/>
+        </taskdef>
+        <schema config="src/hibernate.cfg.xml" quiet="no" text="no" drop="no" delimiter=";" output="databaseschema.sql">
+        </schema>
     </target>
 
 
