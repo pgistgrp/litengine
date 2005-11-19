@@ -11,6 +11,11 @@ import org.pgist.wfengine.IPerformer;
 
 
 /**
+ * Switch Activity class for Switch/EndSwitch.
+ * 
+ * The structure Switch/EndSwitch of LIT WF Engine is different from that of Branch/Join
+ * in that Switch/EndSwitch only select exactly one branch to execute, while ranch/Join
+ * will execute all branches.
  * 
  * @author kenny
  *
@@ -22,6 +27,8 @@ public class SwitchActivity extends Activity {
     
     protected int expression = -1;
     
+    protected EndSwitchActivity endSwitchActivity;
+    
     protected List branches = new ArrayList();
     
     protected Activity others = null;
@@ -31,6 +38,20 @@ public class SwitchActivity extends Activity {
     }
     
     
+    /**
+     * @return
+     * @hibernate.many-to-one column="endswitch_id" class="org.pgist.wfengine.activity.EndSwitchActivity" casecad="all"
+     */
+    public EndSwitchActivity getEndSwitchActivity() {
+        return endSwitchActivity;
+    }
+
+
+    public void setEndSwitchActivity(EndSwitchActivity endSwitchActivity) {
+        this.endSwitchActivity = endSwitchActivity;
+    }
+
+
     /**
      * @return
      * @hibernate.property unique="false" not-null="true"
@@ -45,6 +66,15 @@ public class SwitchActivity extends Activity {
     }
     
     
+    /**
+     * @return
+     * 
+     * @hibernate.list table="litwf_activity" lazy="true" cascade="all"
+     * @hibernate.collection-key column="branch_id"
+     * @hibernate.collection-index column="branch_order"
+     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
+     * 
+     */
     public List getBranches() {
         return branches;
     }

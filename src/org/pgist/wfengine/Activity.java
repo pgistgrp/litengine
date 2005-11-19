@@ -82,15 +82,15 @@ public abstract class Activity {
     
     
     public int doPerform(WorkflowEnvironment env) {
-        if (performerClass==null) return UNDEFINED;
+        if (performerClass==null || "".equals(performerClass)) return UNDEFINED;
         
-        int result = 0;
+        int result = UNDEFINED;
         
         try {
             IPerformer performer = (IPerformer) Class.forName(performerClass).newInstance();
             result = performer.perform(this, env);
         } catch(Exception e) {
-            result = UNDEFINED;
+            e.printStackTrace();
         }
         
         return result;

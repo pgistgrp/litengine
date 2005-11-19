@@ -18,30 +18,47 @@ import org.pgist.wfengine.WorkflowEnvironment;
 public class JoinActivity extends Activity {
     
     
-    private int joinType = 0;
+    protected BranchActivity branchActivity;
     
-    private Set branches = new HashSet();
+    private Set joins = new HashSet();
     
     private Activity next;
     
     
-    public int getJoinType() {
-        return joinType;
+    public JoinActivity() {
     }
     
     
-    public void setJoinType(int joinType) {
-        this.joinType = joinType;
+    /**
+     * @return
+     * @hibernate.many-to-one column="branch_id" class="org.pgist.wfengine.activity.BranchActivity" casecad="all"
+     */
+    public BranchActivity getBranchActivity() {
+        return branchActivity;
+    }
+
+
+    public void setBranchActivity(BranchActivity branchActivity) {
+        this.branchActivity = branchActivity;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.list table="litwf_activity" lazy="true" cascade="all"
+     * @hibernate.collection-key column="join_id"
+     * @hibernate.collection-index column="join_order"
+     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
+     * 
+     */
+    public Set getJoins() {
+        return joins;
     }
     
     
-    public Set getBranches() {
-        return branches;
-    }
-    
-    
-    public void setBranches(Set branches) {
-        this.branches = branches;
+    public void setJoins(Set joins) {
+        this.joins = joins;
     }
     
     

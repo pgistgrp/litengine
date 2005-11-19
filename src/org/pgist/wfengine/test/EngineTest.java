@@ -84,7 +84,7 @@ public class EngineTest {
                 workflow.saveState(session);
                 */
                 
-                Workflow workflow = (Workflow) session.load(Workflow.class, new Long(14));
+                Workflow workflow = (Workflow) session.load(Workflow.class, new Long(1));
                 
                 workflow.execute();
                 
