@@ -15,13 +15,49 @@ import org.pgist.wfengine.WorkflowEnvironment;
 public class LoopActivity extends Activity {
     
     
-    private WhileActivity whilst;
+    protected int count = 0;
     
-    private Activity prev;
+    protected int expression = 0;
     
-    private Activity next;
+    protected WhileActivity whilst;
+    
+    protected Activity prev;
+    
+    protected Activity next;
     
     
+    public LoopActivity() {
+    }
+    
+    
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public int getCount() {
+        return count;
+    }
+
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public int getExpression() {
+        return expression;
+    }
+
+
+    public void setExpression(int expression) {
+        this.expression = expression;
+    }
+
+
     /**
      * @return
      * @hibernate.many-to-one column="while_id" class="org.pgist.wfengine.activity.WhileActivity" casecad="all"
