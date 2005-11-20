@@ -9,6 +9,7 @@ import org.hibernate.cfg.Configuration;
 import org.pgist.wfengine.WorkflowEnvironment;
 import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.activity.BranchActivity;
+import org.pgist.wfengine.activity.JoinActivity;
 import org.pgist.wfengine.activity.SequenceActivity;
 import org.pgist.wfengine.activity.StartActivity;
 import org.pgist.wfengine.activity.SwitchActivity;
@@ -58,28 +59,45 @@ public class EngineTest {
                 sequence.setNext(sequence1);
                 sequence1.setPrev(sequence);
                 
+                BranchActivity branch = new BranchActivity();
+                JoinActivity join = new JoinActivity();
+                branch.setAutomatic(true);
+                branch.setJoinActivity(join);
+                join.setAutomatic(true);
+                join.setBranchActivity(branch);
+                
+                sequence1.setNext(branch);
+                branch.setPrev(sequence1);
+                
                 SequenceActivity sequence2 = new SequenceActivity();
                 sequence2.setAutomatic(true);
                 
-                sequence1.setNext(sequence2);
-                sequence2.setPrev(sequence1);
+                branch.getBranches().add(sequence2);
                 
                 SequenceActivity sequence3 = new SequenceActivity();
                 sequence3.setAutomatic(false);
                 sequence3.setPerformerClass(InquiryPerformer.class.getName());
                 
-                sequence2.setNext(sequence3);
-                sequence3.setPrev(sequence2);
+                branch.getBranches().add(sequence3);
                 
                 SequenceActivity sequence4 = new SequenceActivity();
                 
-                sequence3.setNext(sequence4);
-                sequence4.setPrev(sequence3);
+                sequence2.setNext(sequence4);
+                sequence4.setPrev(sequence2);
+                sequence4.setNext(join);
+                join.getJoins().add(sequence4);
+                
+                SequenceActivity sequence5 = new SequenceActivity();
+                
+                sequence3.setNext(sequence5);
+                sequence5.setPrev(sequence3);
+                sequence5.setNext(join);
+                join.getJoins().add(sequence5);
                 
                 TerminateActivity terminate = new TerminateActivity();
                 
-                terminate.setPrev(sequence4);
-                sequence4.setNext(terminate);
+                terminate.setPrev(join);
+                join.setNext(terminate);
                 
                 workflow.saveState(session);
                 */

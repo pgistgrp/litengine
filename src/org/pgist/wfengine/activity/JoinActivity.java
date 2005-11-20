@@ -46,9 +46,8 @@ public class JoinActivity extends Activity {
     /**
      * @return
      * 
-     * @hibernate.list table="litwf_activity" lazy="true" cascade="all"
+     * @hibernate.set table="litwf_activity" lazy="true" cascade="all"
      * @hibernate.collection-key column="join_id"
-     * @hibernate.collection-index column="join_order"
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      * 
      */

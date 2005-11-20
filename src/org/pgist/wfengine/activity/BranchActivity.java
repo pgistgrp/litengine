@@ -14,7 +14,7 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * 
  * The structure Switch/EndSwitch of LIT WF Engine is different from that of Branch/Join
  * in that Switch/EndSwitch only select exactly one branch to execute, while ranch/Join
- * will execute all branches.
+ * will execute all switches.
  * 
  * @author kenny
  *
@@ -24,6 +24,8 @@ import org.pgist.wfengine.WorkflowEnvironment;
 public class BranchActivity extends Activity {
     
     
+    protected Activity prev;
+
     protected JoinActivity joinActivity;
     
     protected List branches = new ArrayList();
@@ -33,6 +35,20 @@ public class BranchActivity extends Activity {
     }
     
     
+    public Activity getPrev() {
+        return prev;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" casecad="all"
+     */
+    public void setPrev(Activity prev) {
+        this.prev = prev;
+    }
+
+
     /**
      * @return
      * @hibernate.many-to-one column="join_id" class="org.pgist.wfengine.activity.JoinActivity" casecad="all"

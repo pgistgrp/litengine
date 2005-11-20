@@ -15,7 +15,7 @@ import org.pgist.wfengine.IPerformer;
  * 
  * The structure Switch/EndSwitch of LIT WF Engine is different from that of Branch/Join
  * in that Switch/EndSwitch only select exactly one branch to execute, while ranch/Join
- * will execute all branches.
+ * will execute all switches.
  * 
  * @author kenny
  *
@@ -29,7 +29,7 @@ public class SwitchActivity extends Activity {
     
     protected EndSwitchActivity endSwitchActivity;
     
-    protected List branches = new ArrayList();
+    protected List switches = new ArrayList();
     
     protected Activity others = null;
     
@@ -70,18 +70,18 @@ public class SwitchActivity extends Activity {
      * @return
      * 
      * @hibernate.list table="litwf_activity" lazy="true" cascade="all"
-     * @hibernate.collection-key column="branch_id"
-     * @hibernate.collection-index column="branch_order"
+     * @hibernate.collection-key column="switch_id"
+     * @hibernate.collection-index column="switch_order"
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      * 
      */
-    public List getBranches() {
-        return branches;
+    public List getSwitches() {
+        return switches;
     }
     
     
-    public void setBranches(List branches) {
-        this.branches = branches;
+    public void setSwitches(List branches) {
+        this.switches = branches;
     }
     
     
@@ -110,10 +110,10 @@ public class SwitchActivity extends Activity {
                 expression = performer.perform(this, env);
             }
             
-            if (expression<0 || expression>branches.size()) {
+            if (expression<0 || expression>switches.size()) {
                 if (others!=null) stack.push(others);
             } else {
-                stack.push(branches.get(expression));
+                stack.push(switches.get(expression));
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -125,8 +125,8 @@ public class SwitchActivity extends Activity {
     
     public void saveState(Session session) {
         session.saveOrUpdate(this);
-        for (int i=0, n=branches.size(); i<n; i++) {
-            Activity one = (Activity) branches.get(i);
+        for (int i=0, n=switches.size(); i<n; i++) {
+            Activity one = (Activity) switches.get(i);
             one.saveState(session);
         }//for i
         if (others!=null) others.saveState(session);

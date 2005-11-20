@@ -122,7 +122,28 @@ public class Workflow {
             activity.activate(env);
         }//while
         
+    }//execute()
+    
+    
+    /**
+     * Execute a specific activity, this activity have to be the active activity in the environment
+     * @param activity
+     */
+    public void execute(Activity activity) {
+        List waitingList = env.getWaitingList();
         
+        //check if the activity is current activity in the environment
+        if (!waitingList.contains(activity)) return;
+        
+        Stack stack = new Stack();
+        waitingList.remove(activity);
+        stack.push(activity);
+        
+        while (!stack.empty()) {
+            Activity one = (Activity) stack.pop();
+            System.out.println("---> active activity: "+one.getId());
+            one.activate(env);
+        }//while
     }//execute()
     
     

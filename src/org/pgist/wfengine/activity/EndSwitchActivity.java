@@ -21,7 +21,7 @@ public class EndSwitchActivity extends Activity {
     
     private SwitchActivity switchActivity;
     
-    private Set joins = new HashSet();
+    private Set choices = new HashSet();
     
     private Activity next;
     
@@ -47,19 +47,18 @@ public class EndSwitchActivity extends Activity {
     /**
      * @return
      * 
-     * @hibernate.list table="litwf_activity" lazy="true" cascade="all"
-     * @hibernate.collection-key column="join_id"
-     * @hibernate.collection-index column="join_order"
+     * @hibernate.set table="litwf_activity" lazy="true" cascade="all"
+     * @hibernate.collection-key column="choice_id"
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      * 
      */
-    public Set getJoins() {
-        return joins;
+    public Set getChoices() {
+        return choices;
     }
     
     
-    public void setJoins(Set joins) {
-        this.joins = joins;
+    public void setChoices(Set switches) {
+        this.choices = switches;
     }
     
     
