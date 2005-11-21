@@ -1,11 +1,15 @@
 package org.pgist.wfengine.activity;
 
+import java.util.List;
+import java.util.Stack;
+
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
 /**
+ * Loop Activity class for While/Loop.
  * 
  * @author kenny
  *
@@ -15,7 +19,7 @@ import org.pgist.wfengine.WorkflowEnvironment;
 public class LoopActivity extends Activity {
     
     
-    protected int count = 0;
+    protected int loopCount = 0;
     
     protected int expression = 0;
     
@@ -34,13 +38,13 @@ public class LoopActivity extends Activity {
      * @return
      * @hibernate.property not-null="true"
      */
-    public int getCount() {
-        return count;
+    public int getLoopCount() {
+        return loopCount;
     }
 
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setLoopCount(int count) {
+        this.loopCount = count;
     }
 
 
@@ -60,7 +64,7 @@ public class LoopActivity extends Activity {
 
     /**
      * @return
-     * @hibernate.many-to-one column="while_id" class="org.pgist.wfengine.activity.WhileActivity" casecad="all"
+     * @hibernate.many-to-one column="while_id" class="org.pgist.wfengine.activity.WhileActivity" cascade="all"
      */
     public WhileActivity getWhilst() {
         return whilst;
@@ -74,7 +78,7 @@ public class LoopActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" casecad="all"
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getNext() {
         return next;
@@ -88,7 +92,7 @@ public class LoopActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" casecad="all"
+     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getPrev() {
         return prev;
@@ -100,9 +104,31 @@ public class LoopActivity extends Activity {
     }
     
     
+    public void reach(Activity from, WorkflowEnvironment env) {
+        loopCount++;
+    }//reach()
+
+    
     public boolean activate(WorkflowEnvironment env) {
+        Stack stack = (Stack) env.getExecuteStack();
+        List waitingList = (List) env.getWaitingList();
+        
+        if (performerClass!=null && !"".equals(performerClass)) {
+            expression = doPerform(env);;
+        }
+
+        if (expression==1 && next!=null) {
+            stack.push(next);
+            return true;
+        } else if (expression==0 && whilst!=null) {
+            stack.push(whilst);
+            return true;
+        } else {
+            waitingList.add(this);
+        }
+        
         return false;
-    }
+    }//activate()
     
     
     public void saveState(Session session) {

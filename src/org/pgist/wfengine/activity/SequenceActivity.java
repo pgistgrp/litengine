@@ -29,29 +29,29 @@ public class SequenceActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" casecad="all"
-     */
-    public Activity getNext() {
-        return next;
-    }
-    
-    
-    /**
-     * @return
-     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" casecad="all"
+     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getPrev() {
         return prev;
     }
     
     
-    public void setNext(Activity next) {
-        this.next = next;
+    public void setPrev(Activity prev) {
+        this.prev = prev;
     }
 
 
-    public void setPrev(Activity prev) {
-        this.prev = prev;
+    /**
+     * @return
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
+     */
+    public Activity getNext() {
+        return next;
+    }
+    
+    
+    public void setNext(Activity next) {
+        this.next = next;
     }
 
 
@@ -86,6 +86,7 @@ public class SequenceActivity extends Activity {
         }
         
         if (result==1 && next!=null) {
+            next.reach(this, env);
             stack.push(next);
         } else {
             waitingList.add(this);

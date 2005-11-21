@@ -1,7 +1,9 @@
 package org.pgist.wfengine.activity;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
@@ -32,7 +34,7 @@ public class EndSwitchActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="switch_id" class="org.pgist.wfengine.activity.SwitchActivity" casecad="all"
+     * @hibernate.many-to-one column="switch_id" class="org.pgist.wfengine.activity.SwitchActivity" cascade="all"
      */
     public SwitchActivity getSwitchActivity() {
         return switchActivity;
@@ -64,7 +66,7 @@ public class EndSwitchActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" casecad="all"
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getNext() {
         return next;
@@ -76,13 +78,43 @@ public class EndSwitchActivity extends Activity {
     }
     
     
-    public void reach(Activity from, WorkflowEnvironment env) {
-        
-    }//reach()
-    
-    
     public boolean activate(WorkflowEnvironment env) {
-        return false;
+        
+        Stack stack = (Stack) env.getExecuteStack();
+        List waitingList = (List) env.getWaitingList();
+        
+        int result = UNDEFINED;
+        
+        if (automatic) {
+            
+            //For the automatic sequence activity, discard the return value
+            //jump to the next activity
+            
+            if (performerClass!=null && !"".equals(performerClass)) {
+                doPerform(env);
+            }
+            
+            result = 1;
+            
+        } else {
+            
+            //For the non-automatic sequence activity, check the return value,
+            //if ==0, wait for user response
+            //if ==1, jump to the next activity
+            
+            if (performerClass!=null && !"".equals(performerClass)) {
+                result = doPerform(env);;
+            }
+            
+        }
+        
+        if (result==1 && next!=null) {
+            stack.push(next);
+        } else {
+            waitingList.add(this);
+        }
+        
+        return (result==1);
     }//activate()
     
     

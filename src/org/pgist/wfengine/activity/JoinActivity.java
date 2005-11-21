@@ -1,7 +1,9 @@
 package org.pgist.wfengine.activity;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
@@ -9,6 +11,7 @@ import org.pgist.wfengine.WorkflowEnvironment;
 
 
 /**
+ * Join Activity class for Branch/Join.
  * 
  * @author kenny
  *
@@ -22,6 +25,8 @@ public class JoinActivity extends Activity {
     
     private Set joins = new HashSet();
     
+    private int joinCount = 0;
+    
     private Activity next;
     
     
@@ -31,7 +36,7 @@ public class JoinActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="branch_id" class="org.pgist.wfengine.activity.BranchActivity" casecad="all"
+     * @hibernate.many-to-one column="branch_id" class="org.pgist.wfengine.activity.BranchActivity" cascade="all"
      */
     public BranchActivity getBranchActivity() {
         return branchActivity;
@@ -63,7 +68,21 @@ public class JoinActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" casecad="all"
+     * @hibernate.property
+     */
+    public int getJoinCount() {
+        return joinCount;
+    }
+
+
+    public void setJoinCount(int joinCount) {
+        this.joinCount = joinCount;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getNext() {
         return next;
@@ -76,12 +95,52 @@ public class JoinActivity extends Activity {
     
     
     public void reach(Activity from, WorkflowEnvironment env) {
-        
+        if (joins.contains(from)) {
+            joinCount++;
+        }
     }//reach()
     
     
     public boolean activate(WorkflowEnvironment env) {
-        return false;
+        if (joinCount<joins.size()) return false;
+        
+        Stack stack = (Stack) env.getExecuteStack();
+        List waitingList = (List) env.getWaitingList();
+        
+        int result = UNDEFINED;
+        
+        if (automatic) {
+            
+            //For the automatic sequence activity, discard the return value
+            //jump to the next activity
+            
+            if (performerClass!=null && !"".equals(performerClass)) {
+                doPerform(env);
+            }
+            
+            result = 1;
+            
+        } else {
+            
+            //For the non-automatic sequence activity, check the return value,
+            //if ==UNDEFINED, wait for user response
+            //else, jump to the other activity
+            if (performerClass!=null && !"".equals(performerClass)) {
+                result = doPerform(env);;
+            }
+            
+        }
+        
+        if (result==UNDEFINED) {
+            waitingList.add(this);
+        } else {
+            if (next!=null) {
+                next.reach(this, env);
+                stack.add(next);
+            }
+        }
+        
+        return (result!=UNDEFINED);
     }//activate()
     
     

@@ -82,7 +82,7 @@ public class Workflow {
     
     /**
      * @return
-     * @hibernate.many-to-one column="definition_id" class="org.pgist.wfengine.Activity" casecad="all"
+     * @hibernate.many-to-one column="definition_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getDefinition() {
         return definition;

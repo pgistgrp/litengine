@@ -40,7 +40,7 @@ public class SwitchActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="endswitch_id" class="org.pgist.wfengine.activity.EndSwitchActivity" casecad="all"
+     * @hibernate.many-to-one column="endswitch_id" class="org.pgist.wfengine.activity.EndSwitchActivity" cascade="all"
      */
     public EndSwitchActivity getEndSwitchActivity() {
         return endSwitchActivity;
@@ -87,7 +87,7 @@ public class SwitchActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="other_id" class="org.pgist.wfengine.Activity" casecad="all"
+     * @hibernate.many-to-one column="other_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getOthers() {
         return others;

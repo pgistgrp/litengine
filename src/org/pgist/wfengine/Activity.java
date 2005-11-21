@@ -97,6 +97,16 @@ public abstract class Activity {
     }//activate()
     
     
+    /**
+     * The reach() should be called exactly once before any activity is activated.
+     * @param from
+     * @param env
+     */
+    public void reach(Activity from, WorkflowEnvironment env) {
+        //Default do nothing.
+    }//reach()
+    
+    
     public abstract boolean activate(WorkflowEnvironment env);
     
     public abstract void saveState(Session session);

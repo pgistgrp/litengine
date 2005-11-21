@@ -24,7 +24,7 @@ public class TerminateActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" casecad="all"
+     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getPrev() {
         return prev;

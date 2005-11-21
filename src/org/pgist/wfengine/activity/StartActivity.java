@@ -27,7 +27,7 @@ public class StartActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" casecad="all"
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getNext() {
         return next;
