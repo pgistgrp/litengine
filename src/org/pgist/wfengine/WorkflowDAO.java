@@ -3,6 +3,7 @@ package org.pgist.wfengine;
 import org.hibernate.Session;
 
 
+
 /**
  * The interface WorkflowDAO.
  * 
@@ -12,9 +13,9 @@ import org.hibernate.Session;
 public interface WorkflowDAO {
     
     
-    Session getSession();
+    Workflow getWorkflow(Long id);
     
-    void setSession(Session session);
+    Session getSession();
     
     
 }//interface WorkflowDAO

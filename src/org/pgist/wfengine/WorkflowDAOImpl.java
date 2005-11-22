@@ -12,17 +12,14 @@ import org.hibernate.Session;
 public class WorkflowDAOImpl implements WorkflowDAO {
     
     
-    private ThreadLocal session;
+    public Workflow getWorkflow(Long id) {
+        return null;
+    }//getWorkflow()
     
     
     public Session getSession() {
-        return (Session) session.get();
-    }
-    
-    
-    public void setSession(Session session) {
-        this.session.set(session);
-    }
+        return null;
+    }//getSession()
     
     
 }//class WorkflowDAOImpl

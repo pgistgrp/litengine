@@ -5,6 +5,7 @@ import org.hibernate.Session;
 
 /**
  * Abstract Activity class.
+ * 
  * This class is the parent and root class for all activity classes.
  * 
  * @author kenny
@@ -18,6 +19,8 @@ public abstract class Activity {
     
     protected Long id = null;
     
+    protected String caption; 
+
     protected boolean automatic = false;
     
     protected String performerClass = null;
@@ -36,6 +39,20 @@ public abstract class Activity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public String getCaption() {
+        return caption;
+    }
+
+
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
 
