@@ -19,7 +19,7 @@ public abstract class Activity {
     
     protected Long id = null;
     
-    protected String caption; 
+    protected String caption = ""; 
 
     protected boolean automatic = false;
     
