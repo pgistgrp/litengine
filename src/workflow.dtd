@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT workflow (environment, process*)>
+<!ATTLIST workflow
+    name CDATA #REQUIRED
+>
+
+<!ELEMENT environment (var*)>
+<!ATTLIST var
+    name CDATA #REQUIRED
+    value CDATA #REQUIRED
+>
+
+<!ELEMENT process (environment, sequence*)>
+<!ATTLIST process
+    name CDATA #REQUIRED
+>
+
+<!ELEMENT sequence (task* | branch*, switch*, while*, repeat*)>
+
+<!ELEMENT while (sequence*)>
+
+<!ELEMENT repeat (sequence*)>
+
+<!ELEMENT branch (sequence*)>
+
+<!ELEMENT switch (sequence*)>
+
+<!ELEMENT task (#PCDATA)>
+<!ATTLIST task
+    name CDATA #REQUIRED
+    class CDATA #IMPLIED
+>
+

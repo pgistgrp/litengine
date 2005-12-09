@@ -1,0 +1,48 @@
+<sequence>
+  <task/>
+  <task/>
+</sequence>
+
+<while>
+  <sequence>
+    <task/>
+    <task/>
+  </sequence>
+</while>
+
+<repeat until="">
+  <sequence>
+    <task/>
+    <task/>
+  </sequence>
+</repeat>
+
+<branch>
+  <sequence>
+    <task/>
+    <task/>
+  </sequence>
+  <sequence>
+    <task/>
+    <task/>
+  </sequence>
+  <sequence>
+    <task/>
+  </sequence>
+</branch>
+
+<switch>
+  <sequence>
+    <task/>
+    <task/>
+  </sequence>
+  <sequence>
+    <task/>
+    <task/>
+  </sequence>
+  <sequence>
+    <task/>
+  </sequence>
+</switch>
+
+
