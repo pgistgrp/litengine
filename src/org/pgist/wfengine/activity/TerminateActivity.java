@@ -12,7 +12,7 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="SequenceActivity" table="litwf_activity_terminate"
  * @hibernate.joined-subclass-key column="id"
  */
-public class TerminateActivity extends Activity {
+public class TerminateActivity extends Activity implements BackTracable {
     
     
     protected Activity prev = null;

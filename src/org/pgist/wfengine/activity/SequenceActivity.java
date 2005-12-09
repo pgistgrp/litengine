@@ -16,10 +16,11 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="SequenceActivity" table="litwf_activity_sequence"
  * @hibernate.joined-subclass-key column="id"
  */
-public class SequenceActivity extends Activity {
+public class SequenceActivity extends Activity implements BackTracable, PushDownable {
     
     
     protected Activity prev;
+    
     protected Activity next;
     
     
@@ -54,7 +55,7 @@ public class SequenceActivity extends Activity {
         this.next = next;
     }
 
-
+    
     public boolean activate(WorkflowEnvironment env) {
         
         Stack stack = (Stack) env.getExecuteStack();

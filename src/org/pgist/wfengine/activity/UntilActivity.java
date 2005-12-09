@@ -16,7 +16,7 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="UntilActivity" table="litwf_activity_until"
  * @hibernate.joined-subclass-key column="id"
  */
-public class UntilActivity extends Activity {
+public class UntilActivity extends Activity implements BackTracable, PushDownable {
     
     
     protected int loopCount = 0;
@@ -27,12 +27,26 @@ public class UntilActivity extends Activity {
     
     private Activity prev;
     
-    private Activity next;
+    protected Activity next;
     
     
     public UntilActivity() {
     }
     
+    
+    /**
+     * @return
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
+     */
+    public Activity getNext() {
+        return next;
+    }
+    
+    
+    public void setNext(Activity next) {
+        this.next = next;
+    }
+
     
     /**
      * @return
@@ -90,20 +104,6 @@ public class UntilActivity extends Activity {
     }
     
     
-    /**
-     * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
-     */
-    public Activity getNext() {
-        return next;
-    }
-
-
-    public void setNext(Activity next) {
-        this.next = next;
-    }
-
-
     public boolean activate(WorkflowEnvironment env) {
         Stack stack = (Stack) env.getExecuteStack();
         List waitingList = (List) env.getWaitingList();

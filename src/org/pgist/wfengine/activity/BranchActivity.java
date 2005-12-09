@@ -21,7 +21,7 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="BranchActivity" table="litwf_activity_branch"
  * @hibernate.joined-subclass-key column="id"
  */
-public class BranchActivity extends Activity {
+public class BranchActivity extends Activity implements BackTracable {
     
     
     protected Activity prev;

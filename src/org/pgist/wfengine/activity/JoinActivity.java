@@ -18,8 +18,10 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="JoinActivity" table="litwf_activity_join"
  * @hibernate.joined-subclass-key column="id"
  */
-public class JoinActivity extends Activity {
+public class JoinActivity extends Activity implements PushDownable {
     
+    
+    protected Activity next;
     
     protected BranchActivity branchActivity;
     
@@ -27,12 +29,24 @@ public class JoinActivity extends Activity {
     
     private int joinCount = 0;
     
-    private Activity next;
-    
     
     public JoinActivity() {
     }
     
+    
+    /**
+     * @return
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
+     */
+    public Activity getNext() {
+        return next;
+    }
+    
+    
+    public void setNext(Activity next) {
+        this.next = next;
+    }
+
     
     /**
      * @return
@@ -80,20 +94,6 @@ public class JoinActivity extends Activity {
     }
 
 
-    /**
-     * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
-     */
-    public Activity getNext() {
-        return next;
-    }
-    
-    
-    public void setNext(Activity next) {
-        this.next = next;
-    }
-    
-    
     public void reach(Activity from, WorkflowEnvironment env) {
         if (joins.contains(from)) {
             joinCount++;

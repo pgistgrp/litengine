@@ -15,7 +15,7 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="RepeatActivity" table="litwf_activity_repeat"
  * @hibernate.joined-subclass-key column="id"
  */
-public class RepeatActivity extends Activity {
+public class RepeatActivity extends Activity implements BackTracable, PushDownable {
     
     
     protected int loopCount = 0;

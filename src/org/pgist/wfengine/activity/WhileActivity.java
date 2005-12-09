@@ -16,7 +16,7 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="WhileActivity" table="litwf_activity_while"
  * @hibernate.joined-subclass-key column="id"
  */
-public class WhileActivity extends Activity {
+public class WhileActivity extends Activity implements BackTracable, PushDownable {
     
     
     protected int loopCount = 0;

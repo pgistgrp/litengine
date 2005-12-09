@@ -18,19 +18,33 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="EndSwitchActivity" table="litwf_activity_endswitch"
  * @hibernate.joined-subclass-key column="id"
  */
-public class EndSwitchActivity extends Activity {
+public class EndSwitchActivity extends Activity implements PushDownable {
     
+    
+    protected Activity next;
     
     private SwitchActivity switchActivity;
     
     private Set choices = new HashSet();
     
-    private Activity next;
-    
     
     public EndSwitchActivity() {
     }
     
+    
+    /**
+     * @return
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
+     */
+    public Activity getNext() {
+        return next;
+    }
+    
+    
+    public void setNext(Activity next) {
+        this.next = next;
+    }
+
     
     /**
      * @return
@@ -61,20 +75,6 @@ public class EndSwitchActivity extends Activity {
     
     public void setChoices(Set switches) {
         this.choices = switches;
-    }
-    
-    
-    /**
-     * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
-     */
-    public Activity getNext() {
-        return next;
-    }
-    
-    
-    public void setNext(Activity next) {
-        this.next = next;
     }
     
     

@@ -16,7 +16,7 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="LoopActivity" table="litwf_activity_loop"
  * @hibernate.joined-subclass-key column="id"
  */
-public class LoopActivity extends Activity {
+public class LoopActivity extends Activity implements BackTracable, PushDownable {
     
     
     protected int loopCount = 0;
@@ -78,20 +78,6 @@ public class LoopActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
-     */
-    public Activity getNext() {
-        return next;
-    }
-    
-    
-    public void setNext(Activity next) {
-        this.next = next;
-    }
-    
-    
-    /**
-     * @return
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getPrev() {
@@ -103,6 +89,20 @@ public class LoopActivity extends Activity {
         this.prev = prev;
     }
     
+    
+    /**
+     * @return
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
+     */
+    public Activity getNext() {
+        return next;
+    }
+    
+    
+    public void setNext(Activity next) {
+        this.next = next;
+    }
+
     
     public void reach(Activity from, WorkflowEnvironment env) {
         loopCount++;

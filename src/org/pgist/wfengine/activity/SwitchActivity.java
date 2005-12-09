@@ -22,7 +22,7 @@ import org.pgist.wfengine.IPerformer;
  * @hibernate.joined-subclass name="SwitchActivity" table="litwf_activity_switch"
  * @hibernate.joined-subclass-key column="id"
  */
-public class SwitchActivity extends Activity {
+public class SwitchActivity extends Activity implements BackTracable {
     
     
     protected int expression = -1;
@@ -33,10 +33,26 @@ public class SwitchActivity extends Activity {
     
     protected Activity others = null;
     
+    protected Activity prev = null;
+
     
     public SwitchActivity() {
     }
     
+    
+    /**
+     * @return
+     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
+     */
+    public Activity getPrev() {
+        return prev;
+    }
+    
+    
+    public void setPrev(Activity prev) {
+        this.prev = prev;
+    }
+
     
     /**
      * @return

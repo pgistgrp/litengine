@@ -18,15 +18,15 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="JumpActivity" table="litwf_activity_jump"
  * @hibernate.joined-subclass-key column="id"
  */
-public class JumpActivity extends Activity {
+public class JumpActivity extends Activity implements BackTracable, PushDownable {
     
-    
-    protected int expression = 0;
     
     protected Activity prev = null;
 
-    protected Activity next = null;
-
+    protected Activity next;
+    
+    protected int expression = 0;
+    
     protected List jumps = new ArrayList();
     
     
@@ -34,20 +34,6 @@ public class JumpActivity extends Activity {
     }
     
     
-    /**
-     * @return
-     * @hibernate.property
-     */
-    public int getExpression() {
-        return expression;
-    }
-
-
-    public void setExpression(int expression) {
-        this.expression = expression;
-    }
-
-
     /**
      * @return
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
@@ -69,10 +55,24 @@ public class JumpActivity extends Activity {
     public Activity getNext() {
         return next;
     }
-
-
+    
+    
     public void setNext(Activity next) {
         this.next = next;
+    }
+
+    
+    /**
+     * @return
+     * @hibernate.property
+     */
+    public int getExpression() {
+        return expression;
+    }
+
+
+    public void setExpression(int expression) {
+        this.expression = expression;
     }
 
 

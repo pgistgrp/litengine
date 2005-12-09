@@ -15,11 +15,11 @@ import org.pgist.wfengine.WorkflowEnvironment;
  * @hibernate.joined-subclass name="StartActivity" table="litwf_activity_start"
  * @hibernate.joined-subclass-key column="id"
  */
-public class StartActivity extends Activity {
+public class StartActivity extends Activity implements PushDownable {
     
     
-    protected Activity next = null;
-    
+    protected Activity next;
+
     
     public StartActivity() {
     }
@@ -32,13 +32,13 @@ public class StartActivity extends Activity {
     public Activity getNext() {
         return next;
     }
-
-
+    
+    
     public void setNext(Activity next) {
         this.next = next;
     }
 
-
+    
     public boolean activate(WorkflowEnvironment env) {
         int result = UNDEFINED;
         
