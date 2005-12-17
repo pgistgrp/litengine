@@ -10,13 +10,15 @@ package org.pgist.wfengine;
 public class WFProcess {
 
     
-    public Long id;
+    protected Long id;
     
-    public String name;
+    protected String name;
     
-    public Environment env = new Environment();
+    protected Environment env = new Environment();
     
-    public Activity activity;
+    protected BackTracable head;
+    
+    protected PushDownable tail;
     
     
     /**
@@ -59,16 +61,43 @@ public class WFProcess {
 
     /**
      * @return
-     * @hibernate.many-to-one column="activity_id" class="org.pgist.wfengine.Activity" cascade="all"
+     * @hibernate.many-to-one column="head_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
-    public Activity getActivity() {
-        return activity;
+    public BackTracable getHead() {
+        return head;
     }
 
 
-    public void setActivity(Activity activity) {
-        this.activity = activity;
+    public void setHead(BackTracable activity) {
+        this.head = activity;
     }
     
     
+    /**
+     * @return
+     * @hibernate.many-to-one column="tail_id" class="org.pgist.wfengine.Activity" cascade="all"
+     */
+    public PushDownable getTail() {
+        return tail;
+    }
+
+
+    public void setTail(PushDownable tail) {
+        this.tail = tail;
+    }
+    
+    
+    public LinearTasks spawn() {
+        BackTracable newHead = null;
+        PushDownable newTail = null;
+        
+        Activity headActivity = ((Activity) head).clone(null);
+        newHead = (BackTracable) headActivity;
+        newTail = (PushDownable) headActivity.probe();
+        
+        LinearTasks tasks = new LinearTasks(newHead, newTail);
+        return tasks;
+    }//spawn()
+
+
 }//class WFProcess

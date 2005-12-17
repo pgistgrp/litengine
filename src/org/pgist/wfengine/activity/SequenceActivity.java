@@ -5,6 +5,8 @@ import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.BackTracable;
+import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -23,11 +25,41 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
     
     protected Activity next;
     
+    protected String taskName;
+    
     
     public SequenceActivity() {
     }
     
     
+    public Activity clone(Activity prev) {
+        try {
+            SequenceActivity embryo = new SequenceActivity();
+            embryo.setAutomatic(this.automatic);
+            embryo.setCaption(this.caption);
+            embryo.setPerformerClass(this.performerClass);
+            embryo.setTaskName(this.taskName);
+            embryo.setUrl(this.url);
+            embryo.setPrev(prev);
+            
+            if (next!=null) {
+                Activity embryoNext = next.clone(embryo);
+                embryo.setNext(embryoNext);
+            }
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }//clone()
+
+    
+    public Activity probe() {
+        if (next==null) return this;
+        return next.probe();
+    }
+
+
     /**
      * @return
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
@@ -43,8 +75,9 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
 
 
     /**
-     * @return
      * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
+
+     * @return
      */
     public Activity getNext() {
         return next;
@@ -55,6 +88,20 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
         this.next = next;
     }
 
+    
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public String getTaskName() {
+        return taskName;
+    }
+
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+    
     
     public boolean activate(WorkflowEnvironment env) {
         
@@ -101,6 +148,6 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
-    
-    
+
+
 }//class SequenceActivity

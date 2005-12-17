@@ -1,5 +1,6 @@
 package org.pgist.wfengine;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Stack;
 
@@ -13,9 +14,12 @@ import org.hibernate.Session;
  *
  * @hibernate.class table="litwf_workflow"
  */
-public class Workflow {
+public class Workflow implements Serializable {
     
     
+    private static final long serialVersionUID = -8038860928226339011L;
+    
+
     protected Long id = null;
     
     //The definition activity of a workflow instance
@@ -26,6 +30,12 @@ public class Workflow {
     
     //
     private WorkflowEnvironment env = new WorkflowEnvironment();
+    
+    //
+    private boolean finished;
+    
+    //
+    private boolean cancelled;
     
     
     public Workflow() {
@@ -95,16 +105,39 @@ public class Workflow {
     }//setDefinition()
     
     
+    /**
+     * @return
+     * 
+     * @hibernate.property unique="false" not-null="true"
+     */
     public boolean isFinished() {
-        if (!born) return false;
-        
-        Stack stack = env.getExecuteStack();
-        List waitingList = env.getWaitingList();
-        return (stack.empty() && waitingList.size()==0);
+        return finished;
     }
     
     
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.property unique="false" not-null="true"
+     */
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+
+    public void setCancelled(boolean canceled) {
+        this.cancelled = canceled;
+    }
+
+
     public void execute() {
+        if (finished || cancelled) return;
+        
         Stack stack = env.getExecuteStack();
         List waitingList = env.getWaitingList();
         
@@ -130,6 +163,8 @@ public class Workflow {
      * @param activity
      */
     public void execute(Activity activity) {
+        if (finished || cancelled) return;
+        
         List waitingList = env.getWaitingList();
         
         //check if the activity is current activity in the environment

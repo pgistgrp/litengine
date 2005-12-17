@@ -11,12 +11,10 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.pgist.wfengine.activity.BackTracable;
 import org.pgist.wfengine.activity.BranchActivity;
 import org.pgist.wfengine.activity.EndSwitchActivity;
 import org.pgist.wfengine.activity.JoinActivity;
 import org.pgist.wfengine.activity.LoopActivity;
-import org.pgist.wfengine.activity.PushDownable;
 import org.pgist.wfengine.activity.RepeatActivity;
 import org.pgist.wfengine.activity.SequenceActivity;
 import org.pgist.wfengine.activity.SwitchActivity;
@@ -115,7 +113,8 @@ public class WFDefinitionParser {
         Element sequence = ele.element("sequence");
         LinearTasks tasks = parseSequence(sequence);
         
-        process.setActivity((Activity) tasks.getFirst());
+        process.setHead(tasks.getFirst());
+        process.setTail(tasks.getLast());
         
         return process;
     }//parseProcess()
@@ -130,6 +129,7 @@ public class WFDefinitionParser {
             Element one = (Element) elements.get(i);
             if ("task".equals(one.getName().toLowerCase())) {
                 SequenceActivity activity = new SequenceActivity();
+                activity.setTaskName(one.attributeValue("name"));
                 if (first==null) {
                     first = activity;
                 } else {
@@ -139,6 +139,8 @@ public class WFDefinitionParser {
                 last = activity;
             } else if ("branch".equals(one.getName().toLowerCase())) {
                 BranchActivity branch = parseBranch(one);
+                String auto = one.attributeValue("automatic");
+                branch.setAutomatic("true".equals(auto));
                 if (first==null) {
                     first = branch;
                 } else {
@@ -278,31 +280,4 @@ public class WFDefinitionParser {
     }//parseRepeat()
     
 
-
-    /**
-     * Inner class LinearTasks
-     * @author kenny
-     *
-     */
-    private class LinearTasks {
-        
-        private BackTracable first;
-        private PushDownable last;
-        
-        public LinearTasks(BackTracable first, PushDownable last) {
-            this.first = first;
-            this.last = last;
-        }
-        
-        public BackTracable getFirst() {
-            return first;
-        }
-        
-        public PushDownable getLast() {
-            return last;
-        }
-        
-    }//class LinearTasks
-    
-    
 }//class WFDefinitionParser

@@ -22,12 +22,17 @@
 <!ELEMENT repeat (sequence*)>
 
 <!ELEMENT branch (sequence*)>
+<!ATTLIST task
+    automatic CDATA #IMPLIED
+>
 
 <!ELEMENT switch (sequence*)>
+<!ATTLIST switch
+    automatic CDATA #IMPLIED
+>
 
 <!ELEMENT task (#PCDATA)>
 <!ATTLIST task
     name CDATA #REQUIRED
-    class CDATA #IMPLIED
 >
 

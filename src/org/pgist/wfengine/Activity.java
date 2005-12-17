@@ -12,14 +12,14 @@ import org.hibernate.Session;
  *
  * @hibernate.class table="litwf_activity"
  */
-public abstract class Activity {
+public abstract class Activity implements Cloneable {
     
     
     public final static int UNDEFINED = -99999999;
     
     protected Long id = null;
     
-    protected String caption = ""; 
+    protected String caption = "";
 
     protected boolean automatic = false;
     
@@ -128,5 +128,9 @@ public abstract class Activity {
     
     public abstract void saveState(Session session);
     
+    abstract public Activity clone(Activity prev);
     
+    abstract public Activity probe();
+
+
 }//abstract class Activity

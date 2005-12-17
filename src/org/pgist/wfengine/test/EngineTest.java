@@ -40,7 +40,7 @@ public class EngineTest {
                 session = sessionFactory.openSession();
                 Transaction transaction = session.beginTransaction();
                 
-                /*
+                //*
                 Workflow workflow = new Workflow();
                 
                 StartActivity start = new StartActivity();
@@ -48,11 +48,14 @@ public class EngineTest {
                 workflow.setDefinition(start);
                 
                 SequenceActivity sequence = new SequenceActivity();
+                sequence.setTaskName("aa");
                 
                 start.setNext(sequence);
                 sequence.setPrev(start);
                 
                 SequenceActivity sequence1 = new SequenceActivity();
+                sequence1.setTaskName("aa");
+
                 sequence1.setAutomatic(false);
                 sequence1.setPerformerClass(InquiryPerformer.class.getName());
                 
@@ -70,17 +73,20 @@ public class EngineTest {
                 branch.setPrev(sequence1);
                 
                 SequenceActivity sequence2 = new SequenceActivity();
+                sequence2.setTaskName("aa");
                 sequence2.setAutomatic(true);
                 
                 branch.getBranches().add(sequence2);
                 
                 SequenceActivity sequence3 = new SequenceActivity();
+                sequence3.setTaskName("aa");
                 sequence3.setAutomatic(false);
                 sequence3.setPerformerClass(InquiryPerformer.class.getName());
                 
                 branch.getBranches().add(sequence3);
                 
                 SequenceActivity sequence4 = new SequenceActivity();
+                sequence4.setTaskName("aa");
                 
                 sequence2.setNext(sequence4);
                 sequence4.setPrev(sequence2);
@@ -88,6 +94,7 @@ public class EngineTest {
                 join.getJoins().add(sequence4);
                 
                 SequenceActivity sequence5 = new SequenceActivity();
+                sequence5.setTaskName("aa");
                 
                 sequence3.setNext(sequence5);
                 sequence5.setPrev(sequence3);
@@ -100,13 +107,13 @@ public class EngineTest {
                 join.setNext(terminate);
                 
                 workflow.saveState(session);
-                */
+                //*/
                 
-                Workflow workflow = (Workflow) session.load(Workflow.class, new Long(1));
+                //Workflow workflow = (Workflow) session.load(Workflow.class, new Long(1));
                 
-                workflow.execute();
+                //workflow.execute();
                 
-                workflow.saveState(session);
+                //workflow.saveState(session);
                 
                 transaction.commit();
             } catch(Exception ex) {

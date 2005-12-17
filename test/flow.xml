@@ -8,59 +8,23 @@
   </environment>
   
   
-  <process name="process1">
+  <process name="Process_test1">
     <environment>
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <task name="Input your name" class="org.pgist.wfengine.InputNamePerformer"/>
-      <task name="Greeting" class="org.pgist.wfengine.InputNamePerformer"/>
-      <branch>
+      <task name="Task_InputName"/>
+      <task name="Task_InputAge"/>
+      <branch automatic="true">
         <sequence>
-          <task name="Test1" class="org.pgist.wfengine.InputNamePerformer"/>
-          <task name="Test2" class="org.pgist.wfengine.InputNamePerformer"/>
+          <task name="Task_InputName"/>
+          <task name="Task_InputAge"/>
         </sequence>
         <sequence>
-          <task name="Test3" class="org.pgist.wfengine.InputNamePerformer"/>
-          <task name="Test4" class="org.pgist.wfengine.InputNamePerformer"/>
-        </sequence>
-        <sequence>
-          <task name="Test5" class="org.pgist.wfengine.InputNamePerformer"/>
-          <switch>
-            <sequence>
-              <task name="TestX001" class="org.pgist.wfengine.InputNamePerformer"/>
-              <task name="TestX002" class="org.pgist.wfengine.InputNamePerformer"/>
-              <task name="TestX003" class="org.pgist.wfengine.InputNamePerformer"/>
-            </sequence>
-            <sequence>
-              <task name="TestX011" class="org.pgist.wfengine.InputNamePerformer"/>
-              <task name="TestX012" class="org.pgist.wfengine.InputNamePerformer"/>
-              <task name="TestX013" class="org.pgist.wfengine.InputNamePerformer"/>
-            </sequence>
-            <sequence>
-              <task name="TestX021" class="org.pgist.wfengine.InputNamePerformer"/>
-              <task name="TestX022" class="org.pgist.wfengine.InputNamePerformer"/>
-              <task name="TestX023" class="org.pgist.wfengine.InputNamePerformer"/>
-            </sequence>
-          </switch>
-          <task name="Test6" class="org.pgist.wfengine.InputNamePerformer"/>
-          <task name="Test7" class="org.pgist.wfengine.InputNamePerformer"/>
-          <task name="Test8" class="org.pgist.wfengine.InputNamePerformer"/>
+          <task name="Task_InputName"/>
+          <task name="Task_InputAge"/>
         </sequence>
       </branch>
-    </sequence>
-  </process>
-  
-  
-  <process name="process2">
-    <environment>
-      <var name="totalCount" value="1"/>
-    </environment>
-    <sequence>
-      <task reference="process1">
-      </task>
-      <task name="Goodbye" class="org.pgist.wfengine.GoodbyePerformer">
-      </task>
     </sequence>
   </process>
   

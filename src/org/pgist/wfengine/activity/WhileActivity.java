@@ -5,6 +5,8 @@ import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.BackTracable;
+import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -28,12 +30,54 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
     protected Activity prev;
     
     protected Activity next;
-    
+
+    protected transient LoopActivity embryoLoop;
+
     
     public WhileActivity() {
     }
     
     
+    public Activity clone(Activity prev) {
+        try {
+            WhileActivity embryo = new WhileActivity();
+            embryo.setAutomatic(this.automatic);
+            embryo.setCaption(this.caption);
+            embryo.setPerformerClass(this.performerClass);
+            embryo.setUrl(this.url);
+            embryo.setPrev(prev);
+            
+            //set the status
+            if (loop==null) {
+                embryoLoop = new LoopActivity();
+                embryoLoop.setAutomatic(loop.getAutomatic());
+                embryoLoop.setCaption(loop.getCaption());
+                embryoLoop.setPerformerClass(loop.getPerformerClass());
+                embryoLoop.setUrl(loop.getUrl());
+                embryo.setLoop(embryoLoop);
+                embryoLoop.setWhilst(embryo);
+            }
+            
+            if (next!=null) {
+                Activity embryoNext = next.clone(embryo);
+                embryo.setNext(embryoNext);
+            }
+            
+            //reset the status
+            embryoLoop = null;
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+    
+    
+    public Activity probe() {
+        return loop.probe();
+    }
+
+
     /**
      * @return
      * @hibernate.property not-null="true"
@@ -138,6 +182,6 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
-    
-    
+
+
 }//class WhileActivity

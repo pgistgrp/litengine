@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -34,6 +35,29 @@ public class JoinActivity extends Activity implements PushDownable {
     }
     
     
+    public Activity clone(Activity prev) {
+        try {
+            JoinActivity embryo = branchActivity.embryoJoin;
+            embryo.getJoins().add(prev);
+            
+            if (embryo.next==null && next!=null) {
+                Activity embryoNext = next.clone(embryo);
+                embryo.setNext(embryoNext);
+            }
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+    
+    
+    public Activity probe() {
+        if (next==null) return this;
+        return next.probe();
+    }
+
+
     /**
      * @return
      * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
@@ -148,6 +172,6 @@ public class JoinActivity extends Activity implements PushDownable {
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
-    
-    
+
+
 }//class JoinActivity

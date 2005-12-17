@@ -1,11 +1,13 @@
 package org.pgist.wfengine.activity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.BackTracable;
 import org.pgist.wfengine.WorkflowEnvironment;
 import org.pgist.wfengine.IPerformer;
 
@@ -35,11 +37,55 @@ public class SwitchActivity extends Activity implements BackTracable {
     
     protected Activity prev = null;
 
+    protected transient EndSwitchActivity embryoEndSwitch;
+    
     
     public SwitchActivity() {
     }
     
     
+    public Activity clone(Activity prev) {
+        try {
+            SwitchActivity embryo = new SwitchActivity();
+            embryo.setAutomatic(this.automatic);
+            embryo.setCaption(this.caption);
+            embryo.setPerformerClass(this.performerClass);
+            embryo.setUrl(this.url);
+            embryo.setPrev(prev);
+            embryo.getSwitches().clear();
+            
+            //set the status
+            if (endSwitchActivity!=null) {
+                embryoEndSwitch = new EndSwitchActivity();
+                embryoEndSwitch.setAutomatic(endSwitchActivity.getAutomatic());
+                embryoEndSwitch.setCaption(endSwitchActivity.getCaption());
+                embryoEndSwitch.setPerformerClass(endSwitchActivity.getPerformerClass());
+                embryoEndSwitch.setUrl(endSwitchActivity.getUrl());
+                embryo.setEndSwitchActivity(embryoEndSwitch);
+                embryoEndSwitch.setSwitchActivity(embryo);
+            }
+            
+            for (Iterator iter=switches.iterator(); iter.hasNext(); ) {
+                Activity branch = (Activity) iter.next();
+                BackTracable embryoBranch = (BackTracable) branch.clone(embryo);
+                embryo.getSwitches().add(embryoBranch);
+            }//for iter
+            
+            //reset the status
+            embryoEndSwitch = null;
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+    
+    
+    public Activity probe() {
+        return endSwitchActivity.probe();
+    }
+
+
     /**
      * @return
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
@@ -147,6 +193,6 @@ public class SwitchActivity extends Activity implements BackTracable {
         }//for i
         if (others!=null) others.saveState(session);
     }//saveState()
-    
-    
+
+
 }//class SwitchActivity

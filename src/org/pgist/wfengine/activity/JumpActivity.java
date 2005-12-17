@@ -6,7 +6,9 @@ import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.BackTracable;
 import org.pgist.wfengine.IPerformer;
+import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -34,6 +36,17 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
     }
     
     
+    public Activity clone(Activity prev) {
+        return null;
+    }
+    
+
+    public Activity probe() {
+        if (next==null) return this;
+        return next.probe();
+    }
+
+
     /**
      * @return
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
@@ -123,6 +136,6 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
-    
+
 
 }//class JumpActivity

@@ -13,7 +13,7 @@ import org.hibernate.Session;
 public interface WorkflowDAO {
     
     
-    Workflow getWorkflow(Long id);
+    Workflow getWorkflow(Long id, boolean finished, boolean cancelled);
     
     Session getSession();
     

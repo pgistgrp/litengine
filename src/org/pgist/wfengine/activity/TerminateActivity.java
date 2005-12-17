@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.BackTracable;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -22,6 +23,19 @@ public class TerminateActivity extends Activity implements BackTracable {
     }
     
     
+    /**
+     * Clone of terminate activity need not be implemented ?????
+     */
+    public Activity clone(Activity prev) {
+        return null;
+    }
+
+
+    public Activity probe() {
+        return this;
+    }
+
+
     /**
      * @return
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"

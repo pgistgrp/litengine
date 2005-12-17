@@ -5,6 +5,8 @@ import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.BackTracable;
+import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -28,11 +30,53 @@ public class RepeatActivity extends Activity implements BackTracable, PushDownab
     
     protected Activity next;
     
+    protected transient UntilActivity embryoUntil;
+
     
     public RepeatActivity() {
     }
     
     
+    public Activity clone(Activity prev) {
+        try {
+            RepeatActivity embryo = new RepeatActivity();
+            embryo.setAutomatic(this.automatic);
+            embryo.setCaption(this.caption);
+            embryo.setPerformerClass(this.performerClass);
+            embryo.setUrl(this.url);
+            embryo.setPrev(prev);
+            
+            //set the status
+            if (until!=null) {
+                embryoUntil = new UntilActivity();
+                embryoUntil.setAutomatic(until.getAutomatic());
+                embryoUntil.setCaption(until.getCaption());
+                embryoUntil.setPerformerClass(until.getPerformerClass());
+                embryoUntil.setUrl(until.getUrl());
+                embryo.setUntil(embryoUntil);
+                embryoUntil.setRepeat(embryo);
+            }
+            
+            if (next!=null) {
+                Activity embryoNext = next.clone(embryo);
+                embryo.setNext(embryoNext);
+            }
+            
+            //reset the status
+            embryoUntil = null;
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
+    
+    public Activity probe() {
+        return until.probe();
+    }
+
+
     /**
      * @return
      * @hibernate.property not-null="true"

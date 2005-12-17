@@ -1,11 +1,13 @@
 package org.pgist.wfengine.activity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.BackTracable;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -30,11 +32,55 @@ public class BranchActivity extends Activity implements BackTracable {
     
     protected List branches = new ArrayList();
     
+    protected transient JoinActivity embryoJoin;
+
     
     public BranchActivity() {
     }
     
     
+    public Activity clone(Activity prev) {
+        try {
+            BranchActivity embryo = new BranchActivity();
+            embryo.setAutomatic(this.automatic);
+            embryo.setCaption(this.caption);
+            embryo.setPerformerClass(this.performerClass);
+            embryo.setUrl(this.url);
+            embryo.setPrev(prev);
+            embryo.getBranches().clear();
+            
+            //set the status
+            if (joinActivity!=null) {
+                embryoJoin = new JoinActivity();
+                embryoJoin.setAutomatic(joinActivity.getAutomatic());
+                embryoJoin.setCaption(joinActivity.getCaption());
+                embryoJoin.setPerformerClass(joinActivity.getPerformerClass());
+                embryoJoin.setUrl(joinActivity.getUrl());
+                embryo.setJoinActivity(embryoJoin);
+                embryoJoin.setBranchActivity(embryo);
+            }
+            
+            for (Iterator iter=branches.iterator(); iter.hasNext(); ) {
+                Activity branch = (Activity) iter.next();
+                BackTracable embryoBranch = (BackTracable) branch.clone(embryo);
+                embryo.getBranches().add(embryoBranch);
+            }//for iter
+            
+            //reset the status
+            embryoJoin = null;
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }//clone()
+
+    
+    public Activity probe() {
+        return joinActivity.probe();
+    }
+
+
     public Activity getPrev() {
         return prev;
     }
