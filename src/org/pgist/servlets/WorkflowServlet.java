@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEngine;
+import org.springframework.web.context.WebApplicationContext;
 
 
 /**
@@ -21,7 +22,7 @@ public class WorkflowServlet extends HttpServlet {
     
     private static final long serialVersionUID = 8750027589724323485L;
     
-
+    
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
         execute(req, resp);
     }//doGet()
@@ -33,7 +34,6 @@ public class WorkflowServlet extends HttpServlet {
     
     
     private void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
-        System.out.println("----> @WorkflowServlet.execute");
         WorkflowContext wfContext = new WorkflowContext();
         
         //extract flowId
@@ -41,7 +41,12 @@ public class WorkflowServlet extends HttpServlet {
             String flowIdStr = (String) req.getParameter("flowId");
             Long flowId = new Long(flowIdStr);
             wfContext.setWorkflowId(flowId);
-            Workflow workflow = WorkflowEngine.getWorkflow(flowId);
+            WebApplicationContext appContext = (WebApplicationContext) getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+            if (appContext==null) {
+                throw new ServletException("Can't find spring web application context!");
+            }
+            WorkflowEngine engine = (WorkflowEngine) appContext.getBean("litengine");
+            Workflow workflow = engine.getWorkflow(flowId);
             wfContext.setWorkflow(workflow);
         } catch(Exception e) {
             //error report
