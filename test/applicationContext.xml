@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+
+    <bean id="baseTransactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true">
+      <property name="transactionManager" ref="transactionManager"/>
+      <property name="transactionAttributes">
+        <props>
+          <prop key="add*">PROPAGATION_REQUIRED</prop>
+          <prop key="save*">PROPAGATION_REQUIRED</prop>
+          <prop key="set*">PROPAGATION_REQUIRED</prop>
+          <prop key="update*">PROPAGATION_REQUIRED</prop>
+          <prop key="edit*">PROPAGATION_REQUIRED</prop>
+          <prop key="create*">PROPAGATION_REQUIRED</prop>
+          <prop key="delete*">PROPAGATION_REQUIRED</prop>
+          <prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+          <prop key="load*">PROPAGATION_REQUIRED,readOnly</prop>
+        </props>
+      </property>
+    </bean>
+    
+    
+    <bean id="litengine" class="org.pgist.wfengine.WorkflowEngine">
+      <property name="workflowDAO" ref="workflowDAO"/>
+    </bean>
+    
+    
+    <!--bean id="litengine1" parent="baseTransactionProxy">
+      <property name="target">
+        <bean class="org.pgist.wfengine.WorkflowEngine">
+          <property name="workflowDAO" ref="workflowDAO"/>
+        </bean>
+      </property>
+    </bean-->
+    
+    
+</beans>
+
