@@ -1,11 +1,11 @@
 package org.pgist.wfengine.activity;
 
-import java.util.List;
-import java.util.Stack;
-
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.AutoTask;
+import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -54,26 +54,17 @@ public class StartActivity extends Activity implements PushDownable {
     }
 
     
-    public boolean activate(WorkflowEnvironment env) {
-        int result = UNDEFINED;
-        
-        if (performerClass!=null && !"".equals(performerClass)) {
-            result = doPerform(env);
-        }
-        
-        Stack stack = (Stack) env.getExecuteStack();
-        List waitingList = (List) env.getWaitingList();
-        
-        if (automatic || result==1) {
-            if (next!=null) {
-                stack.push(next);
-            }
+    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+        if (task==null) {
+            return new Activity[] { next };
+        } else if (task instanceof AutoTask) {
+            ((AutoTask)task).execute(workflow, env, this);
+            return new Activity[] { next };
         } else {
-            waitingList.add(this);
+            ((ManualTask)task).init(workflow, env, this);
+            return new Activity[] { this };
         }
-        
-        return (result==1);
-    }//activate()
+    }//doActivate()
     
     
     public void saveState(Session session) {

@@ -1,13 +1,15 @@
 package org.pgist.wfengine.activity;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.AutoTask;
+import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.Task;
+import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -45,6 +47,8 @@ public class JoinActivity extends Activity implements PushDownable {
                 embryo.setNext(embryoNext);
             }
             
+            if (task!=null) embryo.setTask( (Task) task.clone() );
+
             return embryo;
         } catch(Exception e) {
             return null;
@@ -118,54 +122,22 @@ public class JoinActivity extends Activity implements PushDownable {
     }
 
 
-    public void reach(Activity from, WorkflowEnvironment env) {
-        if (joins.contains(from)) {
-            joinCount++;
-        }
-    }//reach()
-    
-    
-    public boolean activate(WorkflowEnvironment env) {
-        if (joinCount<joins.size()) return false;
-        
-        Stack stack = (Stack) env.getExecuteStack();
-        List waitingList = (List) env.getWaitingList();
-        
-        int result = UNDEFINED;
-        
-        if (automatic) {
-            
-            //For the automatic sequence activity, discard the return value
-            //jump to the next activity
-            
-            if (performerClass!=null && !"".equals(performerClass)) {
-                doPerform(env);
-            }
-            
-            result = 1;
-            
+    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+        joinCount++;
+        if (joinCount<joins.size()) {
+            return null;
         } else {
-            
-            //For the non-automatic sequence activity, check the return value,
-            //if ==UNDEFINED, wait for user response
-            //else, jump to the other activity
-            if (performerClass!=null && !"".equals(performerClass)) {
-                result = doPerform(env);;
-            }
-            
-        }
-        
-        if (result==UNDEFINED) {
-            waitingList.add(this);
-        } else {
-            if (next!=null) {
-                next.reach(this, env);
-                stack.add(next);
+            if (task==null) {
+                return new Activity[] { next };
+            } else if (task instanceof AutoTask) {
+                ((AutoTask)task).execute(workflow, env, this);
+                return new Activity[] { next };
+            } else {
+                ((ManualTask)task).init(workflow, env, this);
+                return new Activity[] { this };
             }
         }
-        
-        return (result!=UNDEFINED);
-    }//activate()
+    }//doActivate()
     
     
     public void saveState(Session session) {

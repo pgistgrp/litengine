@@ -2,13 +2,14 @@ package org.pgist.wfengine.activity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.IPerformer;
+import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -108,28 +109,22 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
     }
 
 
-    public boolean activate(WorkflowEnvironment env) {
-        Stack stack = (Stack) env.getExecuteStack();
-        
-        expression = -1;
-        
-        try {
-            if (performerClass!=null) {
-                IPerformer performer = (IPerformer) Class.forName(performerClass).newInstance();
-                expression = performer.perform(this, env);
-            }
-            
-            if (expression<0 || expression>jumps.size()) {
-                if (next!=null) stack.push(next);
+    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+        if (task==null) {
+            return new Activity[] { next };
+        } else if (task instanceof AutoTask) {
+            int result = ((AutoTask)task).execute(workflow, env, this);
+            if (result>=jumps.size()) result = jumps.size()-1;
+            if (result<0) {
+                return new Activity[] { next };
             } else {
-                stack.push(jumps.get(expression));
+                return new Activity[] { (Activity) jumps.get(result) };
             }
-        } catch(Exception e) {
-            e.printStackTrace();
+        } else {
+            ((ManualTask)task).init(workflow, env, this);
+            return new Activity[] { this };
         }
-        
-        return true;
-    }//activate()
+    }//doActivate()
     
     
     public void saveState(Session session) {

@@ -3,11 +3,14 @@ package org.pgist.wfengine.activity;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
+import org.pgist.wfengine.ManualTask;
+import org.pgist.wfengine.Task;
+import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -42,9 +45,7 @@ public class BranchActivity extends Activity implements BackTracable {
     public Activity clone(Activity prev) {
         try {
             BranchActivity embryo = new BranchActivity();
-            embryo.setAutomatic(this.automatic);
             embryo.setCaption(this.caption);
-            embryo.setPerformerClass(this.performerClass);
             embryo.setUrl(this.url);
             embryo.setPrev(prev);
             embryo.getBranches().clear();
@@ -52,12 +53,11 @@ public class BranchActivity extends Activity implements BackTracable {
             //set the status
             if (joinActivity!=null) {
                 embryoJoin = new JoinActivity();
-                embryoJoin.setAutomatic(joinActivity.getAutomatic());
                 embryoJoin.setCaption(joinActivity.getCaption());
-                embryoJoin.setPerformerClass(joinActivity.getPerformerClass());
                 embryoJoin.setUrl(joinActivity.getUrl());
                 embryo.setJoinActivity(embryoJoin);
                 embryoJoin.setBranchActivity(embryo);
+                if (task!=null) embryo.setTask( (Task) task.clone() );
             }
             
             for (Iterator iter=branches.iterator(); iter.hasNext(); ) {
@@ -128,42 +128,33 @@ public class BranchActivity extends Activity implements BackTracable {
     }
     
     
-    public boolean activate(WorkflowEnvironment env) {
-        Stack stack = (Stack) env.getExecuteStack();
-        List waitingList = (List) env.getWaitingList();
+    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+        //initialize branch/join pair
+        joinActivity.setJoinCount(0);
         
-        int result = UNDEFINED;
-        
-        if (automatic) {
+        if (task==null) {
+            Activity[] activities = new Activity[branches.size()];
+            for (int i=0; i<activities.length; i++) {
+                activities[i] = (Activity) branches.get(i);
+            }//for i
             
-            //For the automatic sequence activity, discard the return value
-            //jump to the next activity
+            return activities;
+        } else if (task instanceof AutoTask) {
+            //Execute Auto Task, discard the return value
+            ((AutoTask)task).execute(workflow, env, this);
             
-            if (performerClass!=null && !"".equals(performerClass)) {
-                doPerform(env);
-            }
+            Activity[] activities = new Activity[branches.size()];
+            for (int i=0; i<activities.length; i++) {
+                activities[i] = (Activity) branches.get(i);
+            }//for i
             
-            result = 1;
-            
+            return activities;
         } else {
-            
-            //For the non-automatic sequence activity, check the return value,
-            //if ==UNDEFINED, wait for user response
-            //else, jump to the other activity
-            if (performerClass!=null && !"".equals(performerClass)) {
-                result = doPerform(env);;
-            }
-            
+            //Execute Manual Task, discard the return value
+            ((ManualTask)task).init(workflow, env, this);
+            return new Activity[] { this };
         }
-        
-        if (result==UNDEFINED) {
-            waitingList.add(this);
-        } else {
-            stack.addAll(branches);
-        }
-        
-        return (result!=UNDEFINED);
-    }//activate()
+    }//doActivate()
     
     
     public void saveState(Session session) {

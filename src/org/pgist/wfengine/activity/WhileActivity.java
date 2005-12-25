@@ -1,12 +1,13 @@
 package org.pgist.wfengine.activity;
 
-import java.util.List;
-import java.util.Stack;
-
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
+import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.Task;
+import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -41,18 +42,15 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
     public Activity clone(Activity prev) {
         try {
             WhileActivity embryo = new WhileActivity();
-            embryo.setAutomatic(this.automatic);
             embryo.setCaption(this.caption);
-            embryo.setPerformerClass(this.performerClass);
             embryo.setUrl(this.url);
             embryo.setPrev(prev);
+            if (task!=null) embryo.setTask( (Task) task.clone() );
             
             //set the status
             if (loop==null) {
                 embryoLoop = new LoopActivity();
-                embryoLoop.setAutomatic(loop.getAutomatic());
                 embryoLoop.setCaption(loop.getCaption());
-                embryoLoop.setPerformerClass(loop.getPerformerClass());
                 embryoLoop.setUrl(loop.getUrl());
                 embryo.setLoop(embryoLoop);
                 embryoLoop.setWhilst(embryo);
@@ -148,34 +146,24 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
     }
     
     
-    public void reach(Activity from, WorkflowEnvironment env) {
-        loopCount++;
-    }//reach()
-
-    
-    public boolean activate(WorkflowEnvironment env) {
-        Stack stack = (Stack) env.getExecuteStack();
-        List waitingList = (List) env.getWaitingList();
-        
-        if (performerClass!=null && !"".equals(performerClass)) {
-            expression = doPerform(env);;
-        }
-
-        if (expression==1 && next!=null) {
-            next.reach(this, env);
-            stack.push(next);
-            return true;
-        } else if (expression==0 && loop!=null) {
-            loop.reach(this, env);
-            loop.setExpression(1);
-            stack.push(loop);
-            return true;
+    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+        if (task==null) {
+            return new Activity[] { loop };
+        } else if (task instanceof AutoTask) {
+            int result = ((AutoTask)task).execute(workflow, env, this);
+            if (result==0) {
+                //reset loopCount before leaving the loop
+                loopCount = 0;
+                return new Activity[] { loop.getNext() };
+            } else {
+                loopCount++;
+                return new Activity[] { next };
+            }
         } else {
-            waitingList.add(this);
+            ((ManualTask)task).init(workflow, env, this);
+            return new Activity[] { this };
         }
-        
-        return false;
-    }//activate()
+    }//doActivate()
     
     
     public void saveState(Session session) {

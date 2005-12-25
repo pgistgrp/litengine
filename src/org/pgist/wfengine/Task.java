@@ -9,7 +9,7 @@ package org.pgist.wfengine;
  * @hibernate.class table="litwf_task"
  */
 public abstract class Task {
-
+    
     
     private Long id;
     
@@ -17,7 +17,7 @@ public abstract class Task {
     
     private String description;
     
-    private boolean automatic;
+    private String className;
     
     
     public Task() {
@@ -70,17 +70,17 @@ public abstract class Task {
      * @return
      * @hibernate.property not-null="true"
      */
-    public boolean isAutomatic() {
-        return automatic;
+    public String getClassName() {
+        return className;
     }
 
 
-    public void setAutomatic(boolean automatic) {
-        this.automatic = automatic;
+    public void setClassName(String className) {
+        this.className = className;
     }
-    
-    
-    public abstract void execute(Workflow workflow);
+
+
+    abstract public Object clone();
     
     
 }//class Task

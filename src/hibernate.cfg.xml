@@ -17,6 +17,7 @@
 
 
         <mapping resource="org/pgist/wfengine/WorkflowEnvironment.hbm.xml"/>
+        <mapping resource="org/pgist/wfengine/WorkflowTracker.hbm.xml"/>
         <mapping resource="org/pgist/wfengine/Workflow.hbm.xml"/>
         <mapping resource="org/pgist/wfengine/Activity.hbm.xml"/>
         <mapping resource="org/pgist/wfengine/WFProcess.hbm.xml"/>

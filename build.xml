@@ -51,11 +51,11 @@
 
     <target name="build" depends="mapping">
         <copy todir="${build}" >
-            <fileset dir="${src}" >
+            <fileset dir="${src}">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
-        <jar destfile="${output}"  basedir="${build}"/>
+        <jar destfile="${output}" basedir="${build}" includes="org/**/*"/>
     </target>
     
     

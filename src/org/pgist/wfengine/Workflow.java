@@ -1,6 +1,7 @@
 package org.pgist.wfengine;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Stack;
 
@@ -36,6 +37,15 @@ public class Workflow implements Serializable {
     
     //
     private boolean cancelled;
+    
+    //
+    private Date beginTime;
+    
+    //
+    private Date endTime;
+    
+    //
+    private WorkflowTracker tracker;
     
     
     public Workflow() {
@@ -135,24 +145,87 @@ public class Workflow implements Serializable {
     }
 
 
-    public void execute() {
-        if (finished || cancelled) return;
+    /**
+     * @return
+     * 
+     * @hibernate.property unique="false"
+     */
+    public Date getBeginTime() {
+        return beginTime;
+    }
+
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.property unique="false"
+     */
+    public Date getEndTime() {
+        return endTime;
+    }
+
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.one-to-one cascade="all" class="org.pgist.wfengine.WorkflowTracker"
+     */
+    public WorkflowTracker getTracker() {
+        return tracker;
+    }
+
+
+    public void setTracker(WorkflowTracker tracker) {
+        this.tracker = tracker;
+    }
+
+
+    /**
+     * Initially execute the workflow.
+     * This method can only be execute exactly ONCE!
+     */
+    synchronized void execute() {
+        //Check if this workflow already finished, cancelled or born
+        if (finished || cancelled || born) return;
         
+        //The stack to execute this workflow
         Stack stack = env.getExecuteStack();
+        
+        //Set born
+        born = true;
+        beginTime = new Date();
+        
+        stack.push(definition);
+        
         List waitingList = env.getWaitingList();
         
-        if (born==false) {
-            born = true;
-            stack.push(definition);
-        } else {
-            stack.addAll(waitingList);
-            waitingList.clear();
-        }
-        
         while (!stack.empty()) {
+            //Pop out an activity
             Activity activity = (Activity) stack.pop();
-            System.out.println("---> active activity: "+activity.getId());
-            activity.activate(env);
+            
+            //Activity this activity
+            Activity[] list = activity.activate(this, env);
+            
+            if (list==null || list.length==0) {
+                //This activity is executed and flow branch finished
+            } else if (list.length==1 && list[0]==activity) {
+                //This activity is not executed
+                waitingList.add(activity);
+            } else {
+                //This activity is executed, and its successive activities are returned
+                for (int i=0; i<list.length; i++) {
+                    stack.add(list[i]);
+                }//for i
+            }
         }//while
         
     }//execute()
@@ -177,7 +250,7 @@ public class Workflow implements Serializable {
         while (!stack.empty()) {
             Activity one = (Activity) stack.pop();
             System.out.println("---> active activity: "+one.getId());
-            one.activate(env);
+            one.activate(this, env);
         }//while
     }//execute()
     

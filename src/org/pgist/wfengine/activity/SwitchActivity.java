@@ -3,13 +3,15 @@ package org.pgist.wfengine.activity;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
+import org.pgist.wfengine.ManualTask;
+import org.pgist.wfengine.Task;
+import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEnvironment;
-import org.pgist.wfengine.IPerformer;
 
 
 /**
@@ -36,7 +38,7 @@ public class SwitchActivity extends Activity implements BackTracable {
     protected Activity others = null;
     
     protected Activity prev = null;
-
+    
     protected transient EndSwitchActivity embryoEndSwitch;
     
     
@@ -47,19 +49,16 @@ public class SwitchActivity extends Activity implements BackTracable {
     public Activity clone(Activity prev) {
         try {
             SwitchActivity embryo = new SwitchActivity();
-            embryo.setAutomatic(this.automatic);
             embryo.setCaption(this.caption);
-            embryo.setPerformerClass(this.performerClass);
             embryo.setUrl(this.url);
             embryo.setPrev(prev);
             embryo.getSwitches().clear();
+            if (task!=null) embryo.setTask( (Task) task.clone() );
             
             //set the status
             if (endSwitchActivity!=null) {
                 embryoEndSwitch = new EndSwitchActivity();
-                embryoEndSwitch.setAutomatic(endSwitchActivity.getAutomatic());
                 embryoEndSwitch.setCaption(endSwitchActivity.getCaption());
-                embryoEndSwitch.setPerformerClass(endSwitchActivity.getPerformerClass());
                 embryoEndSwitch.setUrl(endSwitchActivity.getUrl());
                 embryo.setEndSwitchActivity(embryoEndSwitch);
                 embryoEndSwitch.setSwitchActivity(embryo);
@@ -161,28 +160,24 @@ public class SwitchActivity extends Activity implements BackTracable {
     }
     
     
-    public boolean activate(WorkflowEnvironment env) {
-        Stack stack = (Stack) env.getExecuteStack();
-        
-        expression = -1;
-        
-        try {
-            if (performerClass!=null) {
-                IPerformer performer = (IPerformer) Class.forName(performerClass).newInstance();
-                expression = performer.perform(this, env);
-            }
-            
-            if (expression<0 || expression>switches.size()) {
-                if (others!=null) stack.push(others);
-            } else {
-                stack.push(switches.get(expression));
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+        if (task==null) {
+            //judge by expression
+            if (expression<0) expression = 0;
+            if (expression>=switches.size()) expression = switches.size()-1;
+            return new Activity[] { (Activity) switches.get(expression) };
+        } else if (task instanceof AutoTask) {
+            //judge by result of task
+            int result = ((AutoTask)task).execute(workflow, env, this);
+            if (result<0) result = 0;
+            if (result>=switches.size()) result = switches.size()-1;
+            return new Activity[] { (Activity) switches.get(result) };
+        } else {
+            //manual task
+            ((ManualTask)task).init(workflow, env, this);
+            return new Activity[] { this };
         }
-        
-        return true;
-    }//activate()
+    }//doActivate()
     
     
     public void saveState(Session session) {

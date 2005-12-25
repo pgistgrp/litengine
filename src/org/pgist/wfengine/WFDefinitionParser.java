@@ -98,6 +98,7 @@ public class WFDefinitionParser {
     private WFProcess parseProcess(Element ele) throws Exception {
         WFProcess process = new WFProcess();
         process.setName(ele.attribute("name").getStringValue());
+        process.setDescription(ele.attribute("description").getStringValue());
         
         //parse environment
         Element envElement = ele.element("environment");
@@ -129,7 +130,7 @@ public class WFDefinitionParser {
             Element one = (Element) elements.get(i);
             if ("task".equals(one.getName().toLowerCase())) {
                 SequenceActivity activity = new SequenceActivity();
-                activity.setTaskName(one.attributeValue("name"));
+                //activity.setTaskName(one.attributeValue("name"));
                 if (first==null) {
                     first = activity;
                 } else {
@@ -139,8 +140,6 @@ public class WFDefinitionParser {
                 last = activity;
             } else if ("branch".equals(one.getName().toLowerCase())) {
                 BranchActivity branch = parseBranch(one);
-                String auto = one.attributeValue("automatic");
-                branch.setAutomatic("true".equals(auto));
                 if (first==null) {
                     first = branch;
                 } else {

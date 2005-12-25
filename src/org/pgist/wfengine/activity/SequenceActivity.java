@@ -1,12 +1,13 @@
 package org.pgist.wfengine.activity;
 
-import java.util.List;
-import java.util.Stack;
-
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
+import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.Task;
+import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEnvironment;
 
 
@@ -25,8 +26,6 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
     
     protected Activity next;
     
-    protected String taskName;
-    
     
     public SequenceActivity() {
     }
@@ -35,10 +34,8 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
     public Activity clone(Activity prev) {
         try {
             SequenceActivity embryo = new SequenceActivity();
-            embryo.setAutomatic(this.automatic);
             embryo.setCaption(this.caption);
-            embryo.setPerformerClass(this.performerClass);
-            embryo.setTaskName(this.taskName);
+            if (task!=null) embryo.setTask( (Task) task.clone() );
             embryo.setUrl(this.url);
             embryo.setPrev(prev);
             
@@ -89,59 +86,17 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
     }
 
     
-    /**
-     * @return
-     * @hibernate.property not-null="true"
-     */
-    public String getTaskName() {
-        return taskName;
-    }
-
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-    
-    
-    public boolean activate(WorkflowEnvironment env) {
-        
-        Stack stack = (Stack) env.getExecuteStack();
-        List waitingList = (List) env.getWaitingList();
-        
-        int result = UNDEFINED;
-        
-        if (automatic) {
-            
-            //For the automatic sequence activity, discard the return value
-            //jump to the next activity
-            
-            if (performerClass!=null && !"".equals(performerClass)) {
-                doPerform(env);
-            }
-            
-            result = 1;
-            
+    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+        if (task==null) {
+            return new Activity[] { next };
+        } else if (task instanceof AutoTask) {
+            ((AutoTask)task).execute(workflow, env, this);
+            return new Activity[] { next };
         } else {
-            
-            //For the non-automatic sequence activity, check the return value,
-            //if ==0, wait for user response
-            //if ==1, jump to the next activity
-            
-            if (performerClass!=null && !"".equals(performerClass)) {
-                result = doPerform(env);;
-            }
-            
+            ((ManualTask)task).init(workflow, env, this);
+            return new Activity[] { this };
         }
-        
-        if (result==1 && next!=null) {
-            next.reach(this, env);
-            stack.push(next);
-        } else {
-            waitingList.add(this);
-        }
-        
-        return (result==1);
-    }//activate()
+    }//doActivate()
 
 
     public void saveState(Session session) {

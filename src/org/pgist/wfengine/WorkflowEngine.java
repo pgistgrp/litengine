@@ -10,6 +10,9 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
+import org.pgist.wfengine.activity.StartActivity;
+import org.pgist.wfengine.activity.TerminateActivity;
+
 
 /**
  * The Workflow Engine.
@@ -28,9 +31,13 @@ public class WorkflowEngine {
     
     
     public WorkflowEngine() {
-        CacheManager manager = CacheManager.create();
-        workflowCache = new Cache("workflow", 50, true, false, 2*3600, 20*60);
-        manager.addCache(workflowCache);
+        try {
+            CacheManager manager = CacheManager.create();
+            workflowCache = new Cache("workflow", 50, true, false, 2*3600, 20*60);
+            manager.addCache(workflowCache);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
     
     
@@ -114,6 +121,35 @@ public class WorkflowEngine {
         WFDefinitionParser parser = new WFDefinitionParser(new File(xml));
         return addProcess(parser);
     }//addProcess()
+    
+    
+    /**
+     * Spawn from the given process, generate a new workflow instance
+     * @param process
+     * @return
+     */
+    public Workflow spawn(WFProcess process) {
+        Workflow workflow = new Workflow();
+        WorkflowTracker tracker = new WorkflowTracker();
+        workflow.setTracker(tracker);
+        tracker.setWorkflow(workflow);
+        StartActivity start = new StartActivity();
+        workflow.setDefinition(start);
+        
+        LinearTasks tasks = process.spawn();
+        BackTracable head = tasks.getFirst();
+        start.setNext((Activity)head);
+        head.setPrev(start);
+        
+        TerminateActivity terminate = new TerminateActivity();
+        PushDownable tail = tasks.getLast();
+        terminate.setPrev((Activity) tail);
+        tail.setNext(terminate);
+        
+        workflow.execute();
+        
+        return workflow;
+    }//spawn()
 
 
 }//class WorkflowEngine

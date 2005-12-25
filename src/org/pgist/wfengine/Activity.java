@@ -21,11 +21,11 @@ public abstract class Activity implements Cloneable {
     
     protected String caption = "";
 
-    protected boolean automatic = false;
-    
-    protected String performerClass = null;
-    
     protected String url = null;
+    
+    protected int count = 0;
+    
+    protected Task task;
     
     
     /**
@@ -58,34 +58,6 @@ public abstract class Activity implements Cloneable {
 
     /**
      * @return
-     * @hibernate.property not-null="true"
-     */
-    public boolean getAutomatic() {
-        return automatic;
-    }
-    
-    
-    public void setAutomatic(boolean automatic) {
-        this.automatic = automatic;
-    }
-    
-    
-    /**
-     * @return
-     * @hibernate.property
-     */
-    public String getPerformerClass() {
-        return performerClass;
-    }
-    
-    
-    public void setPerformerClass(String performerClass) {
-        this.performerClass = performerClass;
-    }
-    
-    
-    /**
-     * @return
      * @hibernate.property
      */
     public String getUrl() {
@@ -98,35 +70,48 @@ public abstract class Activity implements Cloneable {
     }
     
     
-    public int doPerform(WorkflowEnvironment env) {
-        if (performerClass==null || "".equals(performerClass)) return UNDEFINED;
-        
-        int result = UNDEFINED;
-        
-        try {
-            IPerformer performer = (IPerformer) Class.forName(performerClass).newInstance();
-            result = performer.perform(this, env);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        
-        return result;
-    }//activate()
-    
-    
     /**
-     * The reach() should be called exactly once before any activity is activated.
-     * @param from
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public int getCount() {
+        return count;
+    }
+
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.many-to-one column="task_id" class="org.pgist.wfengine.Task" cascade="all"
+     */
+    public Task getTask() {
+        return task;
+    }
+
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+
+    /**
+     * Package Accessible
      * @param env
      */
-    public void reach(Activity from, WorkflowEnvironment env) {
-        //Default do nothing.
-    }//reach()
+    Activity[] activate(Workflow workflow, WorkflowEnvironment env) {
+        Activity[] activities = doActivate(workflow, env);
+        if (activities!=null && (activities.length!=1 || activities[0]!=this)) count++;
+        return activities;
+    }//activate
     
     
-    public abstract boolean activate(WorkflowEnvironment env);
+    abstract protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env);
     
-    public abstract void saveState(Session session);
+    abstract public void saveState(Session session);
     
     abstract public Activity clone(Activity prev);
     

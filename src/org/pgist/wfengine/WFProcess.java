@@ -14,6 +14,8 @@ public class WFProcess {
     
     protected String name;
     
+    protected String description;
+
     protected Environment env = new Environment();
     
     protected BackTracable head;
@@ -46,6 +48,20 @@ public class WFProcess {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public String getDescription() {
+        return description;
+    }
+
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 

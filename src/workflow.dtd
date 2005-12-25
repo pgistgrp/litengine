@@ -33,6 +33,7 @@
 
 <!ELEMENT task (#PCDATA)>
 <!ATTLIST task
-    name CDATA #REQUIRED
+    name CDATA #IMPLIED
+    ref CDATA #IMPLIED
 >
 
