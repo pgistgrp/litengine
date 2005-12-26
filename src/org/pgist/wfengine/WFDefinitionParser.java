@@ -130,7 +130,10 @@ public class WFDefinitionParser {
             Element one = (Element) elements.get(i);
             if ("task".equals(one.getName().toLowerCase())) {
                 SequenceActivity activity = new SequenceActivity();
-                //activity.setTaskName(one.attributeValue("name"));
+                String className = one.attributeValue("class");
+                if (className!=null) {
+                    activity.setTask((Task) Class.forName(className).newInstance());
+                }
                 if (first==null) {
                     first = activity;
                 } else {
@@ -187,6 +190,22 @@ public class WFDefinitionParser {
         branch.setJoinActivity(join);
         join.setBranchActivity(branch);
         
+        Element pretask = element.element("pretask");
+        if (pretask!=null) {
+            String className = pretask.attributeValue("class");
+            if (className!=null) {
+                branch.setTask((Task) Class.forName(className).newInstance());
+            }
+        }
+        
+        Element posttask = element.element("posttask");
+        if (posttask!=null) {
+            String className = pretask.attributeValue("class");
+            if (className!=null) {
+                join.setTask((Task) Class.forName(className).newInstance());
+            }
+        }
+        
         List sequences = element.elements("sequence");
         for (int i=0, n=sequences.size(); i<n; i++) {
             Element sequence = (Element) sequences.get(i);
@@ -212,6 +231,22 @@ public class WFDefinitionParser {
         EndSwitchActivity endSwitch = new EndSwitchActivity();
         switche.setEndSwitchActivity(endSwitch);
         endSwitch.setSwitchActivity(switche);
+        
+        Element pretask = element.element("pretask");
+        if (pretask!=null) {
+            String className = pretask.attributeValue("class");
+            if (className!=null) {
+                switche.setTask((Task) Class.forName(className).newInstance());
+            }
+        }
+        
+        Element posttask = element.element("posttask");
+        if (posttask!=null) {
+            String className = pretask.attributeValue("class");
+            if (className!=null) {
+                endSwitch.setTask((Task) Class.forName(className).newInstance());
+            }
+        }
         
         List sequences = element.elements("sequence");
         for (int i=0, n=sequences.size(); i<n; i++) {
@@ -239,6 +274,22 @@ public class WFDefinitionParser {
         whilst.setLoop(loop);
         loop.setWhilst(whilst);
         
+        Element pretask = element.element("pretask");
+        if (pretask!=null) {
+            String className = pretask.attributeValue("class");
+            if (className!=null) {
+                whilst.setTask((Task) Class.forName(className).newInstance());
+            }
+        }
+        
+        Element posttask = element.element("posttask");
+        if (posttask!=null) {
+            String className = pretask.attributeValue("class");
+            if (className!=null) {
+                loop.setTask((Task) Class.forName(className).newInstance());
+            }
+        }
+        
         Element sequence = element.element("sequence");
         
         LinearTasks tasks = parseSequence(sequence);
@@ -261,6 +312,22 @@ public class WFDefinitionParser {
         UntilActivity until = new UntilActivity();
         repeat.setUntil(until);
         until.setRepeat(repeat);
+        
+        Element pretask = element.element("pretask");
+        if (pretask!=null) {
+            String className = pretask.attributeValue("class");
+            if (className!=null) {
+                repeat.setTask((Task) Class.forName(className).newInstance());
+            }
+        }
+        
+        Element posttask = element.element("posttask");
+        if (posttask!=null) {
+            String className = pretask.attributeValue("class");
+            if (className!=null) {
+                until.setTask((Task) Class.forName(className).newInstance());
+            }
+        }
         
         Element sequence = element.element("sequence");
         

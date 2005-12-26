@@ -20,7 +20,7 @@ public class Workflow implements Serializable {
     
     private static final long serialVersionUID = -8038860928226339011L;
     
-
+    
     protected Long id = null;
     
     //The definition activity of a workflow instance
@@ -30,7 +30,7 @@ public class Workflow implements Serializable {
     private boolean born = false;
     
     //
-    private WorkflowEnvironment env = new WorkflowEnvironment();
+    private WorkflowEnvironment env;
     
     //
     private boolean finished;
@@ -54,10 +54,8 @@ public class Workflow implements Serializable {
     
     /**
      * @return
-     * Notes: the id comes from one-to-one mapped Content object.
      * 
-     * @hibernate.id generator-class="foreign"
-     * @hibernate.generator-param name="property" value="env"
+     * @hibernate.id generator-class="native"
      */
     public Long getId() {
         return id;
@@ -190,6 +188,7 @@ public class Workflow implements Serializable {
 
 
     /**
+     * Package Accessible.
      * Initially execute the workflow.
      * This method can only be execute exactly ONCE!
      */
@@ -208,12 +207,15 @@ public class Workflow implements Serializable {
         
         List waitingList = env.getWaitingList();
         
+        Stack parent = new Stack();
+        parent.push(null);
+        
         while (!stack.empty()) {
             //Pop out an activity
             Activity activity = (Activity) stack.pop();
             
             //Activity this activity
-            Activity[] list = activity.activate(this, env);
+            Activity[] list = activity.activate(this, (Activity) parent.pop());
             
             if (list==null || list.length==0) {
                 //This activity is executed and flow branch finished
@@ -222,11 +224,16 @@ public class Workflow implements Serializable {
                 waitingList.add(activity);
             } else {
                 //This activity is executed, and its successive activities are returned
-                for (int i=0; i<list.length; i++) {
-                    stack.add(list[i]);
+                for (int i=0,n=list.length; i<n; i++) {
+                    parent.push(activity);
+                    stack.push(list[i]);
                 }//for i
             }
         }//while
+        
+        tracker = new WorkflowTracker();
+        tracker.setWorkflow(this);
+        tracker.setRoot(definition.getTrackRecord());
         
     }//execute()
     
@@ -249,14 +256,12 @@ public class Workflow implements Serializable {
         
         while (!stack.empty()) {
             Activity one = (Activity) stack.pop();
-            System.out.println("---> active activity: "+one.getId());
-            one.activate(this, env);
+            one.activate(this, activity);//wrong
         }//while
     }//execute()
     
     
     public void saveState(Session session) {
-        session.saveOrUpdate(env);
         session.saveOrUpdate(this);
         definition.saveState(session);
     }//saveState()

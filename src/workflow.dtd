@@ -17,23 +17,32 @@
 
 <!ELEMENT sequence (task* | branch*, switch*, while*, repeat*)>
 
-<!ELEMENT while (sequence*)>
+<!ELEMENT while (pretask*, sequence*, posttask*)>
 
-<!ELEMENT repeat (sequence*)>
+<!ELEMENT repeat (pretask*, sequence*, posttask*)>
 
-<!ELEMENT branch (sequence*)>
-<!ATTLIST task
-    automatic CDATA #IMPLIED
->
+<!ELEMENT branch (pretask*, sequence*, posttask*)>
 
-<!ELEMENT switch (sequence*)>
-<!ATTLIST switch
-    automatic CDATA #IMPLIED
+<!ELEMENT switch (pretask*, sequence*, posttask*)>
+
+<!ELEMENT pretask (#PCDATA)>
+<!ATTLIST pretask
+    name CDATA #IMPLIED
+    ref CDATA #IMPLIED
+    class CDATA #IMPLIED
 >
 
 <!ELEMENT task (#PCDATA)>
 <!ATTLIST task
     name CDATA #IMPLIED
     ref CDATA #IMPLIED
+    class CDATA #IMPLIED
+>
+
+<!ELEMENT posttask (#PCDATA)>
+<!ATTLIST posttask
+    name CDATA #IMPLIED
+    ref CDATA #IMPLIED
+    class CDATA #IMPLIED
 >
 

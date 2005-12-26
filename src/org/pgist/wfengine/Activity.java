@@ -27,6 +27,8 @@ public abstract class Activity implements Cloneable {
     
     protected Task task;
     
+    protected WorkflowTrackRecord trackRecord;
+    
     
     /**
      * @return
@@ -99,23 +101,41 @@ public abstract class Activity implements Cloneable {
 
 
     /**
+     * @return
+     * @hibernate.many-to-one column="track_id" class="org.pgist.wfengine.WorkflowTrackRecord" cascade="all"
+     */
+    public WorkflowTrackRecord getTrackRecord() {
+        return trackRecord;
+    }
+
+
+    public void setTrackRecord(WorkflowTrackRecord trackRecord) {
+        this.trackRecord = trackRecord;
+    }
+
+
+    /**
      * Package Accessible
      * @param env
      */
-    Activity[] activate(Workflow workflow, WorkflowEnvironment env) {
-        Activity[] activities = doActivate(workflow, env);
+    Activity[] activate(Workflow workflow, Activity parent) {
+        trackRecord = new WorkflowTrackRecord();
+        trackRecord.setWorkflowTracker(workflow.getTracker());
+        if (parent!=null) trackRecord.getParents().add(parent.getTrackRecord());
+        
+        Activity[] activities = doActivate(workflow);
         if (activities!=null && (activities.length!=1 || activities[0]!=this)) count++;
         return activities;
     }//activate
     
     
-    abstract protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env);
+    abstract protected Activity[] doActivate(Workflow workflow);
     
     abstract public void saveState(Session session);
     
     abstract public Activity clone(Activity prev);
     
     abstract public Activity probe();
-
+    
 
 }//abstract class Activity

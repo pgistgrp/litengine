@@ -10,7 +10,6 @@ import org.pgist.wfengine.BackTracable;
 import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.Workflow;
-import org.pgist.wfengine.WorkflowEnvironment;
 
 
 /**
@@ -109,11 +108,11 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
     }
 
 
-    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+    protected Activity[] doActivate(Workflow workflow) {
         if (task==null) {
             return new Activity[] { next };
         } else if (task instanceof AutoTask) {
-            int result = ((AutoTask)task).execute(workflow, env, this);
+            int result = ((AutoTask)task).execute(workflow, this);
             if (result>=jumps.size()) result = jumps.size()-1;
             if (result<0) {
                 return new Activity[] { next };
@@ -121,7 +120,7 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
                 return new Activity[] { (Activity) jumps.get(result) };
             }
         } else {
-            ((ManualTask)task).init(workflow, env, this);
+            ((ManualTask)task).init(workflow, this);
             return new Activity[] { this };
         }
     }//doActivate()

@@ -11,7 +11,6 @@ import org.pgist.wfengine.BackTracable;
 import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
-import org.pgist.wfengine.WorkflowEnvironment;
 
 
 /**
@@ -36,7 +35,7 @@ public class BranchActivity extends Activity implements BackTracable {
     protected List branches = new ArrayList();
     
     protected transient JoinActivity embryoJoin;
-
+    
     
     public BranchActivity() {
     }
@@ -57,7 +56,7 @@ public class BranchActivity extends Activity implements BackTracable {
                 embryoJoin.setUrl(joinActivity.getUrl());
                 embryo.setJoinActivity(embryoJoin);
                 embryoJoin.setBranchActivity(embryo);
-                if (task!=null) embryo.setTask( (Task) task.clone() );
+                if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
             }
             
             for (Iterator iter=branches.iterator(); iter.hasNext(); ) {
@@ -128,7 +127,7 @@ public class BranchActivity extends Activity implements BackTracable {
     }
     
     
-    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+    protected Activity[] doActivate(Workflow workflow) {
         //initialize branch/join pair
         joinActivity.setJoinCount(0);
         
@@ -141,7 +140,7 @@ public class BranchActivity extends Activity implements BackTracable {
             return activities;
         } else if (task instanceof AutoTask) {
             //Execute Auto Task, discard the return value
-            ((AutoTask)task).execute(workflow, env, this);
+            ((AutoTask)task).execute(workflow, this);
             
             Activity[] activities = new Activity[branches.size()];
             for (int i=0; i<activities.length; i++) {
@@ -151,7 +150,7 @@ public class BranchActivity extends Activity implements BackTracable {
             return activities;
         } else {
             //Execute Manual Task, discard the return value
-            ((ManualTask)task).init(workflow, env, this);
+            ((ManualTask)task).init(workflow, this);
             return new Activity[] { this };
         }
     }//doActivate()
@@ -164,6 +163,6 @@ public class BranchActivity extends Activity implements BackTracable {
             one.saveState(session);
         }//for i
     }//saveState()
-    
-    
+
+
 }//class SwitchActivity

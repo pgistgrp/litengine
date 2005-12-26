@@ -41,6 +41,11 @@ public class WorkflowEngine {
     }
     
     
+    public WorkflowDAO getWorkflowDAO() {
+        return workflowDAO;
+    }
+
+
     public void setWorkflowDAO(WorkflowDAO workflowDAO) {
         this.workflowDAO = workflowDAO;
     }
@@ -133,6 +138,10 @@ public class WorkflowEngine {
         WorkflowTracker tracker = new WorkflowTracker();
         workflow.setTracker(tracker);
         tracker.setWorkflow(workflow);
+        WorkflowEnvironment env = new WorkflowEnvironment();
+        workflow.setEnv(env);
+        env.setWorkflow(workflow);
+        
         StartActivity start = new StartActivity();
         workflow.setDefinition(start);
         
@@ -150,6 +159,11 @@ public class WorkflowEngine {
         
         return workflow;
     }//spawn()
+    
+    
+    public void saveWorkflow(Workflow workflow) {
+        workflowDAO.saveWorkflow(workflow);
+    }//saveWorkflow()
 
 
 }//class WorkflowEngine

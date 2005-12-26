@@ -11,7 +11,6 @@ import org.pgist.wfengine.BackTracable;
 import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
-import org.pgist.wfengine.WorkflowEnvironment;
 
 
 /**
@@ -53,7 +52,7 @@ public class SwitchActivity extends Activity implements BackTracable {
             embryo.setUrl(this.url);
             embryo.setPrev(prev);
             embryo.getSwitches().clear();
-            if (task!=null) embryo.setTask( (Task) task.clone() );
+            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
             
             //set the status
             if (endSwitchActivity!=null) {
@@ -160,7 +159,7 @@ public class SwitchActivity extends Activity implements BackTracable {
     }
     
     
-    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+    protected Activity[] doActivate(Workflow workflow) {
         if (task==null) {
             //judge by expression
             if (expression<0) expression = 0;
@@ -168,13 +167,13 @@ public class SwitchActivity extends Activity implements BackTracable {
             return new Activity[] { (Activity) switches.get(expression) };
         } else if (task instanceof AutoTask) {
             //judge by result of task
-            int result = ((AutoTask)task).execute(workflow, env, this);
+            int result = ((AutoTask)task).execute(workflow, this);
             if (result<0) result = 0;
             if (result>=switches.size()) result = switches.size()-1;
             return new Activity[] { (Activity) switches.get(result) };
         } else {
             //manual task
-            ((ManualTask)task).init(workflow, env, this);
+            ((ManualTask)task).init(workflow, this);
             return new Activity[] { this };
         }
     }//doActivate()

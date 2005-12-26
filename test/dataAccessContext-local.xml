@@ -8,7 +8,7 @@
            <value>org.postgresql.Driver</value>
         </property>
         <property name="url">
-           <value>jdbc:postgresql://localhost/pgist</value>
+           <value>jdbc:postgresql://localhost/wfengine</value>
         </property>
         <property name="username">
            <value>pgist</value>
@@ -27,9 +27,12 @@
            <list>
                <value>org/pgist/wfengine/WorkflowEnvironment.hbm.xml</value>
                <value>org/pgist/wfengine/Workflow.hbm.xml</value>
+               <value>org/pgist/wfengine/WorkflowTracker.hbm.xml</value>
+               <value>org/pgist/wfengine/WorkflowTrackRecord.hbm.xml</value>
                <value>org/pgist/wfengine/Activity.hbm.xml</value>
                <value>org/pgist/wfengine/WFProcess.hbm.xml</value>
                <value>org/pgist/wfengine/Task.hbm.xml</value>
+               <value>org/pgist/wfengine/AccessManager.hbm.xml</value>
            </list>
         </property>
         <property name="hibernateProperties">

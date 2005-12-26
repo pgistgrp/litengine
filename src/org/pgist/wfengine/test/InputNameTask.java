@@ -15,9 +15,6 @@ import org.pgist.wfengine.WorkflowEnvironment;
 public class InputNameTask extends ManualTask {
     
     
-    private String userName;
-
-    
     public InputNameTask() {
     }
     
@@ -32,8 +29,8 @@ public class InputNameTask extends ManualTask {
     }
 
 
-    public Object clone() {
-        return null;
+    protected int execute(Workflow workflow, Activity activity) {
+        return 0;
     }
     
     

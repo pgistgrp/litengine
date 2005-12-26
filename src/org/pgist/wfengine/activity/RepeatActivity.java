@@ -8,7 +8,6 @@ import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
-import org.pgist.wfengine.WorkflowEnvironment;
 
 
 /**
@@ -44,7 +43,7 @@ public class RepeatActivity extends Activity implements BackTracable, PushDownab
             embryo.setCaption(this.caption);
             embryo.setUrl(this.url);
             embryo.setPrev(prev);
-            if (task!=null) embryo.setTask( (Task) task.clone() );
+            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
             
             //set the status
             if (until!=null) {
@@ -145,16 +144,16 @@ public class RepeatActivity extends Activity implements BackTracable, PushDownab
     }
     
     
-    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+    protected Activity[] doActivate(Workflow workflow) {
         if (task==null) {
             loopCount++;
             return new Activity[] { next };
         } else if (task instanceof AutoTask) {
-            ((AutoTask)task).execute(workflow, env, this);
+            ((AutoTask)task).execute(workflow, this);
             loopCount++;
             return new Activity[] { next };
         } else {
-            ((ManualTask)task).init(workflow, env, this);
+            ((ManualTask)task).init(workflow, this);
             return new Activity[] { this };
         }
     }//doActivate()

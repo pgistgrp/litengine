@@ -2,6 +2,8 @@ package org.pgist.wfengine.test;
 
 import java.util.List;
 
+import org.pgist.wfengine.WFProcess;
+import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEngine;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -77,6 +79,10 @@ public class ParserTest {
             //WorkflowDAO dao = (WorkflowDAO) appContext.getBean("workflowDAO");
             WorkflowEngine engine = (WorkflowEngine) appContext.getBean("litengine");
             List processes = engine.addProcess("/home/kenny/workdir/LITEngine/test/flow.xml");
+            
+            WFProcess process = (WFProcess) processes.get(0);
+            Workflow workflow = engine.spawn(process);
+            engine.saveWorkflow(workflow);
         } catch(Exception e) {
             e.printStackTrace();
         }

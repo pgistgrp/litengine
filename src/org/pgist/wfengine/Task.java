@@ -8,16 +8,12 @@ package org.pgist.wfengine;
  *
  * @hibernate.class table="litwf_task"
  */
-public abstract class Task {
+public abstract class Task implements Cloneable {
     
     
-    private Long id;
+    protected Long id;
     
-    private String name;
-    
-    private String description;
-    
-    private String className;
+    protected Activity activity;
     
     
     public Task() {
@@ -40,47 +36,19 @@ public abstract class Task {
 
     /**
      * @return
-     * @hibernate.property not-null="true"
+     * @hibernate.one-to-one cascade="all" class="org.pgist.wfengine.Activity"
      */
-    public String getName() {
-        return name;
+    public Activity getActivity() {
+        return activity;
     }
 
 
-    public void setName(String name) {
-        this.name = name;
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
-
-
-    /**
-     * @return
-     * @hibernate.property not-null="true"
-     */
-    public String getDescription() {
-        return description;
-    }
-
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-
-    /**
-     * @return
-     * @hibernate.property not-null="true"
-     */
-    public String getClassName() {
-        return className;
-    }
-
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-
-    abstract public Object clone();
+    
+    
+    abstract public Task clone(Activity activity);
     
     
 }//class Task

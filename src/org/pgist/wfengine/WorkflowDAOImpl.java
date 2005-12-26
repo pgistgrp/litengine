@@ -50,6 +50,11 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
         //TODO
         getSession().save(process);
     }//saveProcess()
+
+
+    public void saveWorkflow(Workflow workflow) {
+        getSession().saveOrUpdate(workflow);
+    }//saveWorkflow()
     
     
 }//class WorkflowDAOImpl

@@ -6,7 +6,6 @@ import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.Workflow;
-import org.pgist.wfengine.WorkflowEnvironment;
 
 
 /**
@@ -54,14 +53,14 @@ public class StartActivity extends Activity implements PushDownable {
     }
 
     
-    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+    protected Activity[] doActivate(Workflow workflow) {
         if (task==null) {
             return new Activity[] { next };
         } else if (task instanceof AutoTask) {
-            ((AutoTask)task).execute(workflow, env, this);
+            ((AutoTask)task).execute(workflow, this);
             return new Activity[] { next };
         } else {
-            ((ManualTask)task).init(workflow, env, this);
+            ((ManualTask)task).init(workflow, this);
             return new Activity[] { this };
         }
     }//doActivate()

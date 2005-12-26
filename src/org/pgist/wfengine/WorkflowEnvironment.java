@@ -25,6 +25,8 @@ public class WorkflowEnvironment {
     
     private Map values = new HashMap();
     
+    private Workflow workflow;
+    
     
     public WorkflowEnvironment() {
     }
@@ -32,8 +34,8 @@ public class WorkflowEnvironment {
     
     /**
      * @return
-     * 
-     * @hibernate.id generator-class="native"
+     * @hibernate.id generator-class="foreign"
+     * @hibernate.generator-param name="property" value="workflow"
      */
     public Long getId() {
         return id;
@@ -76,6 +78,20 @@ public class WorkflowEnvironment {
     
     public void setValues(Map values) {
         this.values = values;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.one-to-one name="workflow" cascade="all" class="org.pgist.wfengine.Workflow"
+     */
+    public Workflow getWorkflow() {
+        return workflow;
+    }
+
+
+    public void setWorkflow(Workflow workflow) {
+        this.workflow = workflow;
     }
     
     

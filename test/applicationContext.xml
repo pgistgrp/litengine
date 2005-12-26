@@ -21,18 +21,18 @@
     </bean>
     
     
-    <bean id="litengine" class="org.pgist.wfengine.WorkflowEngine">
+    <!--bean id="litengine" class="org.pgist.wfengine.WorkflowEngine">
       <property name="workflowDAO" ref="workflowDAO"/>
-    </bean>
+    </bean-->
     
     
-    <!--bean id="litengine1" parent="baseTransactionProxy">
+    <bean id="litengine" parent="baseTransactionProxy">
       <property name="target">
         <bean class="org.pgist.wfengine.WorkflowEngine">
           <property name="workflowDAO" ref="workflowDAO"/>
         </bean>
       </property>
-    </bean-->
+    </bean>
     
     
 </beans>

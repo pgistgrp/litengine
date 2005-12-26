@@ -8,7 +8,6 @@ import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
-import org.pgist.wfengine.WorkflowEnvironment;
 
 
 /**
@@ -45,7 +44,7 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
             embryo.setCaption(this.caption);
             embryo.setUrl(this.url);
             embryo.setPrev(prev);
-            if (task!=null) embryo.setTask( (Task) task.clone() );
+            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
             
             //set the status
             if (loop==null) {
@@ -146,11 +145,11 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
     }
     
     
-    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+    protected Activity[] doActivate(Workflow workflow) {
         if (task==null) {
             return new Activity[] { loop };
         } else if (task instanceof AutoTask) {
-            int result = ((AutoTask)task).execute(workflow, env, this);
+            int result = ((AutoTask)task).execute(workflow, this);
             if (result==0) {
                 //reset loopCount before leaving the loop
                 loopCount = 0;
@@ -160,7 +159,7 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
                 return new Activity[] { next };
             }
         } else {
-            ((ManualTask)task).init(workflow, env, this);
+            ((ManualTask)task).init(workflow, this);
             return new Activity[] { this };
         }
     }//doActivate()

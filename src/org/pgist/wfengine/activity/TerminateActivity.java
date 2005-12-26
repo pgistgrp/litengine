@@ -6,7 +6,6 @@ import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
 import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.Workflow;
-import org.pgist.wfengine.WorkflowEnvironment;
 
 
 /**
@@ -53,16 +52,16 @@ public class TerminateActivity extends Activity implements BackTracable {
     }
 
 
-    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+    protected Activity[] doActivate(Workflow workflow) {
         //Terminate Activity have to be handled differently
         count++;
         if (task==null) {
             return null;
         } else if (task instanceof AutoTask) {
-            ((AutoTask)task).execute(workflow, env, this);
+            ((AutoTask)task).execute(workflow, this);
             return null;
         } else {
-            ((ManualTask)task).init(workflow, env, this);
+            ((ManualTask)task).init(workflow, this);
             return new Activity[] { this };
         }
     }//doActivate()

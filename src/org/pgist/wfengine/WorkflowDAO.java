@@ -18,6 +18,8 @@ public interface WorkflowDAO {
     Session getHibernateSession();
 
     void saveProcess(WFProcess process);
+
+    void saveWorkflow(Workflow workflow);
     
     
 }//interface WorkflowDAO

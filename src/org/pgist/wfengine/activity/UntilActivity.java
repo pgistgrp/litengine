@@ -8,7 +8,6 @@ import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
-import org.pgist.wfengine.WorkflowEnvironment;
 
 
 /**
@@ -41,7 +40,7 @@ public class UntilActivity extends Activity implements BackTracable, PushDownabl
         try {
             UntilActivity embryo = repeat.embryoUntil;
             embryo.setPrev(prev);
-            if (task!=null) embryo.setTask( (Task) task.clone() );
+            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
             
             if (embryo.next==null && next!=null) {
                 Activity embryoNext = next.clone(embryo);
@@ -131,11 +130,11 @@ public class UntilActivity extends Activity implements BackTracable, PushDownabl
     }
     
     
-    protected Activity[] doActivate(Workflow workflow, WorkflowEnvironment env) {
+    protected Activity[] doActivate(Workflow workflow) {
         if (task==null) {//infinite loop
             return new Activity[] { repeat };
         } else if (task instanceof AutoTask) {
-            int result = ((AutoTask)task).execute(workflow, env, this);
+            int result = ((AutoTask)task).execute(workflow, this);
             if (result==0) {
                 //reset loopCount before leaving the loop
                 loopCount = 0;
@@ -144,7 +143,7 @@ public class UntilActivity extends Activity implements BackTracable, PushDownabl
                 return new Activity[] { repeat };
             }
         } else {
-            ((ManualTask)task).init(workflow, env, this);
+            ((ManualTask)task).init(workflow, this);
             return new Activity[] { this };
         }
     }//doActivate()
