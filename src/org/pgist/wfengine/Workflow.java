@@ -196,8 +196,7 @@ public class Workflow implements Serializable {
         //Check if this workflow already finished, cancelled or born
         if (finished || cancelled || born) return;
         
-        //The stack to execute this workflow
-        Stack stack = env.getExecuteStack();
+        Stack stack = new Stack();
         
         //Set born
         born = true;
@@ -242,7 +241,7 @@ public class Workflow implements Serializable {
      * Execute a specific activity, this activity have to be the active activity in the environment
      * @param activity
      */
-    public void execute(Activity activity) {
+    synchronized public void execute(Activity activity) {
         if (finished || cancelled) return;
         
         List waitingList = env.getWaitingList();
