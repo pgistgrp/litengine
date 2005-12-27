@@ -112,7 +112,7 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
         if (task==null) {
             return new Activity[] { next };
         } else if (task instanceof AutoTask) {
-            int result = ((AutoTask)task).execute(workflow, this);
+            int result = ((AutoTask)task).execute(workflow);
             if (result>=jumps.size()) result = jumps.size()-1;
             if (result<0) {
                 return new Activity[] { next };
@@ -120,7 +120,7 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
                 return new Activity[] { (Activity) jumps.get(result) };
             }
         } else {
-            ((ManualTask)task).init(workflow, this);
+            ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
     }//doActivate()

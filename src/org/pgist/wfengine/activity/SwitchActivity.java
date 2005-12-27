@@ -167,13 +167,13 @@ public class SwitchActivity extends Activity implements BackTracable {
             return new Activity[] { (Activity) switches.get(expression) };
         } else if (task instanceof AutoTask) {
             //judge by result of task
-            int result = ((AutoTask)task).execute(workflow, this);
+            int result = ((AutoTask)task).execute(workflow);
             if (result<0) result = 0;
             if (result>=switches.size()) result = switches.size()-1;
             return new Activity[] { (Activity) switches.get(result) };
         } else {
             //manual task
-            ((ManualTask)task).init(workflow, this);
+            ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
     }//doActivate()

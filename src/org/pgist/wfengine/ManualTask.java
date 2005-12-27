@@ -1,5 +1,8 @@
 package org.pgist.wfengine;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pgist.model.IUser;
 
 
@@ -45,11 +48,11 @@ public abstract class ManualTask extends Task {
      * @return
      * @throws Exception
      */
-    int perform(Workflow workflow, Activity activity) throws Exception {
+    String perform(Workflow workflow, HttpServletRequest request, HttpServletResponse response) throws Exception {
         //Check Access Permission
         if (accessManager!=null && !accessManager.check(user)) throw new Exception("User has no access permission!");
         
-        return execute(workflow, activity);
+        return execute(workflow, request, response);
     }//perform()
     
     
@@ -74,14 +77,14 @@ public abstract class ManualTask extends Task {
      * @param activity
      * @return
      */
-    abstract protected int execute(Workflow workflow, Activity activity);
+    abstract protected String execute(Workflow workflow,  HttpServletRequest request, HttpServletResponse response);
     
     
     /**
      * Give Task object an oppotunity to initialize itself
      *
      */
-    public void init(Workflow workflow, Activity activity) {
+    public void init(Workflow workflow) {
     }
     
     
@@ -89,7 +92,7 @@ public abstract class ManualTask extends Task {
      * Give Task object an oppotunity to finalize itself
      *
      */
-    public void destroy(Workflow workflow, Activity activity) {
+    public void destroy(Workflow workflow) {
     }
 
 

@@ -58,10 +58,10 @@ public class TerminateActivity extends Activity implements BackTracable {
         if (task==null) {
             return null;
         } else if (task instanceof AutoTask) {
-            ((AutoTask)task).execute(workflow, this);
+            ((AutoTask)task).execute(workflow);
             return null;
         } else {
-            ((ManualTask)task).init(workflow, this);
+            ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
     }//doActivate()

@@ -149,7 +149,7 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
         if (task==null) {
             return new Activity[] { loop };
         } else if (task instanceof AutoTask) {
-            int result = ((AutoTask)task).execute(workflow, this);
+            int result = ((AutoTask)task).execute(workflow);
             if (result==0) {
                 //reset loopCount before leaving the loop
                 loopCount = 0;
@@ -159,7 +159,7 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
                 return new Activity[] { next };
             }
         } else {
-            ((ManualTask)task).init(workflow, this);
+            ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
     }//doActivate()

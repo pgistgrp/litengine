@@ -109,10 +109,10 @@ public class EndSwitchActivity extends Activity implements PushDownable {
         if (task==null) {
             return new Activity[] { next };
         } else if (task instanceof AutoTask) {
-            ((AutoTask)task).execute(workflow, this);
+            ((AutoTask)task).execute(workflow);
             return new Activity[] { next };
         } else {
-            ((ManualTask)task).init(workflow, this);
+            ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
     }//doActivate()

@@ -140,7 +140,7 @@ public class BranchActivity extends Activity implements BackTracable {
             return activities;
         } else if (task instanceof AutoTask) {
             //Execute Auto Task, discard the return value
-            ((AutoTask)task).execute(workflow, this);
+            ((AutoTask)task).execute(workflow);
             
             Activity[] activities = new Activity[branches.size()];
             for (int i=0; i<activities.length; i++) {
@@ -150,7 +150,7 @@ public class BranchActivity extends Activity implements BackTracable {
             return activities;
         } else {
             //Execute Manual Task, discard the return value
-            ((ManualTask)task).init(workflow, this);
+            ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
     }//doActivate()

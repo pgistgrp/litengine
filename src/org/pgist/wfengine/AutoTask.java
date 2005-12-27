@@ -11,7 +11,7 @@ package org.pgist.wfengine;
 public abstract class AutoTask extends Task {
     
     
-    abstract public int execute(Workflow workflow, Activity activity);
+    abstract public int execute(Workflow workflow);
     
     
 }//abstract class AutoTask
