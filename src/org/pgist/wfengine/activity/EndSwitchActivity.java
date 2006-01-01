@@ -105,7 +105,11 @@ public class EndSwitchActivity extends Activity implements PushDownable {
     }
     
     
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
+    }//doActivate()
+    
+    
+    protected Activity[] doExecute(Workflow workflow) {
         if (task==null) {
             return new Activity[] { next };
         } else if (task instanceof AutoTask) {
@@ -117,6 +121,17 @@ public class EndSwitchActivity extends Activity implements PushDownable {
         }
     }//doActivate()
     
+    
+    protected void doDeActivate(Workflow workflow) {
+    }//doDeActivate()
+    
+    
+    protected void deActivate(Workflow workflow) {
+        if (task!=null) {
+            workflow.getTracker().record(task);
+        }
+    }//deActivate()
+
     
     public void saveState(Session session) {
         session.save(this);

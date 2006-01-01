@@ -13,17 +13,17 @@
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <task class="org.pgist.wfengine.test.InputNameTask"/>
-      <task class="org.pgist.wfengine.test.InputNameTask"/>
+      <task class="org.pgist.wfengine.tasks.InputNameTask"/>
+      <task class="org.pgist.wfengine.tasks.InputNameTask"/>
       <branch automatic="true">
-        <pretask class="org.pgist.wfengine.test.InputNameTask"/>
+        <pretask class="org.pgist.wfengine.tasks.InputNameTask"/>
         <sequence>
-          <task class="org.pgist.wfengine.test.InputNameTask"/>
-          <task class="org.pgist.wfengine.test.InputNameTask"/>
+          <task class="org.pgist.wfengine.tasks.InputNameTask"/>
+          <task class="org.pgist.wfengine.tasks.InputNameTask"/>
         </sequence>
         <sequence>
-          <task class="org.pgist.wfengine.test.InputNameTask"/>
-          <task class="org.pgist.wfengine.test.InputNameTask"/>
+          <task class="org.pgist.wfengine.tasks.InputNameTask"/>
+          <task class="org.pgist.wfengine.tasks.InputNameTask"/>
         </sequence>
         <!--posttask name="Task_End_Select_Branch"/-->
       </branch>

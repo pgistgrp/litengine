@@ -52,9 +52,12 @@ public class TerminateActivity extends Activity implements BackTracable {
     }
 
 
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
+    }//doActivate()
+    
+    
+    protected Activity[] doExecute(Workflow workflow) {
         //Terminate Activity have to be handled differently
-        count++;
         if (task==null) {
             return null;
         } else if (task instanceof AutoTask) {
@@ -64,7 +67,11 @@ public class TerminateActivity extends Activity implements BackTracable {
             ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
-    }//doActivate()
+    }//doExecute()
+    
+    
+    protected void doDeActivate(Workflow workflow) {
+    }//doDeActivate()
     
     
     public void saveState(Session session) {

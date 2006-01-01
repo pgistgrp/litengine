@@ -138,6 +138,7 @@ public class WorkflowEngine {
         WorkflowTracker tracker = new WorkflowTracker();
         workflow.setTracker(tracker);
         tracker.setWorkflow(workflow);
+        
         WorkflowEnvironment env = new WorkflowEnvironment();
         workflow.setEnv(env);
         env.setWorkflow(workflow);

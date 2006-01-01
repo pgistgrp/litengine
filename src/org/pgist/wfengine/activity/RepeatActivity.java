@@ -144,19 +144,26 @@ public class RepeatActivity extends Activity implements BackTracable, PushDownab
     }
     
     
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
+    }//doActivate()
+    
+    
+    protected Activity[] doExecute(Workflow workflow) {
         if (task==null) {
-            loopCount++;
             return new Activity[] { next };
         } else if (task instanceof AutoTask) {
             ((AutoTask)task).execute(workflow);
-            loopCount++;
             return new Activity[] { next };
         } else {
             ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
-    }//doActivate()
+    }//doExecute()
+    
+    
+    protected void doDeActivate(Workflow workflow) {
+        loopCount++;
+    }//doDeActivate()
     
     
     public void saveState(Session session) {

@@ -130,14 +130,16 @@ public class UntilActivity extends Activity implements BackTracable, PushDownabl
     }
     
     
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
+    }//doActivate()
+    
+    
+    protected Activity[] doExecute(Workflow workflow) {
         if (task==null) {//infinite loop
             return new Activity[] { repeat };
         } else if (task instanceof AutoTask) {
             int result = ((AutoTask)task).execute(workflow);
             if (result==0) {
-                //reset loopCount before leaving the loop
-                loopCount = 0;
                 return new Activity[] { next };
             } else {
                 return new Activity[] { repeat };
@@ -146,7 +148,13 @@ public class UntilActivity extends Activity implements BackTracable, PushDownabl
             ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
-    }//doActivate()
+    }//doExecute()
+    
+    
+    protected void doDeActivate(Workflow workflow) {
+        //reset loopCount before leaving the loop
+        repeat.setLoopCount(0);
+    }//doDeActivate()
     
     
     public void saveState(Session session) {

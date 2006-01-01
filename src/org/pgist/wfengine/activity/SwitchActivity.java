@@ -159,7 +159,12 @@ public class SwitchActivity extends Activity implements BackTracable {
     }
     
     
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
+        expression = -1;
+    }//doActivate()
+    
+    
+    protected Activity[] doExecute(Workflow workflow) {
         if (task==null) {
             //judge by expression
             if (expression<0) expression = 0;
@@ -176,7 +181,11 @@ public class SwitchActivity extends Activity implements BackTracable {
             ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
-    }//doActivate()
+    }//doExecute()
+    
+    
+    protected void doDeActivate(Workflow workflow) {
+    }//doDeActivate()
     
     
     public void saveState(Session session) {

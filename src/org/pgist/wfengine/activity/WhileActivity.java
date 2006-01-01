@@ -23,7 +23,7 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
     
     protected int loopCount = 0;
 
-    protected int expression;
+    protected int expression = 0;
     
     protected LoopActivity loop;
     
@@ -145,17 +145,18 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
     }
     
     
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
+    }//doActivate()
+    
+    
+    protected Activity[] doExecute(Workflow workflow) {
         if (task==null) {
             return new Activity[] { loop };
         } else if (task instanceof AutoTask) {
             int result = ((AutoTask)task).execute(workflow);
             if (result==0) {
-                //reset loopCount before leaving the loop
-                loopCount = 0;
                 return new Activity[] { loop.getNext() };
             } else {
-                loopCount++;
                 return new Activity[] { next };
             }
         } else {
@@ -163,6 +164,11 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
             return new Activity[] { this };
         }
     }//doActivate()
+    
+    
+    protected void doDeActivate(Workflow workflow) {
+        loopCount++;
+    }//doDeActivate()
     
     
     public void saveState(Session session) {

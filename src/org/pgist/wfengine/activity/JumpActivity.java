@@ -108,7 +108,11 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
     }
 
 
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
+    }//doActivate()
+    
+    
+    protected Activity[] doExecute(Workflow workflow) {
         if (task==null) {
             return new Activity[] { next };
         } else if (task instanceof AutoTask) {
@@ -123,7 +127,11 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
             ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
-    }//doActivate()
+    }//doExecute()
+    
+    
+    protected void doDeActivate(Workflow workflow) {
+    }//doDeActivate()
     
     
     public void saveState(Session session) {

@@ -1,5 +1,7 @@
 package org.pgist.wfengine;
 
+import java.util.List;
+
 
 /**
  * The trancker of a workflow instance. It records and track the trajactory of workflow running.
@@ -15,7 +17,7 @@ public class WorkflowTracker {
     
     private Workflow workflow;
     
-    private WorkflowTrackRecord root;
+    private List records;
     
     
     public WorkflowTracker() {
@@ -53,16 +55,26 @@ public class WorkflowTracker {
 
     /**
      * @return
-     * @hibernate.many-to-one column="root_id" class="org.pgist.wfengine.WorkflowTrackRecord" cascade="all"
+     * 
+     * @hibernate.list table="litwf_task" lazy="true" cascade="all"
+     * @hibernate.collection-key column="tracker_id"
+     * @hibernate.collection-index column="task_order"
+     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Task"
+     * 
      */
-    public WorkflowTrackRecord getRoot() {
-        return root;
+    public List getRecords() {
+        return records;
     }
 
 
-    public void setRoot(WorkflowTrackRecord root) {
-        this.root = root;
+    public void setRecords(List records) {
+        this.records = records;
     }
+
+
+    public void record(Task task) {
+        records.add(task);
+    }//record()
     
     
 }//class WorkflowTracker

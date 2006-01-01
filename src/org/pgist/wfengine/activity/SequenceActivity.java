@@ -85,7 +85,11 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
     }
 
     
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
+    }//doActivate()
+    
+    
+    protected Activity[] doExecute(Workflow workflow) {
         if (task==null) {
             return new Activity[] { next };
         } else if (task instanceof AutoTask) {
@@ -95,9 +99,13 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
             ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
-    }//doActivate()
-
-
+    }//doExecute()
+    
+    
+    protected void doDeActivate(Workflow workflow) {
+    }//doDeActivate()
+    
+    
     public void saveState(Session session) {
         session.save(this);
         if (next!=null) next.saveState(session);

@@ -115,7 +115,11 @@ public class LoopActivity extends Activity implements BackTracable, PushDownable
     }
 
     
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
+    }//doActivate()
+    
+    
+    protected Activity[] doExecute(Workflow workflow) {
         if (task==null) {
             return new Activity[] { whilst };
         } else if (task instanceof AutoTask) {
@@ -125,7 +129,13 @@ public class LoopActivity extends Activity implements BackTracable, PushDownable
             ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
-    }//doActivate()
+    }//doExecute()
+    
+    
+    protected void doDeActivate(Workflow workflow) {
+        //reset loopCount before leaving the loop
+        whilst.setLoopCount(0);
+    }//doDeActivate()
     
     
     public void saveState(Session session) {

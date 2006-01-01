@@ -206,15 +206,19 @@ public class Workflow implements Serializable {
         
         List waitingList = env.getWaitingList();
         
-        Stack parent = new Stack();
-        parent.push(null);
+        Stack parentStack = new Stack();
+        parentStack.push(null);
         
         while (!stack.empty()) {
-            //Pop out an activity
+            //Pop out an activity and it's parent
             Activity activity = (Activity) stack.pop();
+            Activity parent = (Activity) parentStack.pop();
             
             //Activity this activity
-            Activity[] list = activity.activate(this, (Activity) parent.pop());
+            activity.activate(this, parent);
+            
+            //Execute this activity
+            Activity[] list = activity.execute(this, parent);
             
             if (list==null || list.length==0) {
                 //This activity is executed and flow branch finished
@@ -223,16 +227,16 @@ public class Workflow implements Serializable {
                 waitingList.add(activity);
             } else {
                 //This activity is executed, and its successive activities are returned
+                
                 for (int i=0,n=list.length; i<n; i++) {
-                    parent.push(activity);
+                    parentStack.push(activity);
                     stack.push(list[i]);
                 }//for i
+                
+                //Deactivate this activity
+                activity.deActivate(this, parent);
             }
         }//while
-        
-        tracker = new WorkflowTracker();
-        tracker.setWorkflow(this);
-        tracker.setRoot(definition.getTrackRecord());
         
     }//execute()
     

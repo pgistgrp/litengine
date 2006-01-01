@@ -121,8 +121,12 @@ public class JoinActivity extends Activity implements PushDownable {
     }
 
 
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
         joinCount++;
+    }//doActivate()
+
+    
+    protected Activity[] doExecute(Workflow workflow) {
         if (joinCount<joins.size()) {
             return null;
         } else {
@@ -136,7 +140,11 @@ public class JoinActivity extends Activity implements PushDownable {
                 return new Activity[] { this };
             }
         }
-    }//doActivate()
+    }//doExecute()
+    
+    
+    protected void doDeActivate(Workflow workflow) {
+    }//doDeActivate()
     
     
     public void saveState(Session session) {

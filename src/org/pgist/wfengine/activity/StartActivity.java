@@ -53,17 +53,26 @@ public class StartActivity extends Activity implements PushDownable {
     }
 
     
-    protected Activity[] doActivate(Workflow workflow) {
+    protected void doActivate(Workflow workflow) {
+    }//doActivate()
+    
+    
+    protected Activity[] doExecute(Workflow workflow) {
         if (task==null) {
             return new Activity[] { next };
         } else if (task instanceof AutoTask) {
+            //discard the return value
             ((AutoTask)task).execute(workflow);
             return new Activity[] { next };
         } else {
             ((ManualTask)task).init(workflow);
             return new Activity[] { this };
         }
-    }//doActivate()
+    }//doExecute()
+    
+    
+    protected void doDeActivate(Workflow workflow) {
+    }//doDeActivate()
     
     
     public void saveState(Session session) {
