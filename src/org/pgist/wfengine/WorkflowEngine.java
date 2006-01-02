@@ -156,7 +156,11 @@ public class WorkflowEngine {
         terminate.setPrev((Activity) tail);
         tail.setNext(terminate);
         
-        workflow.execute();
+        try {
+            workflow.execute();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         
         return workflow;
     }//spawn()

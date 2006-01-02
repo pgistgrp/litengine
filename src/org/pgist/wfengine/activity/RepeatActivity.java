@@ -2,9 +2,7 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
@@ -37,43 +35,6 @@ public class RepeatActivity extends Activity implements BackTracable, PushDownab
     }
     
     
-    public Activity clone(Activity prev) {
-        try {
-            RepeatActivity embryo = new RepeatActivity();
-            embryo.setCaption(this.caption);
-            embryo.setUrl(this.url);
-            embryo.setPrev(prev);
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            //set the status
-            if (until!=null) {
-                embryoUntil = new UntilActivity();
-                embryoUntil.setCaption(until.getCaption());
-                embryoUntil.setUrl(until.getUrl());
-                embryo.setUntil(embryoUntil);
-                embryoUntil.setRepeat(embryo);
-            }
-            
-            if (next!=null) {
-                Activity embryoNext = next.clone(embryo);
-                embryo.setNext(embryoNext);
-            }
-            
-            //reset the status
-            embryoUntil = null;
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-    
-    public Activity probe() {
-        return until.probe();
-    }
-
-
     /**
      * @return
      * @hibernate.property not-null="true"
@@ -144,18 +105,65 @@ public class RepeatActivity extends Activity implements BackTracable, PushDownab
     }
     
     
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public Activity clone(Activity prev) {
+        try {
+            RepeatActivity embryo = new RepeatActivity();
+            embryo.setCaption(this.caption);
+            embryo.setUrl(this.url);
+            embryo.setPrev(prev);
+            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
+            
+            //set the status
+            if (until!=null) {
+                embryoUntil = new UntilActivity();
+                embryoUntil.setCaption(until.getCaption());
+                embryoUntil.setUrl(until.getUrl());
+                embryo.setUntil(embryoUntil);
+                embryoUntil.setRepeat(embryo);
+            }
+            
+            if (next!=null) {
+                Activity embryoNext = next.clone(embryo);
+                embryo.setNext(embryoNext);
+            }
+            
+            //reset the status
+            embryoUntil = null;
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
+    
+    public Activity probe() {
+        return until.probe();
+    }
+
+
     protected void doActivate(Workflow workflow) {
     }//doActivate()
     
     
-    protected Activity[] doExecute(Workflow workflow) {
+    protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             return new Activity[] { next };
-        } else if (task instanceof AutoTask) {
-            ((AutoTask)task).execute(workflow);
+        } else if (task.getType()==Task.TASK_AUTOMATIC) {
+            //Execute Auto Task, discard the return value
+            task.initialize(workflow);
+            task.execute(workflow);
+            task.finalize(workflow);
+            
             return new Activity[] { next };
         } else {
-            ((ManualTask)task).init(workflow);
+            //initialize the task
+            task.initialize(workflow);
             return new Activity[] { this };
         }
     }//doExecute()

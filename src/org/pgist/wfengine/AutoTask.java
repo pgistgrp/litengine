@@ -11,7 +11,24 @@ package org.pgist.wfengine;
 public abstract class AutoTask extends Task {
     
     
-    abstract public int execute(Workflow workflow);
+    public int getType() {
+        return TASK_AUTOMATIC;
+    }//getType()
+    
+    
+    /**
+     * @param activity
+     * @return
+     */
+    public Task clone(Activity activity) {
+        try {
+            Task result = (AutoTask) super.clone();
+            result.setActivity(activity);
+            return result;
+        } catch(Exception e) {
+            return null;
+        }
+    }//clone()
     
     
 }//abstract class AutoTask

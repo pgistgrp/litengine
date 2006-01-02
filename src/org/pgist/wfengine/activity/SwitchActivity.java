@@ -6,9 +6,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -45,45 +43,6 @@ public class SwitchActivity extends Activity implements BackTracable {
     }
     
     
-    public Activity clone(Activity prev) {
-        try {
-            SwitchActivity embryo = new SwitchActivity();
-            embryo.setCaption(this.caption);
-            embryo.setUrl(this.url);
-            embryo.setPrev(prev);
-            embryo.getSwitches().clear();
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            //set the status
-            if (endSwitchActivity!=null) {
-                embryoEndSwitch = new EndSwitchActivity();
-                embryoEndSwitch.setCaption(endSwitchActivity.getCaption());
-                embryoEndSwitch.setUrl(endSwitchActivity.getUrl());
-                embryo.setEndSwitchActivity(embryoEndSwitch);
-                embryoEndSwitch.setSwitchActivity(embryo);
-            }
-            
-            for (Iterator iter=switches.iterator(); iter.hasNext(); ) {
-                Activity branch = (Activity) iter.next();
-                BackTracable embryoBranch = (BackTracable) branch.clone(embryo);
-                embryo.getSwitches().add(embryoBranch);
-            }//for iter
-            
-            //reset the status
-            embryoEndSwitch = null;
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-    
-    
-    public Activity probe() {
-        return endSwitchActivity.probe();
-    }
-
-
     /**
      * @return
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
@@ -159,26 +118,73 @@ public class SwitchActivity extends Activity implements BackTracable {
     }
     
     
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public Activity clone(Activity prev) {
+        try {
+            SwitchActivity embryo = new SwitchActivity();
+            embryo.setCaption(this.caption);
+            embryo.setUrl(this.url);
+            embryo.setPrev(prev);
+            embryo.getSwitches().clear();
+            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
+            
+            //set the status
+            if (endSwitchActivity!=null) {
+                embryoEndSwitch = new EndSwitchActivity();
+                embryoEndSwitch.setCaption(endSwitchActivity.getCaption());
+                embryoEndSwitch.setUrl(endSwitchActivity.getUrl());
+                embryo.setEndSwitchActivity(embryoEndSwitch);
+                embryoEndSwitch.setSwitchActivity(embryo);
+            }
+            
+            for (Iterator iter=switches.iterator(); iter.hasNext(); ) {
+                Activity branch = (Activity) iter.next();
+                BackTracable embryoBranch = (BackTracable) branch.clone(embryo);
+                embryo.getSwitches().add(embryoBranch);
+            }//for iter
+            
+            //reset the status
+            embryoEndSwitch = null;
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+    
+    
+    public Activity probe() {
+        return endSwitchActivity.probe();
+    }
+
+
     protected void doActivate(Workflow workflow) {
         expression = -1;
     }//doActivate()
     
     
-    protected Activity[] doExecute(Workflow workflow) {
+    protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             //judge by expression
             if (expression<0) expression = 0;
             if (expression>=switches.size()) expression = switches.size()-1;
             return new Activity[] { (Activity) switches.get(expression) };
-        } else if (task instanceof AutoTask) {
-            //judge by result of task
-            int result = ((AutoTask)task).execute(workflow);
+        } else if (task.getType()==Task.TASK_AUTOMATIC) {
+            //Execute Auto Task
+            task.initialize(workflow);
+            int result = task.execute(workflow);
+            task.finalize(workflow);
+            
             if (result<0) result = 0;
             if (result>=switches.size()) result = switches.size()-1;
             return new Activity[] { (Activity) switches.get(result) };
         } else {
-            //manual task
-            ((ManualTask)task).init(workflow);
+            //initialize the task
+            task.initialize(workflow);
             return new Activity[] { this };
         }
     }//doExecute()

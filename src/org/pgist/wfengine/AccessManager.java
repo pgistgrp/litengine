@@ -34,6 +34,11 @@ public class AccessManager {
     }
 
     
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     /**
      * Check if the current user have the previlege
      * @param user

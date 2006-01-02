@@ -1,6 +1,7 @@
 package org.pgist.wfengine;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Stack;
@@ -33,6 +34,9 @@ public class Workflow implements Serializable {
     private WorkflowEnvironment env;
     
     //
+    private List waitingList = new ArrayList(16);
+    
+    //
     private boolean finished;
     
     //
@@ -46,6 +50,10 @@ public class Workflow implements Serializable {
     
     //
     private WorkflowTracker tracker;
+    
+    //
+    private transient Stack stack = new Stack();
+    private transient Stack parentStack = new Stack();
     
     
     public Workflow() {
@@ -129,6 +137,25 @@ public class Workflow implements Serializable {
 
 
     /**
+     * 
+     * @return
+     * 
+     * @hibernate.list table="litwf_activity" lazy="true" cascade="all"
+     * @hibernate.collection-key column="waiting_id"
+     * @hibernate.collection-index column="order_num"
+     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
+     */
+    public List getWaitingList() {
+        return waitingList;
+    }
+
+
+    public void setWaitingList(List waitingList) {
+        this.waitingList = waitingList;
+    }
+
+
+    /**
      * @return
      * 
      * @hibernate.property unique="false" not-null="true"
@@ -185,28 +212,51 @@ public class Workflow implements Serializable {
     public void setTracker(WorkflowTracker tracker) {
         this.tracker = tracker;
     }
-
-
+    
+    
+    /*
+     * -------------------------------------------------------------------
+     */
+    
+    
+    private void perform(Activity activity, Activity parent) throws Exception {
+        //Execute this activity
+        Activity[] list = activity.execute(this, parent);
+        
+        if (list==null || list.length==0) {
+            //This activity is executed and flow branch finished
+        } else if (list.length==1 && list[0]==activity) {
+            //This activity is not executed
+            waitingList.add(activity);
+            return;
+        } else {
+            //This activity is executed, and its successive activities are returned
+            
+            for (int i=0,n=list.length; i<n; i++) {
+                parentStack.push(activity);
+                stack.push(list[i]);
+            }//for i
+            
+            //Deactivate this activity
+            activity.deActivate(this, null);
+        }
+    }//perform()
+    
+    
     /**
      * Package Accessible.
      * Initially execute the workflow.
      * This method can only be execute exactly ONCE!
      */
-    synchronized void execute() {
+    void execute() throws Exception {
         //Check if this workflow already finished, cancelled or born
         if (finished || cancelled || born) return;
-        
-        Stack stack = new Stack();
         
         //Set born
         born = true;
         beginTime = new Date();
         
         stack.push(definition);
-        
-        List waitingList = env.getWaitingList();
-        
-        Stack parentStack = new Stack();
         parentStack.push(null);
         
         while (!stack.empty()) {
@@ -217,25 +267,7 @@ public class Workflow implements Serializable {
             //Activity this activity
             activity.activate(this, parent);
             
-            //Execute this activity
-            Activity[] list = activity.execute(this, parent);
-            
-            if (list==null || list.length==0) {
-                //This activity is executed and flow branch finished
-            } else if (list.length==1 && list[0]==activity) {
-                //This activity is not executed
-                waitingList.add(activity);
-            } else {
-                //This activity is executed, and its successive activities are returned
-                
-                for (int i=0,n=list.length; i<n; i++) {
-                    parentStack.push(activity);
-                    stack.push(list[i]);
-                }//for i
-                
-                //Deactivate this activity
-                activity.deActivate(this, parent);
-            }
+            perform(activity, parent);
         }//while
         
     }//execute()
@@ -245,21 +277,25 @@ public class Workflow implements Serializable {
      * Execute a specific activity, this activity have to be the active activity in the environment
      * @param activity
      */
-    synchronized public void execute(Activity activity) {
-        if (finished || cancelled) return;
-        
-        List waitingList = env.getWaitingList();
+    synchronized public void execute(Activity activity) throws Exception {
+        if (finished || cancelled || !born) return;
         
         //check if the activity is current activity in the environment
         if (!waitingList.contains(activity)) return;
         
-        Stack stack = new Stack();
         waitingList.remove(activity);
-        stack.push(activity);
+        
+        perform(activity, null);
         
         while (!stack.empty()) {
-            Activity one = (Activity) stack.pop();
-            one.activate(this, activity);//wrong
+            //Pop out an activity and it's parent
+            activity = (Activity) stack.pop();
+            Activity parent = (Activity) parentStack.pop();
+            
+            //Activity this activity
+            activity.activate(this, parent);
+            
+            perform(activity, parent);
         }//while
     }//execute()
     

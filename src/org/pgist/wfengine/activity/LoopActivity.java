@@ -2,9 +2,7 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
@@ -34,31 +32,6 @@ public class LoopActivity extends Activity implements BackTracable, PushDownable
     }
     
     
-    public Activity clone(Activity prev) {
-        try {
-            LoopActivity embryo = whilst.embryoLoop;
-            embryo.setPrev(prev);
-            
-            if (embryo.next==null && next!=null) {
-                Activity embryoNext = next.clone(embryo);
-                embryo.setNext(embryoNext);
-            }
-            
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-    
-    
-    public Activity probe() {
-        if (next==null) return this;
-        return next.probe();
-    }
-
-
     /**
      * @return
      * @hibernate.property not-null="true"
@@ -115,18 +88,53 @@ public class LoopActivity extends Activity implements BackTracable, PushDownable
     }
 
     
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public Activity clone(Activity prev) {
+        try {
+            LoopActivity embryo = whilst.embryoLoop;
+            embryo.setPrev(prev);
+            
+            if (embryo.next==null && next!=null) {
+                Activity embryoNext = next.clone(embryo);
+                embryo.setNext(embryoNext);
+            }
+            
+            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+    
+    
+    public Activity probe() {
+        if (next==null) return this;
+        return next.probe();
+    }
+
+
     protected void doActivate(Workflow workflow) {
     }//doActivate()
     
     
-    protected Activity[] doExecute(Workflow workflow) {
+    protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             return new Activity[] { whilst };
-        } else if (task instanceof AutoTask) {
-            ((AutoTask)task).execute(workflow);
+        } else if (task.getType()==Task.TASK_AUTOMATIC) {
+            //Execute Auto Task, discard the return value
+            task.initialize(workflow);
+            task.execute(workflow);
+            task.finalize(workflow);
+            
             return new Activity[] { whilst };
         } else {
-            ((ManualTask)task).init(workflow);
+            //initialize the task
+            task.initialize(workflow);
             return new Activity[] { this };
         }
     }//doExecute()

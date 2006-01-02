@@ -6,9 +6,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -127,11 +125,16 @@ public class BranchActivity extends Activity implements BackTracable {
     }
     
     
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     protected void doActivate(Workflow workflow) {
     }//doActivate()
     
     
-    protected Activity[] doExecute(Workflow workflow) {
+    protected Activity[] doExecute(Workflow workflow) throws Exception {
         //initialize branch/join pair
         joinActivity.setJoinCount(0);
         
@@ -142,9 +145,11 @@ public class BranchActivity extends Activity implements BackTracable {
             }//for i
             
             return activities;
-        } else if (task instanceof AutoTask) {
+        } else if (task.getType()==Task.TASK_AUTOMATIC) {
             //Execute Auto Task, discard the return value
-            ((AutoTask)task).execute(workflow);
+            task.initialize(workflow);
+            task.execute(workflow);
+            task.finalize(workflow);
             
             Activity[] activities = new Activity[branches.size()];
             for (int i=0; i<activities.length; i++) {
@@ -153,8 +158,8 @@ public class BranchActivity extends Activity implements BackTracable {
             
             return activities;
         } else {
-            //Execute Manual Task, discard the return value
-            ((ManualTask)task).init(workflow);
+            //initialize the task
+            task.initialize(workflow);
             return new Activity[] { this };
         }
     }//doExecute()

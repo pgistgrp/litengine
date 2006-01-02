@@ -41,19 +41,30 @@ public abstract class ManualTask extends Task {
     }
     
     
+    public int getType() {
+        return TASK_MANUAL;
+    }//getType()
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     /**
      * Package Accessible
+     * 
      * @param workflow
      * @param activity
      * @return
      * @throws Exception
      */
-    String perform(Workflow workflow, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public int execute(Workflow workflow) throws Exception {
         //Check Access Permission
         if (accessManager!=null && !accessManager.check(user)) throw new Exception("User has no access permission!");
         
-        return execute(workflow, request, response);
-    }//perform()
+        return execute(workflow, (HttpServletRequest) properties.get("request"), (HttpServletResponse) properties.get("response"));
+    }//execute()
     
     
     /**
@@ -68,32 +79,33 @@ public abstract class ManualTask extends Task {
         } catch(Exception e) {
             return null;
         }
-    }
+    }//clone()
 
     
     /**
+     * Give Task object an oppotunity to initialize itself, default implementation
+     *
+     */
+    public void initialize(Workflow workflow) {
+    }//initialize()
+    
+    
+    /**
+     * Give Task object an oppotunity to finalize itself, default implementation
+     *
+     */
+    public void finalize(Workflow workflow) {
+    }//finalize()
+
+
+    /**
      * Execute the task.
+     * 
      * @param workflow
      * @param activity
      * @return
      */
-    abstract protected String execute(Workflow workflow,  HttpServletRequest request, HttpServletResponse response);
+    abstract protected int execute(Workflow workflow,  HttpServletRequest request, HttpServletResponse response);
     
     
-    /**
-     * Give Task object an oppotunity to initialize itself
-     *
-     */
-    public void init(Workflow workflow) {
-    }
-    
-    
-    /**
-     * Give Task object an oppotunity to finalize itself
-     *
-     */
-    public void destroy(Workflow workflow) {
-    }
-
-
 }//abstract class ManualTask

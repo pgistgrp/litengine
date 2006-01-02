@@ -1,8 +1,6 @@
 package org.pgist.wfengine;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -18,8 +16,6 @@ public class WorkflowEnvironment {
     
     protected Long id = null;
 
-    private List waitingList = new ArrayList(16);
-    
     private Map values = new HashMap();
     
     private Workflow workflow;
@@ -41,25 +37,6 @@ public class WorkflowEnvironment {
     
     public void setId(Long id) {
         this.id = id;
-    }
-    
-    
-    /**
-     * 
-     * @return
-     * 
-     * @hibernate.list table="litwf_activity" lazy="true" cascade="all"
-     * @hibernate.collection-key column="env_id"
-     * @hibernate.collection-index column="order_num"
-     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
-     */
-    public List getWaitingList() {
-        return waitingList;
-    }
-    
-    
-    public void setWaitingList(List waitingList) {
-        this.waitingList = waitingList;
     }
     
     

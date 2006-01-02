@@ -2,9 +2,7 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
@@ -38,43 +36,6 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
     }
     
     
-    public Activity clone(Activity prev) {
-        try {
-            WhileActivity embryo = new WhileActivity();
-            embryo.setCaption(this.caption);
-            embryo.setUrl(this.url);
-            embryo.setPrev(prev);
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            //set the status
-            if (loop==null) {
-                embryoLoop = new LoopActivity();
-                embryoLoop.setCaption(loop.getCaption());
-                embryoLoop.setUrl(loop.getUrl());
-                embryo.setLoop(embryoLoop);
-                embryoLoop.setWhilst(embryo);
-            }
-            
-            if (next!=null) {
-                Activity embryoNext = next.clone(embryo);
-                embryo.setNext(embryoNext);
-            }
-            
-            //reset the status
-            embryoLoop = null;
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-    
-    
-    public Activity probe() {
-        return loop.probe();
-    }
-
-
     /**
      * @return
      * @hibernate.property not-null="true"
@@ -145,22 +106,69 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
     }
     
     
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public Activity clone(Activity prev) {
+        try {
+            WhileActivity embryo = new WhileActivity();
+            embryo.setCaption(this.caption);
+            embryo.setUrl(this.url);
+            embryo.setPrev(prev);
+            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
+            
+            //set the status
+            if (loop==null) {
+                embryoLoop = new LoopActivity();
+                embryoLoop.setCaption(loop.getCaption());
+                embryoLoop.setUrl(loop.getUrl());
+                embryo.setLoop(embryoLoop);
+                embryoLoop.setWhilst(embryo);
+            }
+            
+            if (next!=null) {
+                Activity embryoNext = next.clone(embryo);
+                embryo.setNext(embryoNext);
+            }
+            
+            //reset the status
+            embryoLoop = null;
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+    
+    
+    public Activity probe() {
+        return loop.probe();
+    }
+
+
     protected void doActivate(Workflow workflow) {
     }//doActivate()
     
     
-    protected Activity[] doExecute(Workflow workflow) {
+    protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             return new Activity[] { loop };
-        } else if (task instanceof AutoTask) {
-            int result = ((AutoTask)task).execute(workflow);
+        } else if (task.getType()==Task.TASK_AUTOMATIC) {
+            //Execute Auto Task
+            task.initialize(workflow);
+            int result = task.execute(workflow);
+            task.finalize(workflow);
+            
             if (result==0) {
                 return new Activity[] { loop.getNext() };
             } else {
                 return new Activity[] { next };
             }
         } else {
-            ((ManualTask)task).init(workflow);
+            //initialize the task
+            task.initialize(workflow);
             return new Activity[] { this };
         }
     }//doActivate()

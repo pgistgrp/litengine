@@ -2,9 +2,8 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.AutoTask;
 import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.ManualTask;
+import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
 
@@ -26,19 +25,6 @@ public class TerminateActivity extends Activity implements BackTracable {
     
     
     /**
-     * Clone of terminate activity need not be implemented ?????
-     */
-    public Activity clone(Activity prev) {
-        return null;
-    }
-
-
-    public Activity probe() {
-        return this;
-    }
-
-
-    /**
      * @return
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
@@ -52,19 +38,42 @@ public class TerminateActivity extends Activity implements BackTracable {
     }
 
 
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    /**
+     * Clone of terminate activity need not be implemented ?????
+     */
+    public Activity clone(Activity prev) {
+        return null;
+    }
+
+
+    public Activity probe() {
+        return this;
+    }
+
+
     protected void doActivate(Workflow workflow) {
     }//doActivate()
     
     
-    protected Activity[] doExecute(Workflow workflow) {
+    protected Activity[] doExecute(Workflow workflow) throws Exception {
         //Terminate Activity have to be handled differently
         if (task==null) {
             return null;
-        } else if (task instanceof AutoTask) {
-            ((AutoTask)task).execute(workflow);
+        } else if (task.getType()==Task.TASK_AUTOMATIC) {
+            //Execute Auto Task, discard the return value
+            task.initialize(workflow);
+            task.execute(workflow);
+            task.finalize(workflow);
+            
             return null;
         } else {
-            ((ManualTask)task).init(workflow);
+            //initialize the task
+            task.initialize(workflow);
             return new Activity[] { this };
         }
     }//doExecute()

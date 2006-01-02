@@ -21,8 +21,9 @@ public class InputNameTask extends ManualTask {
     }
     
     
-    protected String execute(Workflow workflow, HttpServletRequest request, HttpServletResponse response) {
-        return "";
+    protected int execute(Workflow workflow, HttpServletRequest request, HttpServletResponse response) {
+        
+        return 0;
     }//execute()
     
     

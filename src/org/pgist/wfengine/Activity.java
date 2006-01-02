@@ -98,6 +98,11 @@ public abstract class Activity implements Cloneable {
     }
 
 
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     /**
      * Package Accessible
      * @param workflow
@@ -115,7 +120,7 @@ public abstract class Activity implements Cloneable {
      * Package Accessible
      * @param env
      */
-    final Activity[] execute(Workflow workflow, Activity parent) {
+    final Activity[] execute(Workflow workflow, Activity parent) throws Exception {
         return doExecute(workflow);
     }//activate
     
@@ -136,7 +141,7 @@ public abstract class Activity implements Cloneable {
     
     abstract protected void doActivate(Workflow workflow);
     
-    abstract protected Activity[] doExecute(Workflow workflow);
+    abstract protected Activity[] doExecute(Workflow workflow) throws Exception;
     
     abstract protected void doDeActivate(Workflow workflow);
     

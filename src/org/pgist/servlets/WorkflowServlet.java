@@ -68,7 +68,7 @@ public class WorkflowServlet extends HttpServlet {
 
 
     private void showFlowTasks(HttpServletRequest req, HttpServletResponse resp, IWorkflowContext context) throws ServletException, java.io.IOException {
-        List list = context.getWorkflow().getEnv().getWaitingList();
+        List list = context.getWorkflow().getWaitingList();
         req.setAttribute("runningList", list);
         
         req.getRequestDispatcher("/workflow.jsp").forward(req, resp);

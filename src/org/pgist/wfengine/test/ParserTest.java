@@ -2,10 +2,16 @@ package org.pgist.wfengine.test;
 
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.WFProcess;
 import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEngine;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.orm.hibernate3.SessionHolder;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 
 /**
@@ -17,67 +23,51 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class ParserTest {
     
     
+    private ClassPathXmlApplicationContext appContext = null;
+    
+    protected SessionFactory sessionFactory = null; 
+    
+    private WorkflowEngine engine = null;
+    
+    
     /**
      * Execute the task
      */
     public static void main(String[] args) {
         ParserTest test = new ParserTest();
-        test.run();
-
-        /*
-        try {
-            Configuration cfg = new Configuration();
-            cfg.configure(new File("/home/kenny/workdir/LITEngine/src/hibernate.cfg.xml"));
-            SessionFactory sessionFactory = cfg.buildSessionFactory();
-            
-            //initialization begins here
-            
-            Session session = null;
-            try {
-                session = sessionFactory.openSession();
-                Transaction transaction = session.beginTransaction();
-                
-                File file = new File("/home/kenny/workdir/LITEngine/test/flow.xml");
-                WFDefinitionParser parser = new WFDefinitionParser(file);
-                parser.parse();
-                List processes = parser.getProcesses();
-                
-                for (int i=0, n=processes.size(); i<n; i++) {
-                    WFProcess process = (WFProcess) processes.get(i);
-                    session.save(process);
-                }//for i
-                
-                transaction.commit();
-            } catch(Exception ex) {
-                ex.printStackTrace();
-            } finally {
-                session.close();
-            }
-            
-            //initialization ends here
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        */
+        test.runInit();
+        
+        //test.runParse();
+        test.runFlow();
+        
+        test.runDestroy();
     }//main()
     
+    
+    public void runInit() {
+        appContext = new ClassPathXmlApplicationContext(
+            new String[] {
+                "/test/dataAccessContext-local.xml",
+                "/test/applicationContext.xml"
+            }
+        );
+        
+        sessionFactory = (SessionFactory) appContext.getBean("sessionFactory");
+        Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+        TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
+        
+        engine = (WorkflowEngine) appContext.getBean("litengine");
+    }//runInit()
+    
 
-    public void run() {
+    private void runDestroy() {
+        SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.unbindResource(sessionFactory);
+        SessionFactoryUtils.releaseSession(sessionHolder.getSession(), sessionFactory);
+    }//runDestroy()
+
+
+    public void runParse() {
         try {
-            ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext(
-                new String[] {
-                    "/test/dataAccessContext-local.xml",
-                    "/test/applicationContext.xml"
-                }
-            );
-            
-            String[] names = appContext.getBeanDefinitionNames();
-            for (int i=0; i<names.length; i++) {
-                System.out.println("--> "+names[i]);
-            }//for i
-            
-            //WorkflowDAO dao = (WorkflowDAO) appContext.getBean("workflowDAO");
-            WorkflowEngine engine = (WorkflowEngine) appContext.getBean("litengine");
             List processes = engine.addProcess("/home/kenny/workdir/LITEngine/test/flow.xml");
             
             WFProcess process = (WFProcess) processes.get(0);
@@ -86,7 +76,22 @@ public class ParserTest {
         } catch(Exception e) {
             e.printStackTrace();
         }
-    }//run()
+    }//runParse()
+    
+    
+    public void runFlow() {
+        try {
+            WorkflowEngine engine = (WorkflowEngine) appContext.getBean("litengine");
+            Workflow workflow = engine.getWorkflow(new Long(61));
+            
+            List activities = workflow.getWaitingList();
+            workflow.execute((Activity) (activities.get(0)));
+            
+            engine.saveWorkflow(workflow);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }//runFlow()
     
     
 }//class ParserTest

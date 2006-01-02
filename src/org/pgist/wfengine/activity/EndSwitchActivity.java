@@ -5,8 +5,6 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.AutoTask;
-import org.pgist.wfengine.ManualTask;
 import org.pgist.wfengine.PushDownable;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
@@ -34,31 +32,6 @@ public class EndSwitchActivity extends Activity implements PushDownable {
     }
     
     
-    public Activity clone(Activity prev) {
-        try {
-            EndSwitchActivity embryo = switchActivity.embryoEndSwitch;
-            embryo.getChoices().add(prev);
-            
-            if (embryo.next==null && next!=null) {
-                Activity embryoNext = next.clone(embryo);
-                embryo.setNext(embryoNext);
-            }
-            
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-
-    public Activity probe() {
-        if (next==null) return this;
-        return next.probe();
-    }
-
-
     /**
      * @return
      * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
@@ -105,18 +78,53 @@ public class EndSwitchActivity extends Activity implements PushDownable {
     }
     
     
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public Activity clone(Activity prev) {
+        try {
+            EndSwitchActivity embryo = switchActivity.embryoEndSwitch;
+            embryo.getChoices().add(prev);
+            
+            if (embryo.next==null && next!=null) {
+                Activity embryoNext = next.clone(embryo);
+                embryo.setNext(embryoNext);
+            }
+            
+            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
+            
+            return embryo;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
+
+    public Activity probe() {
+        if (next==null) return this;
+        return next.probe();
+    }
+
+
     protected void doActivate(Workflow workflow) {
     }//doActivate()
     
     
-    protected Activity[] doExecute(Workflow workflow) {
+    protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             return new Activity[] { next };
-        } else if (task instanceof AutoTask) {
-            ((AutoTask)task).execute(workflow);
+        } else if (task.getType()==Task.TASK_AUTOMATIC) {
+            //Execute Auto Task, discard the return value
+            task.initialize(workflow);
+            task.execute(workflow);
+            task.finalize(workflow);
+            
             return new Activity[] { next };
         } else {
-            ((ManualTask)task).init(workflow);
+            //initialize the task
+            task.initialize(workflow);
             return new Activity[] { this };
         }
     }//doActivate()
