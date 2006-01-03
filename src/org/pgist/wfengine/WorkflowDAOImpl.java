@@ -55,6 +55,25 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
     public void saveWorkflow(Workflow workflow) {
         getSession().saveOrUpdate(workflow);
     }//saveWorkflow()
+
+
+    private static final String hql_getProcess = "from WFProcess p where id=:id and deleted=:deleted";
+    
+    
+    public WFProcess getProcess(Long id) {
+        WFProcess process = null;
+        
+        Query query = getSession().createQuery(hql_getProcess);
+        query.setLong("id", id.longValue());
+        query.setBoolean("deleted", false);
+        
+        Iterator iter = query.iterate();
+        if (iter.hasNext()) {
+            process = (WFProcess) iter.next();
+        }
+        
+        return process;
+    }//getProcess()
     
     
 }//class WorkflowDAOImpl

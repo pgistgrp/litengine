@@ -127,34 +127,36 @@ public class JoinActivity extends Activity implements PushDownable {
     protected void doActivate(Workflow workflow) {
         joinCount++;
     }//doActivate()
-
+    
     
     protected Activity[] doExecute(Workflow workflow) throws Exception {
-        if (joinCount<joins.size()) {
-            return null;
-        } else {
+        if (joinCount>=joins.size()) { 
             if (task==null) {
-                return new Activity[] { next };
+                expression = 1;
             } else if (task.getType()==Task.TASK_AUTOMATIC) {
-                //Execute Auto Task, discard the return value
-                task.initialize(workflow);
                 task.execute(workflow);
-                task.finalize(workflow);
-                
-                return new Activity[] { next };
-            } else {
-                //initialize the task
-                task.initialize(workflow);
-                return new Activity[] { this };
+                expression = 1;
             }
+        }
+        
+        if (expression>0) {//task is finished
+            return new Activity[] { next };
+        } else {
+            return new Activity[] { this };
         }
     }//doExecute()
     
     
-    protected void doDeActivate(Workflow workflow) {
-    }//doDeActivate()
+    public void proceed() throws Exception {
+        expression = 1;
+    }//proceed()
     
     
+    protected void proceed(int decision) throws Exception {
+        expression = 1;
+    }//proceed()
+
+
     public void saveState(Session session) {
         session.save(this);
         if (next!=null) next.saveState(session);

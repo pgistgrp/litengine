@@ -27,7 +27,8 @@ public class WorkflowTracker {
     /**
      * @return
      * 
-     * @hibernate.id generator-class="native"
+     * @hibernate.id generator-class="foreign"
+     * @hibernate.generator-param name="property" value="workflow"
      */
     public Long getId() {
         return id;
@@ -41,7 +42,7 @@ public class WorkflowTracker {
 
     /**
      * @return
-     * @hibernate.many-to-one column="workflow_id" cascade="all" class="org.pgist.wfengine.Workflow"
+     * @hibernate.one-to-one name="workflow" cascade="all" class="org.pgist.wfengine.Workflow"
      */
     public Workflow getWorkflow() {
         return workflow;
@@ -72,6 +73,11 @@ public class WorkflowTracker {
     }
 
 
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     public void record(Task task) {
         records.add(task);
     }//record()

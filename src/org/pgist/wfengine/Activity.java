@@ -25,6 +25,8 @@ public abstract class Activity implements Cloneable {
     
     protected int count = 0;
     
+    protected int expression = 0;
+    
     protected Task task;
     
     
@@ -86,6 +88,20 @@ public abstract class Activity implements Cloneable {
 
     /**
      * @return
+     * @hibernate.property not-null="true"
+     */
+    public int getExpression() {
+        return expression;
+    }
+
+
+    public void setExpression(int expression) {
+        this.expression = expression;
+    }
+
+
+    /**
+     * @return
      * @hibernate.many-to-one column="task_id" class="org.pgist.wfengine.Task" cascade="all"
      */
     public Task getTask() {
@@ -109,8 +125,14 @@ public abstract class Activity implements Cloneable {
      * @param parent
      */
     final void activate(Workflow workflow, Activity parent) {
-        //Increase Count. That means the total visiting count for this activity.
+        //Increase Count. That means the total visiting times for this activity.
         count++;
+        
+        //expression==0 means for manual task, the task is waiting for performing
+        expression = 0;
+        
+        //initialize the task
+        if (task!=null) task.initialize(workflow);
         
         doActivate(workflow);
     }//activate
@@ -130,6 +152,8 @@ public abstract class Activity implements Cloneable {
      * @param env
      */
     final void deActivate(Workflow workflow, Activity parent) {
+        if (task!=null) task.finalize(workflow);
+        
         doDeActivate(workflow);
         
         //Track the task
@@ -139,12 +163,27 @@ public abstract class Activity implements Cloneable {
     }//activate
     
     
-    abstract protected void doActivate(Workflow workflow);
+    /**
+     * default implementation
+     * @param workflow
+     */
+    protected void doActivate(Workflow workflow) {
+    }//doActivate()
+    
+    
+    /**
+     * default implementation
+     * @param workflow
+     */
+    protected void doDeActivate(Workflow workflow) {
+    }//doDeActivate()
+    
     
     abstract protected Activity[] doExecute(Workflow workflow) throws Exception;
     
-    abstract protected void doDeActivate(Workflow workflow);
+    abstract protected void proceed() throws Exception;
     
+    abstract protected void proceed(int decision) throws Exception;
     
     abstract public void saveState(Session session);
     

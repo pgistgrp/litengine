@@ -22,6 +22,8 @@ public class WFProcess {
     
     protected PushDownable tail;
     
+    protected boolean deleted;
+    
     
     /**
      * @return
@@ -103,6 +105,20 @@ public class WFProcess {
     }
     
     
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+
     public LinearTasks spawn() {
         BackTracable newHead = null;
         PushDownable newTail = null;

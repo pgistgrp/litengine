@@ -70,6 +70,11 @@ public class WFDefinitionParser {
     }//getGlobalEnv()
 
 
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     public void parse() throws Exception {
         Element root = document.getRootElement();
         parseWorkflow(root);

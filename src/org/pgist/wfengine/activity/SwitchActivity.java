@@ -26,8 +26,6 @@ import org.pgist.wfengine.Workflow;
 public class SwitchActivity extends Activity implements BackTracable {
     
     
-    protected int expression = -1;
-    
     protected EndSwitchActivity endSwitchActivity;
     
     protected List switches = new ArrayList();
@@ -71,20 +69,6 @@ public class SwitchActivity extends Activity implements BackTracable {
     }
 
 
-    /**
-     * @return
-     * @hibernate.property unique="false" not-null="true"
-     */
-    public int getExpression() {
-        return expression;
-    }
-    
-    
-    public void setExpression(int expression) {
-        this.expression = expression;
-    }
-    
-    
     /**
      * @return
      * 
@@ -162,38 +146,34 @@ public class SwitchActivity extends Activity implements BackTracable {
     }
 
 
-    protected void doActivate(Workflow workflow) {
-        expression = -1;
-    }//doActivate()
-    
-    
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
-            //judge by expression
-            if (expression<0) expression = 0;
-            if (expression>=switches.size()) expression = switches.size()-1;
-            return new Activity[] { (Activity) switches.get(expression) };
+            expression = 1;
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            //Execute Auto Task
-            task.initialize(workflow);
-            int result = task.execute(workflow);
-            task.finalize(workflow);
-            
-            if (result<0) result = 0;
-            if (result>=switches.size()) result = switches.size()-1;
-            return new Activity[] { (Activity) switches.get(result) };
-        } else {
-            //initialize the task
-            task.initialize(workflow);
+            task.execute(workflow);
+        }
+        
+        if (expression<0) expression = 0;
+        if (expression>switches.size()) expression = switches.size();
+        
+        if (expression==0) {
             return new Activity[] { this };
+        } else {
+            return new Activity[] { (Activity) switches.get(expression-1) };
         }
     }//doExecute()
     
     
-    protected void doDeActivate(Workflow workflow) {
-    }//doDeActivate()
+    public void proceed() throws Exception {
+        expression = 1;
+    }//proceed()
     
     
+    protected void proceed(int decision) throws Exception {
+        expression = decision;
+    }//proceed()
+
+
     public void saveState(Session session) {
         session.saveOrUpdate(this);
         for (int i=0, n=switches.size(); i<n; i++) {

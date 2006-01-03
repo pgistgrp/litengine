@@ -20,6 +20,8 @@ public interface WorkflowDAO {
     void saveProcess(WFProcess process);
 
     void saveWorkflow(Workflow workflow);
+
+    WFProcess getProcess(Long id);
     
     
 }//interface WorkflowDAO

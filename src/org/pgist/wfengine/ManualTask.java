@@ -59,11 +59,11 @@ public abstract class ManualTask extends Task {
      * @return
      * @throws Exception
      */
-    public int execute(Workflow workflow) throws Exception {
+    public void execute(Workflow workflow) throws Exception {
         //Check Access Permission
         if (accessManager!=null && !accessManager.check(user)) throw new Exception("User has no access permission!");
         
-        return execute(workflow, (HttpServletRequest) properties.get("request"), (HttpServletResponse) properties.get("response"));
+        execute(workflow, (HttpServletRequest) properties.get("request"), (HttpServletResponse) properties.get("response"));
     }//execute()
     
     
@@ -74,6 +74,7 @@ public abstract class ManualTask extends Task {
     public Task clone(Activity activity) {
         try {
             Task result = (ManualTask) super.clone();
+            result.setId(null);
             result.setActivity(activity);
             return result;
         } catch(Exception e) {
@@ -105,7 +106,7 @@ public abstract class ManualTask extends Task {
      * @param activity
      * @return
      */
-    abstract protected int execute(Workflow workflow,  HttpServletRequest request, HttpServletResponse response);
+    abstract protected void execute(Workflow workflow,  HttpServletRequest request, HttpServletResponse response);
     
     
 }//abstract class ManualTask

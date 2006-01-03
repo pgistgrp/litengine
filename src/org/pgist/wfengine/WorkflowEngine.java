@@ -128,6 +128,11 @@ public class WorkflowEngine {
     }//addProcess()
     
     
+    public WFProcess getProcess(Long id)throws Exception {
+        return workflowDAO.getProcess(id);
+    }//getProcess()
+    
+    
     /**
      * Spawn from the given process, generate a new workflow instance
      * @param process
@@ -135,6 +140,7 @@ public class WorkflowEngine {
      */
     public Workflow spawn(WFProcess process) {
         Workflow workflow = new Workflow();
+        
         WorkflowTracker tracker = new WorkflowTracker();
         workflow.setTracker(tracker);
         tracker.setWorkflow(workflow);

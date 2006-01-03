@@ -38,7 +38,8 @@ public class ParserTest {
         test.runInit();
         
         //test.runParse();
-        test.runFlow();
+        test.runSpawn();
+        //test.runFlow();
         
         test.runDestroy();
     }//main()
@@ -72,6 +73,7 @@ public class ParserTest {
             
             WFProcess process = (WFProcess) processes.get(0);
             Workflow workflow = engine.spawn(process);
+            
             engine.saveWorkflow(workflow);
         } catch(Exception e) {
             e.printStackTrace();
@@ -79,13 +81,24 @@ public class ParserTest {
     }//runParse()
     
     
+    private void runSpawn() {
+        try {
+            WFProcess process = engine.getProcess(new Long(1));
+            Workflow workflow = engine.spawn(process);
+            engine.saveWorkflow(workflow);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }//runSpawn()
+
+
     public void runFlow() {
         try {
             WorkflowEngine engine = (WorkflowEngine) appContext.getBean("litengine");
-            Workflow workflow = engine.getWorkflow(new Long(61));
+            Workflow workflow = engine.getWorkflow(new Long(17));
             
             List activities = workflow.getWaitingList();
-            workflow.execute((Activity) (activities.get(0)));
+            workflow.proceed((Activity) (activities.get(0)));
             
             engine.saveWorkflow(workflow);
         } catch(Exception e) {

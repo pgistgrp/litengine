@@ -130,43 +130,38 @@ public class BranchActivity extends Activity implements BackTracable {
      */
     
     
-    protected void doActivate(Workflow workflow) {
-    }//doActivate()
-    
-    
     protected Activity[] doExecute(Workflow workflow) throws Exception {
-        //initialize branch/join pair
-        joinActivity.setJoinCount(0);
-        
         if (task==null) {
-            Activity[] activities = new Activity[branches.size()];
-            for (int i=0; i<activities.length; i++) {
-                activities[i] = (Activity) branches.get(i);
-            }//for i
-            
-            return activities;
+            expression = 1;
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            //Execute Auto Task, discard the return value
-            task.initialize(workflow);
             task.execute(workflow);
-            task.finalize(workflow);
-            
+        }
+        
+        if (expression>0) {//task is finished
             Activity[] activities = new Activity[branches.size()];
             for (int i=0; i<activities.length; i++) {
                 activities[i] = (Activity) branches.get(i);
             }//for i
+            
+            //initialize branch/join pair
+            joinActivity.setJoinCount(0);
             
             return activities;
         } else {
-            //initialize the task
-            task.initialize(workflow);
             return new Activity[] { this };
         }
     }//doExecute()
     
     
-    protected void doDeActivate(Workflow workflow) {
-    }//doDeActivate()
+    public void proceed() throws Exception {
+        expression = 1;
+    }//proceed()
+    
+    
+    protected void proceed(int decision) throws Exception {
+        //discard the decision
+        expression = 1;
+    }//proceed()
     
     
     public void saveState(Session session) {

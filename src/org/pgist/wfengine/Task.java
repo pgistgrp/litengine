@@ -95,7 +95,7 @@ public abstract class Task implements Cloneable {
      * @param activity
      * @return
      */
-    abstract public int execute(Workflow workflow) throws Exception;
+    abstract public void execute(Workflow workflow) throws Exception;
     
     
     /**

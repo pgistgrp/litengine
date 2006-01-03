@@ -277,7 +277,7 @@ public class Workflow implements Serializable {
      * Execute a specific activity, this activity have to be the active activity in the environment
      * @param activity
      */
-    synchronized public void execute(Activity activity) throws Exception {
+    synchronized public void proceed(Activity activity) throws Exception {
         if (finished || cancelled || !born) return;
         
         //check if the activity is current activity in the environment
@@ -285,6 +285,7 @@ public class Workflow implements Serializable {
         
         waitingList.remove(activity);
         
+        activity.proceed();
         perform(activity, null);
         
         while (!stack.empty()) {
@@ -297,7 +298,7 @@ public class Workflow implements Serializable {
             
             perform(activity, parent);
         }//while
-    }//execute()
+    }//proceed()
     
     
     public void saveState(Session session) {

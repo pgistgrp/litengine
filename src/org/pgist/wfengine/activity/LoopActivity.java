@@ -118,23 +118,16 @@ public class LoopActivity extends Activity implements BackTracable, PushDownable
     }
 
 
-    protected void doActivate(Workflow workflow) {
-    }//doActivate()
-    
-    
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
-            return new Activity[] { whilst };
+            expression = 1;
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            //Execute Auto Task, discard the return value
-            task.initialize(workflow);
             task.execute(workflow);
-            task.finalize(workflow);
-            
+        }
+        
+        if (expression>0) {//task is finished
             return new Activity[] { whilst };
         } else {
-            //initialize the task
-            task.initialize(workflow);
             return new Activity[] { this };
         }
     }//doExecute()
@@ -146,6 +139,17 @@ public class LoopActivity extends Activity implements BackTracable, PushDownable
     }//doDeActivate()
     
     
+    public void proceed() throws Exception {
+        expression = 1;
+    }//proceed()
+    
+    
+    protected void proceed(int decision) throws Exception {
+        //discard the decision
+        expression = 1;
+    }//proceed()
+
+
     public void saveState(Session session) {
         session.save(this);
         if (next!=null) next.saveState(session);
