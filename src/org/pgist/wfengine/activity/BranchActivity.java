@@ -32,7 +32,7 @@ public class BranchActivity extends Activity implements BackTracable {
     
     protected List branches = new ArrayList();
     
-    protected transient JoinActivity embryoJoin;
+    private transient JoinActivity embryoJoin;
     
     
     public BranchActivity() {
@@ -130,6 +130,16 @@ public class BranchActivity extends Activity implements BackTracable {
      */
     
     
+    public JoinActivity getEmbryoJoin() {
+        return embryoJoin;
+    }
+
+
+    public void setEmbryoJoin(JoinActivity embryoJoin) {
+        this.embryoJoin = embryoJoin;
+    }
+
+
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             expression = 1;

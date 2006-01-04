@@ -101,8 +101,12 @@ public class JoinActivity extends Activity implements PushDownable {
     
     public Activity clone(Activity prev) {
         try {
-            JoinActivity embryo = branchActivity.embryoJoin;
+            JoinActivity embryo = branchActivity.getEmbryoJoin();
+            System.out.println(embryo+"  :  "+prev);
+            System.out.println("1111111111111111111");
             embryo.getJoins().add(prev);
+            System.out.println("2222222222222222222");
+            System.out.println(embryo+"  :  "+prev);
             
             if (embryo.next==null && next!=null) {
                 Activity embryoNext = next.clone(embryo);
@@ -110,7 +114,7 @@ public class JoinActivity extends Activity implements PushDownable {
             }
             
             if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-
+            
             return embryo;
         } catch(Exception e) {
             return null;
@@ -125,11 +129,13 @@ public class JoinActivity extends Activity implements PushDownable {
 
 
     protected void doActivate(Workflow workflow) {
+        System.out.println(this+" ---> "+count);
         joinCount++;
     }//doActivate()
     
     
     protected Activity[] doExecute(Workflow workflow) throws Exception {
+        System.out.println(this+" ===> "+count);
         if (joinCount>=joins.size()) { 
             if (task==null) {
                 expression = 1;
@@ -137,6 +143,9 @@ public class JoinActivity extends Activity implements PushDownable {
                 task.execute(workflow);
                 expression = 1;
             }
+        } else {
+            //temporarily kill this thread
+            return new Activity[] {};
         }
         
         if (expression>0) {//task is finished

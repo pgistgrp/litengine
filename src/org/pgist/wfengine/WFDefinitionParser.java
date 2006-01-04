@@ -119,8 +119,8 @@ public class WFDefinitionParser {
         Element sequence = ele.element("sequence");
         LinearTasks tasks = parseSequence(sequence);
         
-        process.setHead(tasks.getFirst());
-        process.setTail(tasks.getLast());
+        process.setHead((Activity) (tasks.getFirst()) );
+        process.setTail((Activity) (tasks.getLast()) );
         
         return process;
     }//parseProcess()

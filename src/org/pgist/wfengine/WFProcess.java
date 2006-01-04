@@ -18,9 +18,9 @@ public class WFProcess {
 
     protected Environment env = new Environment();
     
-    protected BackTracable head;
+    protected Activity head;
     
-    protected PushDownable tail;
+    protected Activity tail;
     
     protected boolean deleted;
     
@@ -81,12 +81,12 @@ public class WFProcess {
      * @return
      * @hibernate.many-to-one column="head_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
-    public BackTracable getHead() {
-        return head;
+    public Activity getHead() {
+        return (Activity) head;
     }
 
 
-    public void setHead(BackTracable activity) {
+    public void setHead(Activity activity) {
         this.head = activity;
     }
     
@@ -95,12 +95,12 @@ public class WFProcess {
      * @return
      * @hibernate.many-to-one column="tail_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
-    public PushDownable getTail() {
-        return tail;
+    public Activity getTail() {
+        return (Activity) tail;
     }
 
 
-    public void setTail(PushDownable tail) {
+    public void setTail(Activity tail) {
         this.tail = tail;
     }
     

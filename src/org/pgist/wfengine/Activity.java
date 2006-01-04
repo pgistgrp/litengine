@@ -125,8 +125,10 @@ public abstract class Activity implements Cloneable {
      * @param parent
      */
     final void activate(Workflow workflow, Activity parent) {
+        System.out.println(this+" !!!! "+count);
         //Increase Count. That means the total visiting times for this activity.
         count++;
+        System.out.println(this+" #### "+count);
         
         //expression==0 means for manual task, the task is waiting for performing
         expression = 0;
