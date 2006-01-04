@@ -225,16 +225,14 @@ public class Workflow implements Serializable {
         
         if (list==null || list.length==0) {
             //This activity is executed and flow branch finished
-        } else if (list.length==1 && list[0]==activity) {
+        } else if (list.length==1 && list[0].getId()==activity.getId()) {
             //This activity is not executed
-            System.out.println(activity+" --> "+list[0]);
             waitingList.add(activity);
             return;
         } else {
             //This activity is executed, and its successive activities are returned
             
             for (int i=0,n=list.length; i<n; i++) {
-                System.out.println(activity+" ==> "+list[0]);
                 parentStack.push(activity);
                 stack.push(list[i]);
             }//for i

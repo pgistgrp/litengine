@@ -154,14 +154,14 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
     
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
-            expression = 1;
+            setExpression(1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
             task.execute(workflow);
         }
         
-        if (expression==0) {
+        if (getExpression()==0) {
             return new Activity[] { this };
-        } else if (expression>0) {
+        } else if (getExpression()>0) {
             return new Activity[] { next };
         } else {
             return new Activity[] { loop.getNext() };
@@ -175,12 +175,12 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
     
     
     public void proceed() throws Exception {
-        expression = 1;
+        setExpression(1);
     }//proceed()
     
     
     protected void proceed(int decision) throws Exception {
-        expression = decision;
+        setExpression(decision);
     }//proceed()
 
 

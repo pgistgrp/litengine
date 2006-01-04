@@ -118,29 +118,29 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
     
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
-            expression = -1;
+            setExpression(-1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
             task.execute(workflow);
         }
         
-        if (expression>jumps.size()) expression = jumps.size();
-        if (expression==0) {
+        if (getExpression()>jumps.size()) setExpression(jumps.size());
+        if (getExpression()==0) {
             return new Activity[] { this };
-        } else if (expression<0) {
+        } else if (getExpression()<0) {
             return new Activity[] { next };
         } else {
-            return new Activity[] { (Activity) jumps.get(expression-1) };
+            return new Activity[] { (Activity) jumps.get(getExpression()-1) };
         }
     }//doExecute()
     
     
     public void proceed() throws Exception {
-        expression = -1;
+        setExpression(-1);
     }//proceed()
     
     
     protected void proceed(int decision) throws Exception {
-        expression = decision;
+        setExpression(decision);
     }//proceed()
 
 

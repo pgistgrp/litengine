@@ -90,12 +90,12 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
 
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
-            expression = 1;
+            setExpression(1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
             task.execute(workflow);
         }
         
-        if (expression>0) {//task is finished
+        if (getExpression()>0) {//task is finished
             return new Activity[] { next };
         } else {
             return new Activity[] { this };
@@ -104,13 +104,13 @@ public class SequenceActivity extends Activity implements BackTracable, PushDown
     
     
     public void proceed() throws Exception {
-        expression = 1;
+        setExpression(1);
     }//proceed()
     
     
     protected void proceed(int decision) throws Exception {
         //discard the decision
-        expression = 1;
+        setExpression(1);
     }//proceed()
 
 

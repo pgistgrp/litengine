@@ -135,14 +135,14 @@ public class UntilActivity extends Activity implements BackTracable, PushDownabl
 
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {//infinite loop
-            expression = 1;
+            setExpression(1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
             task.execute(workflow);
         }
         
-        if (expression==0) {//task is not finished
+        if (getExpression()==0) {//task is not finished
             return new Activity[] { this };
-        } else if (expression>0) {
+        } else if (getExpression()>0) {
             return new Activity[] { next };
         } else {
             return new Activity[] { repeat };
@@ -157,12 +157,12 @@ public class UntilActivity extends Activity implements BackTracable, PushDownabl
     
     
     public void proceed() throws Exception {
-        expression = 1;
+        setExpression(1);
     }//proceed()
     
     
     protected void proceed(int decision) throws Exception {
-        expression = decision;
+        setExpression(decision);
     }//proceed()
 
 

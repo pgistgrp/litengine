@@ -142,12 +142,12 @@ public class BranchActivity extends Activity implements BackTracable {
 
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
-            expression = 1;
+            setExpression(1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
             task.execute(workflow);
         }
         
-        if (expression>0) {//task is finished
+        if (getExpression()>0) {//task is finished
             Activity[] activities = new Activity[branches.size()];
             for (int i=0; i<activities.length; i++) {
                 activities[i] = (Activity) branches.get(i);
@@ -164,13 +164,13 @@ public class BranchActivity extends Activity implements BackTracable {
     
     
     public void proceed() throws Exception {
-        expression = 1;
+        setExpression(1);
     }//proceed()
     
     
     protected void proceed(int decision) throws Exception {
         //discard the decision
-        expression = 1;
+        setExpression(1);
     }//proceed()
     
     

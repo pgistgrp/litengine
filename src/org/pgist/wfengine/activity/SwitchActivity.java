@@ -148,29 +148,29 @@ public class SwitchActivity extends Activity implements BackTracable {
 
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
-            expression = 1;
+            setExpression(1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
             task.execute(workflow);
         }
         
-        if (expression<0) expression = 0;
-        if (expression>switches.size()) expression = switches.size();
+        if (getExpression()<0) setExpression(0);
+        if (getExpression()>switches.size()) setExpression(switches.size());
         
-        if (expression==0) {
+        if (getExpression()==0) {
             return new Activity[] { this };
         } else {
-            return new Activity[] { (Activity) switches.get(expression-1) };
+            return new Activity[] { (Activity) switches.get(getExpression()-1) };
         }
     }//doExecute()
     
     
     public void proceed() throws Exception {
-        expression = 1;
+        setExpression(1);
     }//proceed()
     
     
     protected void proceed(int decision) throws Exception {
-        expression = decision;
+        setExpression(decision);
     }//proceed()
 
 

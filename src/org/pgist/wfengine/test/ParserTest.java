@@ -95,7 +95,7 @@ public class ParserTest {
     public void runFlow() {
         try {
             WorkflowEngine engine = (WorkflowEngine) appContext.getBean("litengine");
-            Workflow workflow = engine.getWorkflow(new Long(215));
+            Workflow workflow = engine.getWorkflow(new Long(305));
             
             List activities = workflow.getWaitingList();
             workflow.proceed((Activity) (activities.get(0)));
