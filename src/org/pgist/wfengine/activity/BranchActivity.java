@@ -1,12 +1,11 @@
 package org.pgist.wfengine.activity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.BackTracable;
+import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -23,7 +22,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="BranchActivity" table="litwf_activity_branch"
  * @hibernate.joined-subclass-key column="id"
  */
-public class BranchActivity extends Activity implements BackTracable {
+public class BranchActivity extends Activity implements SingleIn {
     
     
     protected Activity prev;
@@ -32,52 +31,11 @@ public class BranchActivity extends Activity implements BackTracable {
     
     protected List branches = new ArrayList();
     
-    private transient JoinActivity embryoJoin;
-    
     
     public BranchActivity() {
     }
     
     
-    public Activity clone(Activity prev) {
-        try {
-            BranchActivity embryo = new BranchActivity();
-            embryo.setCaption(this.caption);
-            embryo.setUrl(this.url);
-            embryo.setPrev(prev);
-            embryo.getBranches().clear();
-            
-            //set the status
-            if (joinActivity!=null) {
-                embryoJoin = new JoinActivity();
-                embryoJoin.setCaption(joinActivity.getCaption());
-                embryoJoin.setUrl(joinActivity.getUrl());
-                embryo.setJoinActivity(embryoJoin);
-                embryoJoin.setBranchActivity(embryo);
-                if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            }
-            
-            for (Iterator iter=branches.iterator(); iter.hasNext(); ) {
-                Activity branch = (Activity) iter.next();
-                BackTracable embryoBranch = (BackTracable) branch.clone(embryo);
-                embryo.getBranches().add(embryoBranch);
-            }//for iter
-            
-            //reset the status
-            embryoJoin = null;
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }//clone()
-
-    
-    public Activity probe() {
-        return joinActivity.probe();
-    }
-
-
     public Activity getPrev() {
         return prev;
     }
@@ -130,16 +88,6 @@ public class BranchActivity extends Activity implements BackTracable {
      */
     
     
-    public JoinActivity getEmbryoJoin() {
-        return embryoJoin;
-    }
-
-
-    public void setEmbryoJoin(JoinActivity embryoJoin) {
-        this.embryoJoin = embryoJoin;
-    }
-
-
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             setExpression(1);

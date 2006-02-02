@@ -2,8 +2,8 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.SingleIn;
+import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -16,7 +16,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="LoopActivity" table="litwf_activity_loop"
  * @hibernate.joined-subclass-key column="id"
  */
-public class LoopActivity extends Activity implements BackTracable, PushDownable {
+public class LoopActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected int expression = 0;
@@ -93,31 +93,6 @@ public class LoopActivity extends Activity implements BackTracable, PushDownable
      */
     
     
-    public Activity clone(Activity prev) {
-        try {
-            LoopActivity embryo = whilst.embryoLoop;
-            embryo.setPrev(prev);
-            
-            if (embryo.next==null && next!=null) {
-                Activity embryoNext = next.clone(embryo);
-                embryo.setNext(embryoNext);
-            }
-            
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-    
-    
-    public Activity probe() {
-        if (next==null) return this;
-        return next.probe();
-    }
-
-
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             setExpression(1);

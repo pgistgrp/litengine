@@ -2,8 +2,8 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.SingleIn;
+import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -15,7 +15,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="RepeatActivity" table="litwf_activity_repeat"
  * @hibernate.joined-subclass-key column="id"
  */
-public class RepeatActivity extends Activity implements BackTracable, PushDownable {
+public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected int loopCount = 0;
@@ -110,43 +110,6 @@ public class RepeatActivity extends Activity implements BackTracable, PushDownab
      */
     
     
-    public Activity clone(Activity prev) {
-        try {
-            RepeatActivity embryo = new RepeatActivity();
-            embryo.setCaption(this.caption);
-            embryo.setUrl(this.url);
-            embryo.setPrev(prev);
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            //set the status
-            if (until!=null) {
-                embryoUntil = new UntilActivity();
-                embryoUntil.setCaption(until.getCaption());
-                embryoUntil.setUrl(until.getUrl());
-                embryo.setUntil(embryoUntil);
-                embryoUntil.setRepeat(embryo);
-            }
-            
-            if (next!=null) {
-                Activity embryoNext = next.clone(embryo);
-                embryo.setNext(embryoNext);
-            }
-            
-            //reset the status
-            embryoUntil = null;
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-    
-    public Activity probe() {
-        return until.probe();
-    }
-
-
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             setExpression(1);

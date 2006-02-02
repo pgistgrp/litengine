@@ -2,7 +2,7 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.BackTracable;
+import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -14,7 +14,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="SequenceActivity" table="litwf_activity_terminate"
  * @hibernate.joined-subclass-key column="id"
  */
-public class TerminateActivity extends Activity implements BackTracable {
+public class TerminateActivity extends Activity implements SingleIn {
     
     
     protected Activity prev = null;
@@ -43,19 +43,6 @@ public class TerminateActivity extends Activity implements BackTracable {
      */
     
     
-    /**
-     * Clone of terminate activity need not be implemented ?????
-     */
-    public Activity clone(Activity prev) {
-        return null;
-    }
-
-
-    public Activity probe() {
-        return this;
-    }
-
-
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         //Terminate Activity have to be handled differently
         if (task==null) {
@@ -86,6 +73,6 @@ public class TerminateActivity extends Activity implements BackTracable {
     public void saveState(Session session) {
         session.save(this);
     }//saveState()
-    
-    
+
+
 }//class TerminateActivity

@@ -2,7 +2,7 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -14,7 +14,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="StartActivity" table="litwf_activity_start"
  * @hibernate.joined-subclass-key column="id"
  */
-public class StartActivity extends Activity implements PushDownable {
+public class StartActivity extends Activity implements SingleOut {
     
     
     protected Activity next;
@@ -43,20 +43,6 @@ public class StartActivity extends Activity implements PushDownable {
      */
     
     
-    /**
-     * Clone of start activity need not be implemented
-     */
-    public Activity clone(Activity prev) {
-        return null;
-    }
-    
-    
-    public Activity probe() {
-        if (next==null) return this;
-        return next.probe();
-    }
-
-
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             setExpression(1);

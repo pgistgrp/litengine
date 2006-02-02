@@ -38,8 +38,8 @@ public class ParserTest {
         test.runInit();
         
         //test.runParse();
-        //test.runSpawn();
-        test.runFlow();
+        test.runSpawn();
+        //test.runFlow();
         
         test.runDestroy();
     }//main()
@@ -60,7 +60,7 @@ public class ParserTest {
         engine = (WorkflowEngine) appContext.getBean("litengine");
     }//runInit()
     
-
+    
     private void runDestroy() {
         SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.unbindResource(sessionFactory);
         SessionFactoryUtils.releaseSession(sessionHolder.getSession(), sessionFactory);
@@ -95,7 +95,7 @@ public class ParserTest {
     public void runFlow() {
         try {
             WorkflowEngine engine = (WorkflowEngine) appContext.getBean("litengine");
-            Workflow workflow = engine.getWorkflow(new Long(305));
+            Workflow workflow = engine.getWorkflow(new Long(341));
             
             List activities = workflow.getWaitingList();
             workflow.proceed((Activity) (activities.get(0)));

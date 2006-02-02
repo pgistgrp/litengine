@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -18,7 +18,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="EndSwitchActivity" table="litwf_activity_endswitch"
  * @hibernate.joined-subclass-key column="id"
  */
-public class EndSwitchActivity extends Activity implements PushDownable {
+public class EndSwitchActivity extends Activity implements SingleOut {
     
     
     protected Activity next;
@@ -83,31 +83,6 @@ public class EndSwitchActivity extends Activity implements PushDownable {
      */
     
     
-    public Activity clone(Activity prev) {
-        try {
-            EndSwitchActivity embryo = switchActivity.embryoEndSwitch;
-            embryo.getChoices().add(prev);
-            
-            if (embryo.next==null && next!=null) {
-                Activity embryoNext = next.clone(embryo);
-                embryo.setNext(embryoNext);
-            }
-            
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-
-    public Activity probe() {
-        if (next==null) return this;
-        return next.probe();
-    }
-
-
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             setExpression(1);
@@ -144,6 +119,6 @@ public class EndSwitchActivity extends Activity implements PushDownable {
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
-    
-    
+
+
 }//class EndSwitchActivity

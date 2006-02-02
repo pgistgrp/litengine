@@ -3,8 +3,6 @@ package org.pgist.wfengine;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.pgist.model.IUser;
-
 
 /**
  * Manually running Task.
@@ -17,16 +15,9 @@ import org.pgist.model.IUser;
 public abstract class ManualTask extends Task {
     
     
-    protected IUser user;
-    
     protected AccessManager accessManager;
     
     
-    public void setUser(IUser user) {
-        this.user = user;
-    }
-
-
     /**
      * @return
      * @hibernate.many-to-one column="access_id" class="org.pgist.wfengine.AccessManager" cascade="all"
@@ -61,7 +52,7 @@ public abstract class ManualTask extends Task {
      */
     public void execute(Workflow workflow) throws Exception {
         //Check Access Permission
-        if (accessManager!=null && !accessManager.check(user)) throw new Exception("User has no access permission!");
+        //if (accessManager!=null && !accessManager.check(user)) throw new Exception("User has no access permission!");
         
         execute(workflow, (HttpServletRequest) properties.get("request"), (HttpServletResponse) properties.get("response"));
     }//execute()

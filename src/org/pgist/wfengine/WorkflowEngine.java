@@ -10,9 +10,6 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.pgist.wfengine.activity.StartActivity;
-import org.pgist.wfengine.activity.TerminateActivity;
-
 
 /**
  * The Workflow Engine.
@@ -138,7 +135,7 @@ public class WorkflowEngine {
      * @param process
      * @return
      */
-    public Workflow spawn(WFProcess process) {
+    public Workflow spawn(Template template) {
         Workflow workflow = new Workflow();
         
         WorkflowTracker tracker = new WorkflowTracker();
@@ -149,18 +146,9 @@ public class WorkflowEngine {
         workflow.setEnv(env);
         env.setWorkflow(workflow);
         
-        StartActivity start = new StartActivity();
-        workflow.setDefinition(start);
+        FlowPiece piece = template.spawn();
         
-        LinearTasks tasks = process.spawn();
-        BackTracable head = tasks.getFirst();
-        start.setNext((Activity)head);
-        head.setPrev(start);
-        
-        TerminateActivity terminate = new TerminateActivity();
-        PushDownable tail = tasks.getLast();
-        terminate.setPrev((Activity) tail);
-        tail.setNext(terminate);
+        workflow.setDefinition((Activity) piece.getHead());
         
         try {
             workflow.execute();

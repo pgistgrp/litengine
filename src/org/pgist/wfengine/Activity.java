@@ -17,10 +17,39 @@ public abstract class Activity implements Cloneable {
     
     public final static int UNDEFINED = -99999999;
     
+    public static final int TYPE_TERMINATE = 0;
+    
+    public static final int TYPE_PGAME     = 1;
+    
+    public static final int TYPE_MEETING   = 2;
+    
+    public static final int TYPE_PMETHOD   = 3;
+    
+    public static final int TYPE_BRANCH    = 4;
+    
+    public static final int TYPE_JOIN      = 5;
+    
+    public static final int TYPE_SWITCH    = 6;
+    
+    public static final int TYPE_ENDSWITCH = 7;
+    
+    public static final int TYPE_WHILE     = 8;
+    
+    public static final int TYPE_LOOP      = 9;
+    
+    public static final int TYPE_REPEAT    = 10;
+    
+    public static final int TYPE_UNTIL     = 11;
+    
+    public static final int TYPE_JUMP      = 12;
+    
+    
     protected Long id = null;
     
+    protected int type;
+    
     protected String caption = "";
-
+    
     protected String url = null;
     
     protected int count = 0;
@@ -41,6 +70,16 @@ public abstract class Activity implements Cloneable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    public int getType() {
+        return type;
+    }
+
+
+    public void setType(int type) {
+        this.type = type;
     }
 
 
@@ -188,9 +227,4 @@ public abstract class Activity implements Cloneable {
     abstract public void saveState(Session session);
     
     
-    abstract public Activity clone(Activity prev);
-    
-    abstract public Activity probe();
-    
-
 }//abstract class Activity

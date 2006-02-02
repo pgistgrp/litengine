@@ -2,8 +2,8 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.SingleIn;
+import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -16,7 +16,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="UntilActivity" table="litwf_activity_until"
  * @hibernate.joined-subclass-key column="id"
  */
-public class UntilActivity extends Activity implements BackTracable, PushDownable {
+public class UntilActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected int loopCount = 0;
@@ -109,30 +109,6 @@ public class UntilActivity extends Activity implements BackTracable, PushDownabl
      */
     
     
-    public Activity clone(Activity prev) {
-        try {
-            UntilActivity embryo = repeat.embryoUntil;
-            embryo.setPrev(prev);
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            if (embryo.next==null && next!=null) {
-                Activity embryoNext = next.clone(embryo);
-                embryo.setNext(embryoNext);
-            }
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-    
-    public Activity probe() {
-        if (next==null) return this;
-        return next.probe();
-    }
-
-
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {//infinite loop
             setExpression(1);

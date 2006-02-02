@@ -1,12 +1,11 @@
 package org.pgist.wfengine.activity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.BackTracable;
+import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -23,7 +22,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="SwitchActivity" table="litwf_activity_switch"
  * @hibernate.joined-subclass-key column="id"
  */
-public class SwitchActivity extends Activity implements BackTracable {
+public class SwitchActivity extends Activity implements SingleIn {
     
     
     protected EndSwitchActivity endSwitchActivity;
@@ -107,45 +106,6 @@ public class SwitchActivity extends Activity implements BackTracable {
      */
     
     
-    public Activity clone(Activity prev) {
-        try {
-            SwitchActivity embryo = new SwitchActivity();
-            embryo.setCaption(this.caption);
-            embryo.setUrl(this.url);
-            embryo.setPrev(prev);
-            embryo.getSwitches().clear();
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            //set the status
-            if (endSwitchActivity!=null) {
-                embryoEndSwitch = new EndSwitchActivity();
-                embryoEndSwitch.setCaption(endSwitchActivity.getCaption());
-                embryoEndSwitch.setUrl(endSwitchActivity.getUrl());
-                embryo.setEndSwitchActivity(embryoEndSwitch);
-                embryoEndSwitch.setSwitchActivity(embryo);
-            }
-            
-            for (Iterator iter=switches.iterator(); iter.hasNext(); ) {
-                Activity branch = (Activity) iter.next();
-                BackTracable embryoBranch = (BackTracable) branch.clone(embryo);
-                embryo.getSwitches().add(embryoBranch);
-            }//for iter
-            
-            //reset the status
-            embryoEndSwitch = null;
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-    
-    
-    public Activity probe() {
-        return endSwitchActivity.probe();
-    }
-
-
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (task==null) {
             setExpression(1);

@@ -1,7 +1,5 @@
 package org.pgist.wfengine;
 
-import org.pgist.model.IUser;
-
 
 /**
  * AccessManager to contraint the access to an ManualTask
@@ -44,9 +42,9 @@ public class AccessManager {
      * @param user
      * @return
      */
-    public boolean check(IUser user) {
-        return false;
-    }//check()
+    //public boolean check(IUser user) {
+    //    return false;
+    //}//check()
     
     
 }//class AccessManager

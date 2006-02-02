@@ -2,8 +2,8 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.SingleIn;
+import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -16,7 +16,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="WhileActivity" table="litwf_activity_while"
  * @hibernate.joined-subclass-key column="id"
  */
-public class WhileActivity extends Activity implements BackTracable, PushDownable {
+public class WhileActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected int loopCount = 0;
@@ -111,43 +111,6 @@ public class WhileActivity extends Activity implements BackTracable, PushDownabl
      */
     
     
-    public Activity clone(Activity prev) {
-        try {
-            WhileActivity embryo = new WhileActivity();
-            embryo.setCaption(this.caption);
-            embryo.setUrl(this.url);
-            embryo.setPrev(prev);
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            //set the status
-            if (loop==null) {
-                embryoLoop = new LoopActivity();
-                embryoLoop.setCaption(loop.getCaption());
-                embryoLoop.setUrl(loop.getUrl());
-                embryo.setLoop(embryoLoop);
-                embryoLoop.setWhilst(embryo);
-            }
-            
-            if (next!=null) {
-                Activity embryoNext = next.clone(embryo);
-                embryo.setNext(embryoNext);
-            }
-            
-            //reset the status
-            embryoLoop = null;
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-    
-    
-    public Activity probe() {
-        return loop.probe();
-    }
-
-
     protected void doActivate(Workflow workflow) {
     }//doActivate()
     

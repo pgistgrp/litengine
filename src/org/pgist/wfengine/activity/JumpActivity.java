@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.BackTracable;
-import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.SingleIn;
+import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -19,7 +19,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="JumpActivity" table="litwf_activity_jump"
  * @hibernate.joined-subclass-key column="id"
  */
-public class JumpActivity extends Activity implements BackTracable, PushDownable {
+public class JumpActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected Activity prev = null;
@@ -101,17 +101,6 @@ public class JumpActivity extends Activity implements BackTracable, PushDownable
      */
     
     
-    public Activity clone(Activity prev) {
-        return null;
-    }
-    
-
-    public Activity probe() {
-        if (next==null) return this;
-        return next.probe();
-    }
-
-
     protected void doActivate(Workflow workflow) {
     }//doActivate()
     

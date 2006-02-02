@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.PushDownable;
+import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
@@ -18,7 +18,7 @@ import org.pgist.wfengine.Workflow;
  * @hibernate.joined-subclass name="JoinActivity" table="litwf_activity_join"
  * @hibernate.joined-subclass-key column="id"
  */
-public class JoinActivity extends Activity implements PushDownable {
+public class JoinActivity extends Activity implements SingleOut {
     
     
     protected Activity next;
@@ -99,31 +99,6 @@ public class JoinActivity extends Activity implements PushDownable {
      */
     
     
-    public Activity clone(Activity prev) {
-        try {
-            JoinActivity embryo = branchActivity.getEmbryoJoin();
-            embryo.getJoins().add(prev);
-            
-            if (embryo.next==null && next!=null) {
-                Activity embryoNext = next.clone(embryo);
-                embryo.setNext(embryoNext);
-            }
-            
-            if (task!=null) embryo.setTask( (Task) task.clone(embryo) );
-            
-            return embryo;
-        } catch(Exception e) {
-            return null;
-        }
-    }
-    
-    
-    public Activity probe() {
-        if (next==null) return this;
-        return next.probe();
-    }
-
-
     protected void doActivate(Workflow workflow) {
         joinCount++;
     }//doActivate()

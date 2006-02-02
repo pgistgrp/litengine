@@ -119,7 +119,8 @@ public class WFProcess {
     }
 
 
-    public LinearTasks spawn() {
+    /*
+    public FlowPiece spawn() {
         BackTracable newHead = null;
         PushDownable newTail = null;
         
@@ -127,9 +128,10 @@ public class WFProcess {
         newHead = (BackTracable) headActivity;
         newTail = (PushDownable) headActivity.probe();
         
-        LinearTasks tasks = new LinearTasks(newHead, newTail);
+        FlowPiece tasks = new FlowPiece(newHead, newTail);
         return tasks;
     }//spawn()
+    */
 
 
 }//class WFProcess

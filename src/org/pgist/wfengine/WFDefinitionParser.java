@@ -117,18 +117,18 @@ public class WFDefinitionParser {
         
         //parse sequence
         Element sequence = ele.element("sequence");
-        LinearTasks tasks = parseSequence(sequence);
+        FlowPiece tasks = parseSequence(sequence);
         
-        process.setHead((Activity) (tasks.getFirst()) );
-        process.setTail((Activity) (tasks.getLast()) );
+        process.setHead((Activity) (tasks.getHead()) );
+        process.setTail((Activity) (tasks.getTail()) );
         
         return process;
     }//parseProcess()
     
     
-    private LinearTasks parseSequence(Element ele) throws Exception {
-        BackTracable first = null;
-        PushDownable last = null;
+    private FlowPiece parseSequence(Element ele) throws Exception {
+        SingleIn first = null;
+        SingleOut last = null;
         
         List elements = ele.elements();
         for (int i=0, n=elements.size(); i<n; i++) {
@@ -185,7 +185,7 @@ public class WFDefinitionParser {
             }
         }//for i
         
-        return new LinearTasks(first, last);
+        return new FlowPiece(first, last);
     }//parseSequence()
     
     
@@ -215,9 +215,9 @@ public class WFDefinitionParser {
         for (int i=0, n=sequences.size(); i<n; i++) {
             Element sequence = (Element) sequences.get(i);
             
-            LinearTasks tasks = parseSequence(sequence);
-            BackTracable first = tasks.getFirst();
-            PushDownable last = tasks.getLast();
+            FlowPiece tasks = parseSequence(sequence);
+            SingleIn first = tasks.getHead();
+            SingleOut last = tasks.getTail();
             
             first.setPrev(branch);
             branch.getBranches().add(first);
@@ -257,9 +257,9 @@ public class WFDefinitionParser {
         for (int i=0, n=sequences.size(); i<n; i++) {
             Element sequence = (Element) sequences.get(i);
             
-            LinearTasks tasks = parseSequence(sequence);
-            BackTracable first = tasks.getFirst();
-            PushDownable last = tasks.getLast();
+            FlowPiece tasks = parseSequence(sequence);
+            SingleIn first = tasks.getHead();
+            SingleOut last = tasks.getTail();
             
             first.setPrev(switche);
             switche.getSwitches().add(first);
@@ -297,9 +297,9 @@ public class WFDefinitionParser {
         
         Element sequence = element.element("sequence");
         
-        LinearTasks tasks = parseSequence(sequence);
-        BackTracable first = tasks.getFirst();
-        PushDownable last = tasks.getLast();
+        FlowPiece tasks = parseSequence(sequence);
+        SingleIn first = tasks.getHead();
+        SingleOut last = tasks.getTail();
         
         first.setPrev(whilst);
         whilst.setNext((Activity) first);
@@ -336,9 +336,9 @@ public class WFDefinitionParser {
         
         Element sequence = element.element("sequence");
         
-        LinearTasks tasks = parseSequence(sequence);
-        BackTracable first = tasks.getFirst();
-        PushDownable last = tasks.getLast();
+        FlowPiece tasks = parseSequence(sequence);
+        SingleIn first = tasks.getHead();
+        SingleOut last = tasks.getTail();
         
         first.setPrev(repeat);
         repeat.setNext((Activity) first);
