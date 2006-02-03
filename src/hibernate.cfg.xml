@@ -24,6 +24,7 @@
         <mapping resource="org/pgist/wfengine/WFProcess.hbm.xml"/>
         <mapping resource="org/pgist/wfengine/Task.hbm.xml"/>
         <mapping resource="org/pgist/wfengine/AccessManager.hbm.xml"/>
+        <mapping resource="org/pgist/wfengine/Template.hbm.xml"/>
         
         
     </session-factory>

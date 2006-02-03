@@ -19,6 +19,8 @@ import org.pgist.wfengine.Workflow;
 public class LoopActivity extends Activity implements SingleIn, SingleOut {
     
     
+    private static final long serialVersionUID = 6198938783718025831L;
+
     protected int expression = 0;
     
     protected WhileActivity whilst;

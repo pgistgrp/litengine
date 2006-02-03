@@ -17,6 +17,8 @@ import org.pgist.wfengine.Workflow;
 public class TerminateActivity extends Activity implements SingleIn {
     
     
+    private static final long serialVersionUID = 4089087931490531333L;
+    
     protected Activity prev = null;
     
     

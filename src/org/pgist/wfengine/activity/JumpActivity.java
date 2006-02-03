@@ -22,6 +22,8 @@ import org.pgist.wfengine.Workflow;
 public class JumpActivity extends Activity implements SingleIn, SingleOut {
     
     
+    private static final long serialVersionUID = -5876606936184585374L;
+
     protected Activity prev = null;
 
     protected Activity next;

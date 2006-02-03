@@ -16,9 +16,18 @@ import org.pgist.wfengine.Template;
  * 
  * It's possible that head activity is the same as the tail activity, that is, the group contains
  * only one activity.
+ * 
+ * @hibernate.joined-subclass name="GroupActivity" table="litwf_activity_group"
+ * @hibernate.joined-subclass-key column="id"
  */
 public abstract class GroupActivity extends Activity implements SingleIn, SingleOut {
     
+    
+    protected Long refId = null;
+    
+    private String name;
+    
+    private String description;
     
     protected Template template;
     
@@ -31,6 +40,48 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     protected Activity next;
     
     
+    /**
+     * @return
+     * @hibernate.property
+     */
+    public Long getRefId() {
+        return refId;
+    }
+
+
+    public void setRefId(Long refId) {
+        this.refId = refId;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public String getName() {
+        return name;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public String getDescription() {
+        return description;
+    }
+
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
     /**
      * @return
      * @hibernate.many-to-one column="template_id" class="org.pgist.wfengine.Template" cascade="all"

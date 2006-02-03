@@ -15,6 +15,9 @@ import org.pgist.wfengine.Workflow;
 public class MeetingActivity extends GroupActivity {
     
     
+    private static final long serialVersionUID = 1099565482436756643L;
+
+
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         // TODO Auto-generated method stub
         return null;

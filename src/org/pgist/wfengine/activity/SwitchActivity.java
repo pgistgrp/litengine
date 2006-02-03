@@ -25,6 +25,8 @@ import org.pgist.wfengine.Workflow;
 public class SwitchActivity extends Activity implements SingleIn {
     
     
+    private static final long serialVersionUID = -6212236874804391823L;
+
     protected EndSwitchActivity endSwitchActivity;
     
     protected List switches = new ArrayList();

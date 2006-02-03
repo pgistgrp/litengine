@@ -69,12 +69,12 @@ public class ParserTest {
 
     public void runParse() {
         try {
-            List processes = engine.addProcess("/home/kenny/workdir/LITEngine/test/flow.xml");
+            //List processes = engine.addProcess("/home/kenny/workdir/LITEngine/test/flow.xml");
             
-            WFProcess process = (WFProcess) processes.get(0);
-            Workflow workflow = engine.spawn(process);
+            //WFProcess process = (WFProcess) processes.get(0);
+            //Workflow workflow = engine.spawn(process);
             
-            engine.saveWorkflow(workflow);
+            //engine.saveWorkflow(workflow);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -83,9 +83,9 @@ public class ParserTest {
     
     public void runSpawn() {
         try {
-            WFProcess process = engine.getProcess(new Long(1));
-            Workflow workflow = engine.spawn(process);
-            engine.saveWorkflow(workflow);
+            //WFProcess process = engine.getProcess(new Long(1));
+            //Workflow workflow = engine.spawn(process);
+            //engine.saveWorkflow(workflow);
         } catch(Exception e) {
             e.printStackTrace();
         }

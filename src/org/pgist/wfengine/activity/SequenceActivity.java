@@ -19,6 +19,8 @@ import org.pgist.wfengine.Workflow;
 public class SequenceActivity extends Activity implements SingleIn, SingleOut {
     
     
+    private static final long serialVersionUID = -2936174093636668778L;
+
     protected Activity prev;
     
     protected Activity next;

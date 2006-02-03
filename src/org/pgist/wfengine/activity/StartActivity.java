@@ -17,6 +17,8 @@ import org.pgist.wfengine.Workflow;
 public class StartActivity extends Activity implements SingleOut {
     
     
+    private static final long serialVersionUID = -5532423374735500868L;
+    
     protected Activity next;
 
     
