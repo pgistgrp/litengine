@@ -1,5 +1,7 @@
 package org.pgist.wfengine;
 
+import java.io.Serializable;
+
 import org.hibernate.Session;
 
 
@@ -12,18 +14,18 @@ import org.hibernate.Session;
  *
  * @hibernate.class table="litwf_activity"
  */
-public abstract class Activity implements Cloneable {
+public abstract class Activity implements Serializable {
     
     
-    public final static int UNDEFINED = -99999999;
+    public final static int UNDEFINED      = -99999999;
     
-    public static final int TYPE_TERMINATE = 0;
+    public static final int TYPE_PACT      = 0;
     
     public static final int TYPE_PGAME     = 1;
     
-    public static final int TYPE_MEETING   = 2;
+    public static final int TYPE_PMETHOD   = 2;
     
-    public static final int TYPE_PMETHOD   = 3;
+    public static final int TYPE_MEETING   = 3;
     
     public static final int TYPE_BRANCH    = 4;
     
@@ -43,14 +45,12 @@ public abstract class Activity implements Cloneable {
     
     public static final int TYPE_JUMP      = 12;
     
+    public static final int TYPE_TERMINATE = 13;
+    
     
     protected Long id = null;
     
     protected int type;
-    
-    protected String caption = "";
-    
-    protected String url = null;
     
     protected int count = 0;
     
@@ -73,6 +73,10 @@ public abstract class Activity implements Cloneable {
     }
 
 
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
     public int getType() {
         return type;
     }
@@ -83,34 +87,6 @@ public abstract class Activity implements Cloneable {
     }
 
 
-    /**
-     * @return
-     * @hibernate.property not-null="true"
-     */
-    public String getCaption() {
-        return caption;
-    }
-
-
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
-
-
-    /**
-     * @return
-     * @hibernate.property
-     */
-    public String getUrl() {
-        return url;
-    }
-    
-    
-    public void setUrl(String url) {
-        this.url = url;
-    }
-    
-    
     /**
      * @return
      * @hibernate.property not-null="true"

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/template.dtd"-->
+<template>
+
+
+  <pgame refid="100000" name="BrainStorming" description="BrainStorming">
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+    <sequence>
+      <pact reference="100"/>
+      <pact reference="100"/>
+      <branch automatic="true">
+        <sequence>
+          <pact reference="200"/>
+          <pact reference="100"/>
+        </sequence>
+        <sequence>
+          <pact reference="200"/>
+          <pact reference="200"/>
+        </sequence>
+      </branch>
+    </sequence>
+  </pgame>
+  
+  
+  <pgame refid="101000" name="Voting" description="Voting">
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+    <sequence>
+      <pact reference="200"/>
+      <pact reference="100"/>
+      <branch automatic="true">
+        <sequence>
+          <pact reference="100"/>
+          <pact reference="100"/>
+        </sequence>
+        <sequence>
+          <pact reference="200"/>
+          <pact reference="200"/>
+        </sequence>
+      </branch>
+    </sequence>
+  </pgame>
+  
+  
+  <pmethod refid="200000" name="ToP" description="ToP">
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+    <sequence>
+      <pgame reference="100000"/>
+      <pgame reference="100000"/>
+      <branch automatic="true">
+        <sequence>
+          <pgame reference="101000"/>
+          <pgame reference="100000"/>
+        </sequence>
+        <sequence>
+          <pgame reference="101000"/>
+          <pgame reference="100000"/>
+        </sequence>
+      </branch>
+    </sequence>
+  </pmethod>
+  
+  
+  <pmethod refid="201000" name="Delphi" description="Delphi">
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+    <sequence>
+      <pgame reference="100000"/>
+      <pgame reference="101000"/>
+      <branch automatic="true">
+        <sequence>
+          <pgame reference="100000"/>
+          <pgame reference="101000"/>
+        </sequence>
+        <sequence>
+          <pgame reference="100000"/>
+          <pgame reference="100000"/>
+        </sequence>
+      </branch>
+    </sequence>
+  </pmethod>
+  
+  
+  <pmethod refid="202000" name="NGT" description="NGT">
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+    <sequence>
+      <pgame reference="101000"/>
+      <pgame reference="101000"/>
+      <branch automatic="true">
+        <sequence>
+          <pgame reference="100000"/>
+          <pgame reference="100000"/>
+        </sequence>
+        <sequence>
+          <pgame reference="100000"/>
+          <pgame reference="101000"/>
+        </sequence>
+      </branch>
+    </sequence>
+  </pmethod>
+  
+  
+  <meeting refid="300000" name="Meeting 1" description="Meeting 1">
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+    <sequence>
+      <pmethod reference="200000"/>
+      <pmethod reference="202000"/>
+      <branch automatic="true">
+        <sequence>
+          <pmethod reference="201000"/>
+          <pmethod reference="200000"/>
+        </sequence>
+        <sequence>
+          <pmethod reference="200000"/>
+          <pmethod reference="202000"/>
+        </sequence>
+      </branch>
+    </sequence>
+  </meeting>
+  
+  
+  <situation refid="400000" name="Dicision Situation 1" description="Dicision Situation 1">
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+    <sequence>
+      <meeting reference="300000"/>
+      <meeting reference="300000"/>
+      <branch automatic="true">
+        <sequence>
+          <meeting reference="300000"/>
+          <meeting reference="300000"/>
+        </sequence>
+        <sequence>
+          <meeting reference="300000"/>
+          <meeting reference="300000"/>
+        </sequence>
+      </branch>
+    </sequence>
+  </situation>
+  
+  
+</template>
+

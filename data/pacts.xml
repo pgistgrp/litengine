@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/pacts.dtd"-->
+<pacts>
+
+
+  <pact refid="100" name="Concern Collection" description="Concern Collection">
+    <class>org.pgist.cvo.ConcernCollection</class>
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+  </pact>
+  
+  
+  <pact refid="200" name="Voting" description="Voting">
+    <class>org.pgist.voting.BrainStorming</class>
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+  </pact>
+  
+  
+</pacts>
+

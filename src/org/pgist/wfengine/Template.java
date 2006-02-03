@@ -8,12 +8,13 @@ import java.util.Stack;
 
 import org.pgist.wfengine.activity.BranchActivity;
 import org.pgist.wfengine.activity.EndSwitchActivity;
-import org.pgist.wfengine.activity.GameActivity;
+import org.pgist.wfengine.activity.PActActivity;
+import org.pgist.wfengine.activity.PGameActivity;
 import org.pgist.wfengine.activity.JoinActivity;
 import org.pgist.wfengine.activity.JumpActivity;
 import org.pgist.wfengine.activity.LoopActivity;
 import org.pgist.wfengine.activity.MeetingActivity;
-import org.pgist.wfengine.activity.MethodActivity;
+import org.pgist.wfengine.activity.PMethodActivity;
 import org.pgist.wfengine.activity.RepeatActivity;
 import org.pgist.wfengine.activity.SwitchActivity;
 import org.pgist.wfengine.activity.TerminateActivity;
@@ -51,9 +52,11 @@ public class Template {
     
     public static final int TEMPLATE_SITUATION = 1;
     
-    public static final int TEMPLATE_MEETING = 2;
+    public static final int TEMPLATE_MEETING   = 2;
     
-    public static final int TEMPLATE_PMETHOD = 3;
+    public static final int TEMPLATE_PMETHOD   = 3;
+    
+    public static final int TEMPLATE_PGAME     = 4;
     
     
     protected Long id;
@@ -187,60 +190,66 @@ public class Template {
             if (one==null) continue;
             
             switch(one.getType()) {
-                case Activity.TYPE_TERMINATE:
-                    two = new TerminateActivity();
+                case Activity.TYPE_PACT:
+                    two = new PActActivity();
+                    stack.push( ((PActActivity) one).getNext() );
                     break;
                 case Activity.TYPE_PGAME:
-                    two = new GameActivity();
-                    stack.push( ((GameActivity) one).getNext() );
+                    two = new PGameActivity();
+                    stack.push( ((PGameActivity) one).getNext() );
                     break;
-                case Activity.TYPE_ENDSWITCH:
-                    two = new EndSwitchActivity();
-                    stack.push( ((EndSwitchActivity) one).getNext() );
-                    break;
-                case Activity.TYPE_JOIN:
-                    two = new JoinActivity();
-                    stack.push( ((JoinActivity) one).getNext() );
-                    break;
-                case Activity.TYPE_JUMP:
-                    two = new JumpActivity();
-                    stack.push( ((JumpActivity) one).getNext() );
-                    break;
-                case Activity.TYPE_LOOP:
-                    two = new LoopActivity();
-                    stack.push( ((LoopActivity) one).getNext() );
+                case Activity.TYPE_PMETHOD:
+                    two = new PMethodActivity();
+                    stack.push( ((PMethodActivity) one).getNext() );
                     break;
                 case Activity.TYPE_MEETING:
                     two = new MeetingActivity();
                     stack.push( ((MeetingActivity) one).getNext() );
                     break;
-                case Activity.TYPE_PMETHOD:
-                    two = new MethodActivity();
-                    stack.push( ((MethodActivity) one).getNext() );
-                    break;
-                case Activity.TYPE_UNTIL:
-                    two = new UntilActivity();
-                    stack.push( ((UntilActivity) one).getNext() );
-                    break;
-                case Activity.TYPE_WHILE:
-                    two = new WhileActivity();
-                    stack.push( ((WhileActivity) one).getNext() );
-                    break;
                 case Activity.TYPE_BRANCH:
                     two = new BranchActivity();
                     stack.addAll(((BranchActivity) one).getBranches());
+                    break;
+                case Activity.TYPE_JOIN:
+                    two = new JoinActivity();
+                    stack.push( ((JoinActivity) one).getNext() );
                     break;
                 case Activity.TYPE_SWITCH:
                     two = new SwitchActivity();
                     stack.addAll(((SwitchActivity) one).getSwitches());
                     break;
+                case Activity.TYPE_ENDSWITCH:
+                    two = new EndSwitchActivity();
+                    stack.push( ((EndSwitchActivity) one).getNext() );
+                    break;
+                case Activity.TYPE_WHILE:
+                    two = new WhileActivity();
+                    stack.push( ((WhileActivity) one).getNext() );
+                    break;
+                case Activity.TYPE_LOOP:
+                    two = new LoopActivity();
+                    stack.push( ((LoopActivity) one).getNext() );
+                    break;
+                case Activity.TYPE_REPEAT:
+                    two = new RepeatActivity();
+                    stack.push( ((RepeatActivity) one).getNext() );
+                    break;
+                case Activity.TYPE_UNTIL:
+                    two = new UntilActivity();
+                    stack.push( ((UntilActivity) one).getNext() );
+                    break;
+                case Activity.TYPE_JUMP:
+                    two = new JumpActivity();
+                    stack.push( ((JumpActivity) one).getNext() );
+                    break;
+                case Activity.TYPE_TERMINATE:
+                    two = new TerminateActivity();
+                    break;
             }//switch
             
-            two.setCaption(one.getCaption());
             two.setCount(0);
             two.setExpression(0);
             two.setType(one.getType());
-            two.setUrl(one.getUrl());
             
             map.put(one, two);
         }//while
@@ -266,75 +275,28 @@ public class Template {
             
             //push children on stack
             switch(one.getType()) {
-                case Activity.TYPE_TERMINATE:
-                    TerminateActivity termOne = (TerminateActivity) one;
-                    TerminateActivity termTwo = (TerminateActivity) two;
-                    termTwo.setPrev( (Activity)map.get(termOne.getPrev()) );
+                case Activity.TYPE_PACT:
+                    PActActivity pactOne = (PActActivity) one;
+                    PActActivity pactTwo = (PActActivity) two;
+                    pactTwo.setPrev( (Activity)map.get(pactOne.getPrev()) );
                     break;
                 case Activity.TYPE_PGAME:
-                    GameActivity gameOne = (GameActivity) one;
-                    GameActivity gameTwo = (GameActivity) two;
+                    PGameActivity gameOne = (PGameActivity) one;
+                    PGameActivity gameTwo = (PGameActivity) two;
                     gameTwo.setPrev( (Activity)map.get(gameOne.getPrev()) );
                     gameTwo.setNext( (Activity)map.get(gameOne.getNext()) );
                     break;
-                case Activity.TYPE_SWITCH:
-                    SwitchActivity switchOne = (SwitchActivity) one;
-                    SwitchActivity switchTwo = (SwitchActivity) two;
-                    switchTwo.setPrev( (Activity)map.get(switchOne.getPrev()) );
-                    switchTwo.setEndSwitchActivity( (EndSwitchActivity)map.get(switchOne.getEndSwitchActivity()) );
-                    list = switchOne.getSwitches();
-                    for (int i=0,n=list.size(); i<n; i++) {
-                        switchTwo.getSwitches().add( map.get(list.get(i)) );
-                    }//for i
-                    break;
-                case Activity.TYPE_JOIN:
-                    JoinActivity joinOne = (JoinActivity) one;
-                    JoinActivity joinTwo = (JoinActivity) two;
-                    joinTwo.setNext( (Activity)map.get(joinOne.getNext()) );
-                    joinTwo.setBranchActivity( (BranchActivity)map.get(joinOne.getBranchActivity()) );
-                    break;
-                case Activity.TYPE_JUMP:
-                    JumpActivity jumpOne = (JumpActivity) one;
-                    JumpActivity jumpTwo = (JumpActivity) two;
-                    jumpTwo.setPrev( (Activity)map.get(jumpOne.getPrev()) );
-                    jumpTwo.setNext( (Activity)map.get(jumpOne.getNext()) );
-                    list = jumpOne.getJumps();
-                    for (int i=0,n=list.size(); i<n; i++) {
-                        jumpTwo.getJumps().add( map.get(list.get(i)) );
-                    }//for i
-                    break;
-                case Activity.TYPE_LOOP:
-                    LoopActivity loopOne = (LoopActivity) one;
-                    LoopActivity loopTwo = (LoopActivity) two;
-                    loopTwo.setPrev( (Activity)map.get(loopOne.getPrev()) );
-                    loopTwo.setNext( (Activity)map.get(loopOne.getNext()) );
-                    loopTwo.setWhilst( (WhileActivity)map.get(loopOne.getWhilst()) );
+                case Activity.TYPE_PMETHOD:
+                    PMethodActivity methodOne = (PMethodActivity) one;
+                    PMethodActivity methodTwo = (PMethodActivity) two;
+                    methodTwo.setPrev( (Activity)map.get(methodOne.getPrev()) );
+                    methodTwo.setNext( (Activity)map.get(methodOne.getNext()) );
                     break;
                 case Activity.TYPE_MEETING:
                     MeetingActivity meetingOne = (MeetingActivity) one;
                     MeetingActivity meetingTwo = (MeetingActivity) two;
                     meetingTwo.setPrev( (Activity)map.get(meetingOne.getPrev()) );
                     meetingTwo.setNext( (Activity)map.get(meetingOne.getNext()) );
-                    break;
-                case Activity.TYPE_PMETHOD:
-                    MethodActivity methodOne = (MethodActivity) one;
-                    MethodActivity methodTwo = (MethodActivity) two;
-                    methodTwo.setPrev( (Activity)map.get(methodOne.getPrev()) );
-                    methodTwo.setNext( (Activity)map.get(methodOne.getNext()) );
-                    break;
-                case Activity.TYPE_UNTIL:
-                    UntilActivity untilOne = (UntilActivity) one;
-                    UntilActivity untilTwo = (UntilActivity) two;
-                    untilTwo.setPrev( (Activity)map.get(untilOne.getPrev()) );
-                    untilTwo.setNext( (Activity)map.get(untilOne.getNext()) );
-                    untilTwo.setRepeat( (RepeatActivity)map.get(untilOne.getRepeat()) );
-                    break;
-                case Activity.TYPE_WHILE:
-                    WhileActivity whileOne = (WhileActivity) one;
-                    WhileActivity whileTwo = (WhileActivity) two;
-                    whileTwo.setPrev( (Activity)map.get(whileOne.getPrev()) );
-                    whileTwo.setNext( (Activity)map.get(whileOne.getNext()) );
-                    whileTwo.setLoop( (LoopActivity)map.get(whileOne.getLoop()) );
                     break;
                 case Activity.TYPE_BRANCH:
                     BranchActivity branchOne = (BranchActivity) one;
@@ -346,11 +308,70 @@ public class Template {
                         branchTwo.getBranches().add( map.get(list.get(i)) );
                     }//for i
                     break;
+                case Activity.TYPE_JOIN:
+                    JoinActivity joinOne = (JoinActivity) one;
+                    JoinActivity joinTwo = (JoinActivity) two;
+                    joinTwo.setNext( (Activity)map.get(joinOne.getNext()) );
+                    joinTwo.setBranchActivity( (BranchActivity)map.get(joinOne.getBranchActivity()) );
+                    break;
+                case Activity.TYPE_SWITCH:
+                    SwitchActivity switchOne = (SwitchActivity) one;
+                    SwitchActivity switchTwo = (SwitchActivity) two;
+                    switchTwo.setPrev( (Activity)map.get(switchOne.getPrev()) );
+                    switchTwo.setEndSwitchActivity( (EndSwitchActivity)map.get(switchOne.getEndSwitchActivity()) );
+                    list = switchOne.getSwitches();
+                    for (int i=0,n=list.size(); i<n; i++) {
+                        switchTwo.getSwitches().add( map.get(list.get(i)) );
+                    }//for i
+                    break;
                 case Activity.TYPE_ENDSWITCH:
                     EndSwitchActivity endSwitchOne = (EndSwitchActivity) one;
                     EndSwitchActivity endSwitchTwo = (EndSwitchActivity) two;
                     endSwitchTwo.setNext( (Activity)map.get(endSwitchOne.getNext()) );
                     endSwitchTwo.setSwitchActivity( (SwitchActivity)map.get(endSwitchOne.getSwitchActivity()) );
+                    break;
+                case Activity.TYPE_WHILE:
+                    WhileActivity whileOne = (WhileActivity) one;
+                    WhileActivity whileTwo = (WhileActivity) two;
+                    whileTwo.setPrev( (Activity)map.get(whileOne.getPrev()) );
+                    whileTwo.setNext( (Activity)map.get(whileOne.getNext()) );
+                    whileTwo.setLoop( (LoopActivity)map.get(whileOne.getLoop()) );
+                    break;
+                case Activity.TYPE_LOOP:
+                    LoopActivity loopOne = (LoopActivity) one;
+                    LoopActivity loopTwo = (LoopActivity) two;
+                    loopTwo.setPrev( (Activity)map.get(loopOne.getPrev()) );
+                    loopTwo.setNext( (Activity)map.get(loopOne.getNext()) );
+                    loopTwo.setWhilst( (WhileActivity)map.get(loopOne.getWhilst()) );
+                    break;
+                case Activity.TYPE_REPEAT:
+                    RepeatActivity repeatOne = (RepeatActivity) one;
+                    RepeatActivity repeatTwo = (RepeatActivity) two;
+                    repeatTwo.setPrev( (Activity)map.get(repeatOne.getPrev()) );
+                    repeatTwo.setNext( (Activity)map.get(repeatOne.getNext()) );
+                    repeatTwo.setUntil( (UntilActivity)map.get(repeatOne.getUntil()) );
+                    break;
+                case Activity.TYPE_UNTIL:
+                    UntilActivity untilOne = (UntilActivity) one;
+                    UntilActivity untilTwo = (UntilActivity) two;
+                    untilTwo.setPrev( (Activity)map.get(untilOne.getPrev()) );
+                    untilTwo.setNext( (Activity)map.get(untilOne.getNext()) );
+                    untilTwo.setRepeat( (RepeatActivity)map.get(untilOne.getRepeat()) );
+                    break;
+                case Activity.TYPE_JUMP:
+                    JumpActivity jumpOne = (JumpActivity) one;
+                    JumpActivity jumpTwo = (JumpActivity) two;
+                    jumpTwo.setPrev( (Activity)map.get(jumpOne.getPrev()) );
+                    jumpTwo.setNext( (Activity)map.get(jumpOne.getNext()) );
+                    list = jumpOne.getJumps();
+                    for (int i=0,n=list.size(); i<n; i++) {
+                        jumpTwo.getJumps().add( map.get(list.get(i)) );
+                    }//for i
+                    break;
+                case Activity.TYPE_TERMINATE:
+                    TerminateActivity termOne = (TerminateActivity) one;
+                    TerminateActivity termTwo = (TerminateActivity) two;
+                    termTwo.setPrev( (Activity)map.get(termOne.getPrev()) );
                     break;
             }//switch
         }//for

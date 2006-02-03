@@ -1,10 +1,10 @@
 package org.pgist.wfengine;
 
-import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+
+import org.pgist.wfengine.activity.PActActivity;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -26,28 +26,33 @@ public class WorkflowEngine {
     
     private WorkflowDAO workflowDAO;
     
+    private TemplateParser templateParser;
+    
     
     public WorkflowEngine() {
         try {
-            CacheManager manager = CacheManager.create();
-            workflowCache = new Cache("workflow", 50, true, false, 2*3600, 20*60);
-            manager.addCache(workflowCache);
+            CacheManager manager = CacheManager.getInstance();
+            workflowCache = manager.getCache("workflow");
+            if (workflowCache==null) {
+                workflowCache = new Cache("workflow", 50, true, false, 2*3600, 20*60);
+                manager.addCache(workflowCache);
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
     
     
-    public WorkflowDAO getWorkflowDAO() {
-        return workflowDAO;
-    }
-
-
     public void setWorkflowDAO(WorkflowDAO workflowDAO) {
         this.workflowDAO = workflowDAO;
     }
     
     
+    public void setTemplateParser(TemplateParser templateParser) {
+        this.templateParser = templateParser;
+    }
+
+
     /**
      * Client programs use this method to get the workflow instance.
      * 
@@ -82,52 +87,42 @@ public class WorkflowEngine {
     
     
     /**
-     * Client programs use this method to add new definition of processes
+     * Client programs use this method to add new definition of pActs
      * 
      * @param stream
      * @return
      * @throws Exception
      */
-    public List addProcess(WFDefinitionParser parser) throws Exception{
+    public List addPActs(InputStream stream) throws Exception {
+        PActParser parser = new PActParser(stream);
         parser.parse();
-        List list = parser.getProcesses();
+        List list = parser.getPActs();
         if (list!=null && list.size()>0) {
-            for (Iterator iter=list.iterator(); iter.hasNext(); ) {
-                WFProcess process = (WFProcess) iter.next();
-                workflowDAO.saveProcess(process);
+            for (int i=0,n=list.size(); i<n; i++) {
+                PActActivity pact = (PActActivity) list.get(i);
+                if (workflowDAO.getPActActivityByRefId(pact.getRefId())!=null) throw new Exception("Another PActActivity has this refid: "+pact.getRefId());
+                workflowDAO.saveActivity(pact);
             }//for iter
         }
         return list;
-    }//addProcess()
+    }//addPActs()
     
     
-    public List addProcess(InputStream stream) throws Exception {
-        WFDefinitionParser parser = new WFDefinitionParser(stream);
-        return addProcess(parser);
-    }//addProcess()
+    /**
+     * Client programs use this method to add new definition of templates
+     * 
+     * @param stream
+     * @return
+     * @throws
+     */
+    public List addTemplates(InputStream stream) throws Exception{
+        return templateParser.parse(stream);
+    }//addTemplates()
     
     
-    public List addProcess(File file) throws Exception {
-        WFDefinitionParser parser = new WFDefinitionParser(file);
-        return addProcess(parser);
-    }//addProcess()
-
-
-    public List addProcess(URL url) throws Exception {
-        WFDefinitionParser parser = new WFDefinitionParser(url);
-        return addProcess(parser);
-    }//addProcess()
-
-
-    public List addProcess(String xml) throws Exception {
-        WFDefinitionParser parser = new WFDefinitionParser(new File(xml));
-        return addProcess(parser);
-    }//addProcess()
-    
-    
-    public WFProcess getProcess(Long id)throws Exception {
-        return workflowDAO.getProcess(id);
-    }//getProcess()
+    public Template getTemplate(Long id)throws Exception {
+        return workflowDAO.getTemplate(id);
+    }//getTemplate()
     
     
     /**
