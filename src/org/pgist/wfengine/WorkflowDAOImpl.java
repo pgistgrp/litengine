@@ -6,10 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.pgist.wfengine.activity.GroupActivity;
-import org.pgist.wfengine.activity.MeetingActivity;
 import org.pgist.wfengine.activity.PActActivity;
-import org.pgist.wfengine.activity.PGameActivity;
-import org.pgist.wfengine.activity.PMethodActivity;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 
@@ -96,33 +93,6 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
         List list = getHibernateTemplate().find(hql_getPActActivityByRefId, refId);
         return (list.size()==0) ? null : (PActActivity) list.get(0);
     }//getPActActivity()
-
-
-    private static final String hql_getPGameActivityByRefId = "from PGameActivity p where refid=?";
-    
-    
-    public PGameActivity getPGameActivityByRefId(Long refId) {
-        List list = getHibernateTemplate().find(hql_getPGameActivityByRefId, refId);
-        return (list.size()==0) ? null : (PGameActivity) list.get(0);
-    }//getPGameActivity()
-
-
-    private static final String hql_getPMethodActivityByRefId = "from PMethodActivity p where refid=?";
-    
-    
-    public PMethodActivity getPMethodActivityByRefId(Long refId) {
-        List list = getHibernateTemplate().find(hql_getPMethodActivityByRefId, refId);
-        return (list.size()==0) ? null : (PMethodActivity) list.get(0);
-    }
-    
-    
-    private static final String hql_getMeetingActivityByRefId = "from MeetingActivity p where refid=?";
-    
-    
-    public MeetingActivity getMeetingActivityByRefId(Long refId) {
-        List list = getHibernateTemplate().find(hql_getMeetingActivityByRefId, refId);
-        return (list.size()==0) ? null : (MeetingActivity) list.get(0);
-    }
 
 
     private static final String hql_getGroupActivityByRefId = "from GroupActivity g where level=? and refid=?";

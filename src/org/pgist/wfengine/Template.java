@@ -9,12 +9,10 @@ import java.util.Stack;
 import org.pgist.wfengine.activity.BranchActivity;
 import org.pgist.wfengine.activity.EndSwitchActivity;
 import org.pgist.wfengine.activity.PActActivity;
-import org.pgist.wfengine.activity.PGameActivity;
+import org.pgist.wfengine.activity.GroupActivity;
 import org.pgist.wfengine.activity.JoinActivity;
 import org.pgist.wfengine.activity.JumpActivity;
 import org.pgist.wfengine.activity.LoopActivity;
-import org.pgist.wfengine.activity.MeetingActivity;
-import org.pgist.wfengine.activity.PMethodActivity;
 import org.pgist.wfengine.activity.RepeatActivity;
 import org.pgist.wfengine.activity.SwitchActivity;
 import org.pgist.wfengine.activity.TerminateActivity;
@@ -38,25 +36,34 @@ import org.pgist.wfengine.activity.WhileActivity;
  * The generated piece of workflow instance will has the exact structure as the template, and
  * can be run by the workflow engine.
  * 
- * There're three types of template:
- *   TEMPLATE_SITUATION - Dicision Situation flow
- *   TEMPLATE_MEETING   - Meeting flow
- *   TEMPLATE_PMETHOD   - Participatory Method flow
+ * There're four types of template:
+ *   TYPE_SITUATION - Dicision Situation flow
+ *   TYPE_MEETING   - Meeting flow
+ *   TYPE_PMETHOD   - Participatory Method flow
+ *   TYPE_PGAME     - Participatory Game flow
  *   
- * TEMPLATE_PMETHOD is the smallest unit of template.
+ * TYPE_PGAME is the smallest unit of template.
+ * 
+ * Use the method spawn() to generate a new flow instance of the template. The spawning algorithm
+ * is a two pass process:
+ * 
+ *    (1) Traverse the template graph, and replicate each activities, the spawned activities are 
+ *        saved in a HashMap with the original activities as the keys.
+ *        
+ *    (2) Weave the spawned activities to a flow graph.
  *
  * @hibernate.class table="litwf_templates"
  */
 public class Template {
     
     
-    public static final int TEMPLATE_SITUATION = 1;
+    public static final int TYPE_SITUATION = 1;
     
-    public static final int TEMPLATE_MEETING   = 2;
+    public static final int TYPE_MEETING   = 2;
     
-    public static final int TEMPLATE_PMETHOD   = 3;
+    public static final int TYPE_PMETHOD   = 3;
     
-    public static final int TEMPLATE_PGAME     = 4;
+    public static final int TYPE_PGAME     = 4;
     
     
     protected Long id;
@@ -185,26 +192,25 @@ public class Template {
         Activity one = null;
         Activity two = null;
         
+        //traverse the flow
         while (!stack.empty()) {
             one = (Activity) stack.pop();
             if (one==null) continue;
             
+            //push children on stack
             switch(one.getType()) {
                 case Activity.TYPE_PACT:
                     two = new PActActivity();
                     stack.push( ((PActActivity) one).getNext() );
                     break;
                 case Activity.TYPE_PGAME:
-                    two = new PGameActivity();
-                    stack.push( ((PGameActivity) one).getNext() );
-                    break;
                 case Activity.TYPE_PMETHOD:
-                    two = new PMethodActivity();
-                    stack.push( ((PMethodActivity) one).getNext() );
-                    break;
                 case Activity.TYPE_MEETING:
-                    two = new MeetingActivity();
-                    stack.push( ((MeetingActivity) one).getNext() );
+                    GroupActivity realOne = (GroupActivity) one;
+                    GroupActivity realTwo = new GroupActivity(realOne.getLevel());
+                    two = realTwo;
+                    realTwo.setTemplate(realOne.getTemplate());
+                    stack.push( realOne.getNext() );
                     break;
                 case Activity.TYPE_BRANCH:
                     two = new BranchActivity();
@@ -267,13 +273,12 @@ public class Template {
         
         List list = null;
         
-        //2nd pass, process previous/next activities
+        //2nd pass, weave the spawned activities
         for (Iterator iter=map.entrySet().iterator(); iter.hasNext(); ) {
             Map.Entry entry = (Map.Entry) iter.next();
             Activity one = (Activity) entry.getKey();
             Activity two = (Activity) entry.getValue();
             
-            //push children on stack
             switch(one.getType()) {
                 case Activity.TYPE_PACT:
                     PActActivity pactOne = (PActActivity) one;
@@ -281,22 +286,12 @@ public class Template {
                     pactTwo.setPrev( (Activity)map.get(pactOne.getPrev()) );
                     break;
                 case Activity.TYPE_PGAME:
-                    PGameActivity gameOne = (PGameActivity) one;
-                    PGameActivity gameTwo = (PGameActivity) two;
-                    gameTwo.setPrev( (Activity)map.get(gameOne.getPrev()) );
-                    gameTwo.setNext( (Activity)map.get(gameOne.getNext()) );
-                    break;
                 case Activity.TYPE_PMETHOD:
-                    PMethodActivity methodOne = (PMethodActivity) one;
-                    PMethodActivity methodTwo = (PMethodActivity) two;
-                    methodTwo.setPrev( (Activity)map.get(methodOne.getPrev()) );
-                    methodTwo.setNext( (Activity)map.get(methodOne.getNext()) );
-                    break;
                 case Activity.TYPE_MEETING:
-                    MeetingActivity meetingOne = (MeetingActivity) one;
-                    MeetingActivity meetingTwo = (MeetingActivity) two;
-                    meetingTwo.setPrev( (Activity)map.get(meetingOne.getPrev()) );
-                    meetingTwo.setNext( (Activity)map.get(meetingOne.getNext()) );
+                    GroupActivity groupOne = (GroupActivity) one;
+                    GroupActivity groupTwo = (GroupActivity) two;
+                    groupTwo.setPrev( (Activity)map.get(groupOne.getPrev()) );
+                    groupTwo.setNext( (Activity)map.get(groupOne.getNext()) );
                     break;
                 case Activity.TYPE_BRANCH:
                     BranchActivity branchOne = (BranchActivity) one;

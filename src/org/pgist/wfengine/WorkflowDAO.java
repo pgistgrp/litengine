@@ -2,10 +2,7 @@ package org.pgist.wfengine;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.activity.GroupActivity;
-import org.pgist.wfengine.activity.MeetingActivity;
 import org.pgist.wfengine.activity.PActActivity;
-import org.pgist.wfengine.activity.PGameActivity;
-import org.pgist.wfengine.activity.PMethodActivity;
 
 
 
@@ -32,12 +29,6 @@ public interface WorkflowDAO {
     
     PActActivity getPActActivityByRefId(Long refId);
     
-    PGameActivity getPGameActivityByRefId(Long refId);
-
-    PMethodActivity getPMethodActivityByRefId(Long refId);
-
-    MeetingActivity getMeetingActivityByRefId(Long refId);
-
     GroupActivity getGroupActivityByRefId(Long level, Long refId);
     
     

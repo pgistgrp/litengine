@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.WFProcess;
 import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEngine;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

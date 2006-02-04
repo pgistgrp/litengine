@@ -64,7 +64,7 @@ public class TemplateParser {
             template.setDeleted(false);
             template.setName(element.attribute("name").getStringValue());
             template.setDescription(element.attribute("description").getStringValue());
-            template.setType(Template.TEMPLATE_PGAME);
+            template.setType(Template.TYPE_PGAME);
             
             Element sequence = (Element) element.element("sequence");
             if (sequence==null) return templates;
@@ -125,7 +125,7 @@ public class TemplateParser {
             template.setDeleted(false);
             template.setName(element.attribute("name").getStringValue());
             template.setDescription(element.attribute("description").getStringValue());
-            template.setType(Template.TEMPLATE_PMETHOD);
+            template.setType(Template.TYPE_PMETHOD);
             
             Element sequence = (Element) element.element("sequence");
             if (sequence==null) return templates;
@@ -187,7 +187,7 @@ public class TemplateParser {
             template.setDeleted(false);
             template.setName(element.attribute("name").getStringValue());
             template.setDescription(element.attribute("description").getStringValue());
-            template.setType(Template.TEMPLATE_PMETHOD);
+            template.setType(Template.TYPE_PMETHOD);
             
             Element sequence = (Element) element.element("sequence");
             if (sequence==null) return templates;
@@ -249,7 +249,7 @@ public class TemplateParser {
             template.setDeleted(false);
             template.setName(element.attribute("name").getStringValue());
             template.setDescription(element.attribute("description").getStringValue());
-            template.setType(Template.TEMPLATE_PMETHOD);
+            template.setType(Template.TYPE_PMETHOD);
             
             Element sequence = (Element) element.element("sequence");
             if (sequence==null) return templates;
