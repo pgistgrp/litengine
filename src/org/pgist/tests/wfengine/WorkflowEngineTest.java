@@ -75,7 +75,7 @@ public class WorkflowEngineTest extends TestCase {
         String filePath = "data/templates.xml";
         try {
             List list = engine.addTemplates(new FileInputStream(filePath));
-            assertEquals(7, list.size());
+            assertEquals(8, list.size());
         } catch(Exception e) {
             e.printStackTrace();
         }

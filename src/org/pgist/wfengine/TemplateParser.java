@@ -187,7 +187,7 @@ public class TemplateParser {
             template.setDeleted(false);
             template.setName(element.attribute("name").getStringValue());
             template.setDescription(element.attribute("description").getStringValue());
-            template.setType(Template.TYPE_PMETHOD);
+            template.setType(Template.TYPE_MEETING);
             
             Element sequence = (Element) element.element("sequence");
             if (sequence==null) return templates;
@@ -249,7 +249,7 @@ public class TemplateParser {
             template.setDeleted(false);
             template.setName(element.attribute("name").getStringValue());
             template.setDescription(element.attribute("description").getStringValue());
-            template.setType(Template.TYPE_PMETHOD);
+            template.setType(Template.TYPE_SITUATION);
             
             Element sequence = (Element) element.element("sequence");
             if (sequence==null) return templates;

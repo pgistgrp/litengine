@@ -129,20 +129,41 @@
   </meeting>
   
   
+  <meeting refid="301000" name="Meeting 2" description="Meeting 2">
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+    <sequence>
+      <pmethod reference="200000"/>
+      <pmethod reference="202000"/>
+      <branch automatic="true">
+        <sequence>
+          <pmethod reference="201000"/>
+          <pmethod reference="200000"/>
+        </sequence>
+        <sequence>
+          <pmethod reference="200000"/>
+          <pmethod reference="202000"/>
+        </sequence>
+      </branch>
+    </sequence>
+  </meeting>
+  
+  
   <situation refid="400000" name="Dicision Situation 1" description="Dicision Situation 1">
     <environment>
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
       <meeting reference="300000"/>
-      <meeting reference="300000"/>
+      <meeting reference="301000"/>
       <branch automatic="true">
         <sequence>
           <meeting reference="300000"/>
-          <meeting reference="300000"/>
+          <meeting reference="301000"/>
         </sequence>
         <sequence>
-          <meeting reference="300000"/>
+          <meeting reference="301000"/>
           <meeting reference="300000"/>
         </sequence>
       </branch>
