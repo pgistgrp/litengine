@@ -7,10 +7,8 @@ import java.util.List;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.pgist.wfengine.activity.MeetingActivity;
+import org.pgist.wfengine.activity.GroupActivity;
 import org.pgist.wfengine.activity.PActActivity;
-import org.pgist.wfengine.activity.PGameActivity;
-import org.pgist.wfengine.activity.PMethodActivity;
 
 
 /**
@@ -57,6 +55,11 @@ public class TemplateParser {
         List elements = root.elements("pgame");
         for (int i=0, n=elements.size(); i<n; i++) {
             Element element = (Element) elements.get(i);
+            
+            Long refId = new Long(element.attribute("refid").getStringValue());
+            if (workflowDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_PGAME), refId)!=null)
+                throw new Exception("Another GroupActivity (pgame) has this refid: "+refId);
+            
             Template template = new Template();
             template.setDeleted(false);
             template.setName(element.attribute("name").getStringValue());
@@ -95,13 +98,13 @@ public class TemplateParser {
             
             workflowDAO.saveTemplate(template);
             
-            PGameActivity game = new PGameActivity();
+            GroupActivity game = new GroupActivity(GroupActivity.LEVEL_PGAME);
             game.setTemplate(template);
             game.setCount(0);
             game.setExpression(0);
             game.setDescription(template.getDescription());
             game.setName(template.getName());
-            game.setRefId(new Long(element.attribute("refid").getStringValue()));
+            game.setRefId(refId);
             game.setTask(null);
             
             workflowDAO.saveActivity(game);
@@ -113,6 +116,11 @@ public class TemplateParser {
         elements = root.elements("pmethod");
         for (int i=0, n=elements.size(); i<n; i++) {
             Element element = (Element) elements.get(i);
+            
+            Long refId = new Long(element.attribute("refid").getStringValue());
+            if (workflowDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_PMETHOD), refId)!=null)
+                throw new Exception("Another GroupActivity (pmethod) has this refid: "+refId);
+            
             Template template = new Template();
             template.setDeleted(false);
             template.setName(element.attribute("name").getStringValue());
@@ -128,10 +136,10 @@ public class TemplateParser {
                     if (!"pgame".equalsIgnoreCase(name)) throw new Exception("element pmethod can not contain element "+name+" !");
                     
                     Long id = new Long(element.attribute("reference").getStringValue());
-                    PGameActivity ref = workflowDAO.getPGameActivityByRefId(id);
-                    if (ref==null) throw new Exception("PGameActivity referenced by refid "+id+" not found!");
+                    GroupActivity ref = workflowDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_PGAME), id);
+                    if (ref==null) throw new Exception("GroupActivity (pgame) referenced by refid "+id+" not found!");
                     
-                    PGameActivity activity = new PGameActivity();
+                    GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_PGAME);
                     activity.setCount(0);
                     activity.setExpression(0);
                     activity.setPrev(parent);
@@ -152,13 +160,13 @@ public class TemplateParser {
             
             workflowDAO.saveTemplate(template);
             
-            PMethodActivity method = new PMethodActivity();
+            GroupActivity method = new GroupActivity(GroupActivity.LEVEL_PMETHOD);
             method.setTemplate(template);
             method.setCount(0);
             method.setExpression(0);
             method.setDescription(template.getDescription());
             method.setName(template.getName());
-            method.setRefId(new Long(element.attribute("refid").getStringValue()));
+            method.setRefId(refId);
             method.setTask(null);
             
             workflowDAO.saveActivity(method);
@@ -170,6 +178,11 @@ public class TemplateParser {
         elements = root.elements("meeting");
         for (int i=0, n=elements.size(); i<n; i++) {
             Element element = (Element) elements.get(i);
+            
+            Long refId = new Long(element.attribute("refid").getStringValue());
+            if (workflowDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_MEETING), refId)!=null)
+                throw new Exception("Another GroupActivity (meeting) has this refid: "+refId);
+            
             Template template = new Template();
             template.setDeleted(false);
             template.setName(element.attribute("name").getStringValue());
@@ -185,10 +198,10 @@ public class TemplateParser {
                     if (!"pmethod".equalsIgnoreCase(name)) throw new Exception("element meeting can not contain element "+name+" !");
                     
                     Long id = new Long(element.attribute("reference").getStringValue());
-                    PMethodActivity ref = workflowDAO.getPMethodActivityByRefId(id);
-                    if (ref==null) throw new Exception("PMethodActivity referenced by refid "+id+" not found!");
+                    GroupActivity ref = workflowDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_PMETHOD), id);
+                    if (ref==null) throw new Exception("GroupActivity (pmethod) referenced by refid "+id+" not found!");
                     
-                    PMethodActivity activity = new PMethodActivity();
+                    GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_PMETHOD);
                     activity.setCount(0);
                     activity.setExpression(0);
                     activity.setPrev(parent);
@@ -209,13 +222,13 @@ public class TemplateParser {
             
             workflowDAO.saveTemplate(template);
             
-            MeetingActivity meeting = new MeetingActivity();
+            GroupActivity meeting = new GroupActivity(GroupActivity.LEVEL_MEETING);
             meeting.setTemplate(template);
             meeting.setCount(0);
             meeting.setExpression(0);
             meeting.setDescription(template.getDescription());
             meeting.setName(template.getName());
-            meeting.setRefId(new Long(element.attribute("refid").getStringValue()));
+            meeting.setRefId(refId);
             meeting.setTask(null);
             
             workflowDAO.saveActivity(meeting);
@@ -223,11 +236,15 @@ public class TemplateParser {
             templates.add(template);
         }//for i
         
-        /*
         //parse situation
         elements = root.elements("situation");
         for (int i=0, n=elements.size(); i<n; i++) {
             Element element = (Element) elements.get(i);
+            
+            Long refId = new Long(element.attribute("refid").getStringValue());
+            if (workflowDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_SITUATION), refId)!=null)
+                throw new Exception("Another GroupActivity (situation) has this refid: "+refId);
+            
             Template template = new Template();
             template.setDeleted(false);
             template.setName(element.attribute("name").getStringValue());
@@ -243,10 +260,10 @@ public class TemplateParser {
                     if (!"meeting".equalsIgnoreCase(name)) throw new Exception("element situation can not contain element "+name+" !");
                     
                     Long id = new Long(element.attribute("reference").getStringValue());
-                    MeetingActivity ref = workflowDAO.getMeetingActivityByRefId(id);
-                    if (ref==null) throw new Exception("MeetingActivity referenced by refid "+id+" not found!");
+                    GroupActivity ref = workflowDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_MEETING), id);
+                    if (ref==null) throw new Exception("GroupActivity (meeting) referenced by refid "+id+" not found!");
                     
-                    MeetingActivity activity = new MeetingActivity();
+                    GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_MEETING);
                     activity.setCount(0);
                     activity.setExpression(0);
                     activity.setPrev(parent);
@@ -267,20 +284,19 @@ public class TemplateParser {
             
             workflowDAO.saveTemplate(template);
             
-            SituationActivity meeting = new SituationActivity();
-            meeting.setTemplate(template);
-            meeting.setCount(0);
-            meeting.setExpression(0);
-            meeting.setDescription(template.getDescription());
-            meeting.setName(template.getName());
-            meeting.setRefId(new Long(element.attribute("refid").getStringValue()));
-            meeting.setTask(null);
+            GroupActivity situation = new GroupActivity(GroupActivity.LEVEL_SITUATION);
+            situation.setTemplate(template);
+            situation.setCount(0);
+            situation.setExpression(0);
+            situation.setDescription(template.getDescription());
+            situation.setName(template.getName());
+            situation.setRefId(refId);
+            situation.setTask(null);
             
-            workflowDAO.saveActivity(meeting);
+            workflowDAO.saveActivity(situation);
             
             templates.add(template);
         }//for i
-        */
         
         return templates;
     }//parseTemplates()

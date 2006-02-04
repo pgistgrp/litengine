@@ -10,8 +10,8 @@ import org.pgist.wfengine.Workflow;
  * 
  * @author kenny
  *
- * @hibernate.joined-subclass name="PGameActivity" table="litwf_activity_pgame"
- * @hibernate.joined-subclass-key column="id"
+ * hibernate.joined-subclass name="PGameActivity" table="litwf_activity_pgame"
+ * hibernate.joined-subclass-key column="id"
  */
 public class PGameActivity extends GroupActivity {
     

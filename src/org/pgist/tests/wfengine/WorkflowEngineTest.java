@@ -14,6 +14,12 @@ import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.orm.hibernate3.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+
+/**
+ * 
+ * @author kenny
+ *
+ */
 public class WorkflowEngineTest extends TestCase {
     
     
@@ -69,7 +75,7 @@ public class WorkflowEngineTest extends TestCase {
         String filePath = "data/templates.xml";
         try {
             List list = engine.addTemplates(new FileInputStream(filePath));
-            assertEquals(6, list.size());
+            assertEquals(7, list.size());
         } catch(Exception e) {
             e.printStackTrace();
         }

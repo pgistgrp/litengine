@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.pgist.wfengine.activity.GroupActivity;
 import org.pgist.wfengine.activity.MeetingActivity;
 import org.pgist.wfengine.activity.PActActivity;
 import org.pgist.wfengine.activity.PGameActivity;
@@ -122,6 +123,15 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
         List list = getHibernateTemplate().find(hql_getMeetingActivityByRefId, refId);
         return (list.size()==0) ? null : (MeetingActivity) list.get(0);
     }
+
+
+    private static final String hql_getGroupActivityByRefId = "from GroupActivity g where level=? and refid=?";
+    
+    
+    public GroupActivity getGroupActivityByRefId(Long level, Long refId) {
+        List list = getHibernateTemplate().find(hql_getGroupActivityByRefId, new Object[] {level, refId});
+        return (list.size()==0) ? null : (GroupActivity) list.get(0);
+    }//getGroupActivityByRefId()
     
     
 }//class WorkflowDAOImpl

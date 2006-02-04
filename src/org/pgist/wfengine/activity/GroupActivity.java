@@ -1,9 +1,11 @@
 package org.pgist.wfengine.activity;
 
+import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Template;
+import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -20,14 +22,28 @@ import org.pgist.wfengine.Template;
  * @hibernate.joined-subclass name="GroupActivity" table="litwf_activity_group"
  * @hibernate.joined-subclass-key column="id"
  */
-public abstract class GroupActivity extends Activity implements SingleIn, SingleOut {
+public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
+    
+    private static final long serialVersionUID = -6374034565784447958L;
+    
+    public static final int LEVEL_UNKNOWN   = 0;
+    
+    public static final int LEVEL_SITUATION = 1;
+    
+    public static final int LEVEL_MEETING   = 2;
+    
+    public static final int LEVEL_PMETHOD   = 3;
+    
+    public static final int LEVEL_PGAME     = 4;
     
     protected Long refId = null;
     
-    private String name;
+    protected int level = LEVEL_UNKNOWN;
     
-    private String description;
+    protected String name;
+    
+    protected String description;
     
     protected Template template;
     
@@ -38,6 +54,14 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     protected Activity prev;
     
     protected Activity next;
+    
+    
+    public GroupActivity() {}
+    
+    
+    public GroupActivity(int level) {
+        this.level = level;
+    }
     
     
     /**
@@ -51,6 +75,20 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
 
     public void setRefId(Long refId) {
         this.refId = refId;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public int getLevel() {
+        return level;
+    }
+
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
 
@@ -149,6 +187,35 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
 
     public void setPrev(Activity prev) {
         this.prev = prev;
+    }
+
+
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    protected Activity[] doExecute(Workflow workflow) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    protected void proceed() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    protected void proceed(int decision) throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    public void saveState(Session session) {
+        // TODO Auto-generated method stub
+        
     }
     
     

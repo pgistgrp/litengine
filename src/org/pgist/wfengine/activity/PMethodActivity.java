@@ -9,8 +9,8 @@ import org.pgist.wfengine.Workflow;
  * 
  * @author kenny
  *
- * @hibernate.joined-subclass name="PMethodActivity" table="litwf_activity_pmethod"
- * @hibernate.joined-subclass-key column="id"
+ * hibernate.joined-subclass name="PMethodActivity" table="litwf_activity_pmethod"
+ * hibernate.joined-subclass-key column="id"
  */
 public class PMethodActivity extends GroupActivity {
     
