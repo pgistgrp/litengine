@@ -30,7 +30,6 @@
                <value>org/pgist/wfengine/WorkflowTracker.hbm.xml</value>
                <value>org/pgist/wfengine/WorkflowTrackRecord.hbm.xml</value>
                <value>org/pgist/wfengine/Activity.hbm.xml</value>
-               <value>org/pgist/wfengine/WFProcess.hbm.xml</value>
                <value>org/pgist/wfengine/Task.hbm.xml</value>
                <value>org/pgist/wfengine/AccessManager.hbm.xml</value>
                <value>org/pgist/wfengine/Template.hbm.xml</value>

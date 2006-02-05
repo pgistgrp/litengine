@@ -308,6 +308,9 @@ public class Template {
                     JoinActivity joinTwo = (JoinActivity) two;
                     joinTwo.setNext( (Activity)map.get(joinOne.getNext()) );
                     joinTwo.setBranchActivity( (BranchActivity)map.get(joinOne.getBranchActivity()) );
+                    for (Iterator iter1=joinOne.getJoins().iterator(); iter1.hasNext(); ) {
+                        joinTwo.getJoins().add( map.get(iter1.next()) );
+                    }//for iter
                     break;
                 case Activity.TYPE_SWITCH:
                     SwitchActivity switchOne = (SwitchActivity) one;
@@ -324,6 +327,9 @@ public class Template {
                     EndSwitchActivity endSwitchTwo = (EndSwitchActivity) two;
                     endSwitchTwo.setNext( (Activity)map.get(endSwitchOne.getNext()) );
                     endSwitchTwo.setSwitchActivity( (SwitchActivity)map.get(endSwitchOne.getSwitchActivity()) );
+                    for (Iterator iter1=endSwitchOne.getChoices().iterator(); iter1.hasNext(); ) {
+                        endSwitchTwo.getChoices().add( map.get(iter1.next()) );
+                    }//for iter
                     break;
                 case Activity.TYPE_WHILE:
                     WhileActivity whileOne = (WhileActivity) one;
