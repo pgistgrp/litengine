@@ -16,6 +16,7 @@ import org.pgist.wfengine.Workflow;
  * @author kenny
  *
  * @hibernate.joined-subclass name="EndSwitchActivity" table="litwf_activity_endswitch"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.EndSwitchActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class EndSwitchActivity extends Activity implements SingleOut {

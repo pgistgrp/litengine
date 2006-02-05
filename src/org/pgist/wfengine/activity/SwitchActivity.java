@@ -20,6 +20,7 @@ import org.pgist.wfengine.Workflow;
  * @author kenny
  *
  * @hibernate.joined-subclass name="SwitchActivity" table="litwf_activity_switch"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.SwitchActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class SwitchActivity extends Activity implements SingleIn {
@@ -31,11 +32,9 @@ public class SwitchActivity extends Activity implements SingleIn {
     
     protected List switches = new ArrayList();
     
-    protected Activity others = null;
+    protected Activity other = null;
     
     protected Activity prev = null;
-    
-    protected transient EndSwitchActivity embryoEndSwitch;
     
     
     public SwitchActivity() {
@@ -93,13 +92,13 @@ public class SwitchActivity extends Activity implements SingleIn {
      * @return
      * @hibernate.many-to-one column="other_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
-    public Activity getOthers() {
-        return others;
+    public Activity getOther() {
+        return other;
     }
     
     
-    public void setOthers(Activity others) {
-        this.others = others;
+    public void setOther(Activity other) {
+        this.other = other;
     }
     
     
@@ -142,7 +141,7 @@ public class SwitchActivity extends Activity implements SingleIn {
             Activity one = (Activity) switches.get(i);
             one.saveState(session);
         }//for i
-        if (others!=null) others.saveState(session);
+        if (other!=null) other.saveState(session);
     }//saveState()
 
 

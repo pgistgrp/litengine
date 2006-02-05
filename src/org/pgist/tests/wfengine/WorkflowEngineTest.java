@@ -7,6 +7,10 @@ import junit.framework.TestCase;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.FlowPiece;
+import org.pgist.wfengine.Template;
+import org.pgist.wfengine.WorkflowDAO;
 import org.pgist.wfengine.WorkflowEngine;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -29,6 +33,8 @@ public class WorkflowEngineTest extends TestCase {
     
     private WorkflowEngine engine = null;
     
+    private WorkflowDAO workflowDAO = null;
+    
     
     protected void setUp() throws Exception {
         super.setUp();
@@ -44,6 +50,7 @@ public class WorkflowEngineTest extends TestCase {
         TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
         
         engine = (WorkflowEngine) appContext.getBean("litengine");
+        workflowDAO = (WorkflowDAO) appContext.getBean("workflowDAO");
     }//setUp()
     
     
@@ -86,8 +93,17 @@ public class WorkflowEngineTest extends TestCase {
      * Test method for 'org.pgist.wfengine.WorkflowEngine.getTemplate(Long)'
      */
     public void testGetTemplate() {
-        
-    }
+        try {
+            Template template = engine.getTemplate(new Long(3));
+            assertNotNull(template);
+            FlowPiece piece = template.spawn();
+            workflowDAO.saveActivity((Activity) piece.getHead());
+            System.out.println("Head ---> "+ ((Activity)piece.getHead()).getId());
+            System.out.println("Tail ---> "+ ((Activity)piece.getTail()).getId());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }//testGetTemplate()
     
     
 }

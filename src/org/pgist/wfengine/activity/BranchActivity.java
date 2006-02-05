@@ -20,6 +20,7 @@ import org.pgist.wfengine.Workflow;
  * @author kenny
  *
  * @hibernate.joined-subclass name="BranchActivity" table="litwf_activity_branch"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.BranchActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class BranchActivity extends Activity implements SingleIn {

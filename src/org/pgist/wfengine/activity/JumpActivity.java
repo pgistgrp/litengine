@@ -17,6 +17,7 @@ import org.pgist.wfengine.Workflow;
  * @author kenny
  *
  * @hibernate.joined-subclass name="JumpActivity" table="litwf_activity_jump"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.JumpActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class JumpActivity extends Activity implements SingleIn, SingleOut {

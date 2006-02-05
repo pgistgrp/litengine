@@ -14,6 +14,7 @@ import org.pgist.wfengine.Workflow;
  * @author kenny
  *
  * @hibernate.joined-subclass name="UntilActivity" table="litwf_activity_until"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.UntilActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class UntilActivity extends Activity implements SingleIn, SingleOut {

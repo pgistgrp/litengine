@@ -13,6 +13,7 @@ import org.pgist.wfengine.Workflow;
  * @author kenny
  *
  * @hibernate.joined-subclass name="RepeatActivity" table="litwf_activity_repeat"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.RepeatActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class RepeatActivity extends Activity implements SingleIn, SingleOut {

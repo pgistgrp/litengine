@@ -45,14 +45,14 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
     
     public Session getHibernateSession() {
         return getSession();
-    }//getSession()
+    }//getHibernateSession()
 
 
     public void saveTemplate(Template template) {
         //check if another template has the same refid
         //TODO
-        getSession().save(template);
-    }//saveProcess()
+        getSession().saveOrUpdate(template);
+    }//saveTemplate()
 
 
     public void saveWorkflow(Workflow workflow) {
@@ -82,7 +82,7 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
     public void saveActivity(Activity activity) {
         //check if another activity has the same refid
         //TODO
-        getSession().save(activity);
+        getSession().saveOrUpdate(activity);
     }//saveActivity()
 
 

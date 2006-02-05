@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.FlowPiece;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Template;
@@ -20,6 +21,7 @@ import org.pgist.wfengine.Workflow;
  * only one activity.
  * 
  * @hibernate.joined-subclass name="GroupActivity" table="litwf_activity_group"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.GroupActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class GroupActivity extends Activity implements SingleIn, SingleOut {
@@ -196,27 +198,36 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected Activity[] doExecute(Workflow workflow) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        if (template!=null && headActivity==null) {
+            FlowPiece piece = template.spawn();
+            headActivity = (Activity) piece.getHead();
+            tailActivity = (Activity) piece.getTail();
+        } else {
+            
+        }
+        if (getExpression()>0) {//task is finished
+            return new Activity[] { next };
+        } else {
+            return new Activity[] { this };
+        }
+    }//doExecute()
 
 
     protected void proceed() throws Exception {
-        // TODO Auto-generated method stub
-        
-    }
+        setExpression(1);
+    }//proceed()
 
 
     protected void proceed(int decision) throws Exception {
-        // TODO Auto-generated method stub
-        
-    }
+        //discard the decision
+        setExpression(1);
+    }//proceed()
 
 
     public void saveState(Session session) {
-        // TODO Auto-generated method stub
-        
-    }
+        session.save(this);
+        if (next!=null) next.saveState(session);
+    }//saveState()
     
     
 }//class GroupActivity

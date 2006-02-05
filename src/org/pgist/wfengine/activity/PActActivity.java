@@ -14,13 +14,14 @@ import org.pgist.wfengine.Workflow;
  * @author kenny
  *
  * @hibernate.joined-subclass name="PActActivity" table="litwf_activity_pact"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.PActActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class PActActivity extends Activity implements SingleIn, SingleOut {
     
     
     private static final long serialVersionUID = 3222935387069104483L;
-
+    
     protected Long refId = null;
     
     protected String name = null;

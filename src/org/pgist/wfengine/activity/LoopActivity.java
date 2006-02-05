@@ -14,6 +14,7 @@ import org.pgist.wfengine.Workflow;
  * @author kenny
  *
  * @hibernate.joined-subclass name="LoopActivity" table="litwf_activity_loop"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.LoopActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class LoopActivity extends Activity implements SingleIn, SingleOut {

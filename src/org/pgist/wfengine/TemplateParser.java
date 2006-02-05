@@ -9,6 +9,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.pgist.wfengine.activity.GroupActivity;
 import org.pgist.wfengine.activity.PActActivity;
+import org.pgist.wfengine.activity.ReturnActivity;
 
 
 /**
@@ -92,11 +93,13 @@ public class TemplateParser {
             });
             
             FlowPiece piece = parser.parse(sequence);
+            SingleOut tail = piece.getTail();
+            ReturnActivity returnActivity = new ReturnActivity();
+            returnActivity.setPrev((Activity) tail);
+            tail.setNext(returnActivity);
             
             template.setHead((Activity) piece.getHead());
-            template.setTail((Activity) piece.getTail());
-            
-            workflowDAO.saveTemplate(template);
+            template.setTail(returnActivity);
             
             GroupActivity game = new GroupActivity(GroupActivity.LEVEL_PGAME);
             game.setTemplate(template);
@@ -107,6 +110,9 @@ public class TemplateParser {
             game.setRefId(refId);
             game.setTask(null);
             
+            returnActivity.setGroup(game);
+            
+            workflowDAO.saveTemplate(template);
             workflowDAO.saveActivity(game);
             
             templates.add(template);
@@ -154,11 +160,13 @@ public class TemplateParser {
             });
             
             FlowPiece piece = parser.parse(sequence);
+            SingleOut tail = piece.getTail();
+            ReturnActivity returnActivity = new ReturnActivity();
+            returnActivity.setPrev((Activity) tail);
+            tail.setNext(returnActivity);
             
             template.setHead((Activity) piece.getHead());
-            template.setTail((Activity) piece.getTail());
-            
-            workflowDAO.saveTemplate(template);
+            template.setTail(returnActivity);
             
             GroupActivity method = new GroupActivity(GroupActivity.LEVEL_PMETHOD);
             method.setTemplate(template);
@@ -169,6 +177,9 @@ public class TemplateParser {
             method.setRefId(refId);
             method.setTask(null);
             
+            returnActivity.setGroup(method);
+            
+            workflowDAO.saveTemplate(template);
             workflowDAO.saveActivity(method);
             
             templates.add(template);
@@ -216,11 +227,13 @@ public class TemplateParser {
             });
             
             FlowPiece piece = parser.parse(sequence);
+            SingleOut tail = piece.getTail();
+            ReturnActivity returnActivity = new ReturnActivity();
+            returnActivity.setPrev((Activity) tail);
+            tail.setNext(returnActivity);
             
             template.setHead((Activity) piece.getHead());
-            template.setTail((Activity) piece.getTail());
-            
-            workflowDAO.saveTemplate(template);
+            template.setTail(returnActivity);
             
             GroupActivity meeting = new GroupActivity(GroupActivity.LEVEL_MEETING);
             meeting.setTemplate(template);
@@ -231,6 +244,9 @@ public class TemplateParser {
             meeting.setRefId(refId);
             meeting.setTask(null);
             
+            returnActivity.setGroup(meeting);
+            
+            workflowDAO.saveTemplate(template);
             workflowDAO.saveActivity(meeting);
             
             templates.add(template);
@@ -278,11 +294,13 @@ public class TemplateParser {
             });
             
             FlowPiece piece = parser.parse(sequence);
+            SingleOut tail = piece.getTail();
+            ReturnActivity returnActivity = new ReturnActivity();
+            returnActivity.setPrev((Activity) tail);
+            tail.setNext(returnActivity);
             
             template.setHead((Activity) piece.getHead());
-            template.setTail((Activity) piece.getTail());
-            
-            workflowDAO.saveTemplate(template);
+            template.setTail(returnActivity);
             
             GroupActivity situation = new GroupActivity(GroupActivity.LEVEL_SITUATION);
             situation.setTemplate(template);
@@ -293,6 +311,9 @@ public class TemplateParser {
             situation.setRefId(refId);
             situation.setTask(null);
             
+            returnActivity.setGroup(situation);
+            
+            workflowDAO.saveTemplate(template);
             workflowDAO.saveActivity(situation);
             
             templates.add(template);

@@ -14,6 +14,7 @@ import org.pgist.wfengine.Workflow;
  * @author kenny
  *
  * @hibernate.joined-subclass name="WhileActivity" table="litwf_activity_while"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.WhileActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class WhileActivity extends Activity implements SingleIn, SingleOut {

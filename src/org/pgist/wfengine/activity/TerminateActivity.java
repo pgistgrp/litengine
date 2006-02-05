@@ -11,7 +11,8 @@ import org.pgist.wfengine.Workflow;
  * 
  * @author kenny
  *
- * @hibernate.joined-subclass name="SequenceActivity" table="litwf_activity_terminate"
+ * @hibernate.joined-subclass name="TerminateActivity" table="litwf_activity_terminate"
+ *                            lazy="true" proxy="org.pgist.wfengine.activity.TerminateActivity"
  * @hibernate.joined-subclass-key column="id"
  */
 public class TerminateActivity extends Activity implements SingleIn {

@@ -14,6 +14,7 @@ import org.pgist.wfengine.activity.JoinActivity;
 import org.pgist.wfengine.activity.JumpActivity;
 import org.pgist.wfengine.activity.LoopActivity;
 import org.pgist.wfengine.activity.RepeatActivity;
+import org.pgist.wfengine.activity.ReturnActivity;
 import org.pgist.wfengine.activity.SwitchActivity;
 import org.pgist.wfengine.activity.TerminateActivity;
 import org.pgist.wfengine.activity.UntilActivity;
@@ -212,6 +213,9 @@ public class Template {
                     realTwo.setTemplate(realOne.getTemplate());
                     stack.push( realOne.getNext() );
                     break;
+                case Activity.TYPE_RETURN:
+                    two = new ReturnActivity();
+                    break;
                 case Activity.TYPE_BRANCH:
                     two = new BranchActivity();
                     stack.addAll(((BranchActivity) one).getBranches());
@@ -222,7 +226,7 @@ public class Template {
                     break;
                 case Activity.TYPE_SWITCH:
                     two = new SwitchActivity();
-                    stack.addAll(((SwitchActivity) one).getSwitches());
+                    stack.addAll( ((SwitchActivity) one).getSwitches() );
                     break;
                 case Activity.TYPE_ENDSWITCH:
                     two = new EndSwitchActivity();
@@ -292,6 +296,12 @@ public class Template {
                     GroupActivity groupTwo = (GroupActivity) two;
                     groupTwo.setPrev( (Activity)map.get(groupOne.getPrev()) );
                     groupTwo.setNext( (Activity)map.get(groupOne.getNext()) );
+                    break;
+                case Activity.TYPE_RETURN:
+                    ReturnActivity returnOne = (ReturnActivity) one;
+                    ReturnActivity returnTwo = (ReturnActivity) two;
+                    returnTwo.setPrev( (Activity)map.get(returnOne.getPrev()) );
+                    returnTwo.setGroup( (GroupActivity)map.get(returnOne.getGroup()) );
                     break;
                 case Activity.TYPE_BRANCH:
                     BranchActivity branchOne = (BranchActivity) one;

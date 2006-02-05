@@ -27,25 +27,27 @@ public abstract class Activity implements Serializable {
     
     public static final int TYPE_MEETING   = 3;
     
-    public static final int TYPE_BRANCH    = 4;
+    public static final int TYPE_RETURN    = 4;
     
-    public static final int TYPE_JOIN      = 5;
+    public static final int TYPE_BRANCH    = 5;
     
-    public static final int TYPE_SWITCH    = 6;
+    public static final int TYPE_JOIN      = 6;
     
-    public static final int TYPE_ENDSWITCH = 7;
+    public static final int TYPE_SWITCH    = 7;
     
-    public static final int TYPE_WHILE     = 8;
+    public static final int TYPE_ENDSWITCH = 8;
     
-    public static final int TYPE_LOOP      = 9;
+    public static final int TYPE_WHILE     = 9;
     
-    public static final int TYPE_REPEAT    = 10;
+    public static final int TYPE_LOOP      = 10;
     
-    public static final int TYPE_UNTIL     = 11;
+    public static final int TYPE_REPEAT    = 11;
     
-    public static final int TYPE_JUMP      = 12;
+    public static final int TYPE_UNTIL     = 12;
     
-    public static final int TYPE_TERMINATE = 13;
+    public static final int TYPE_JUMP      = 13;
+    
+    public static final int TYPE_TERMINATE = 14;
     
     
     protected Long id = null;
