@@ -140,7 +140,7 @@ public class WorkflowEngine {
         workflow.setEnv(env);
         env.setWorkflow(workflow);
         
-        FlowPiece piece = template.spawn(workflowDAO.getHibernateSession(), null);
+        FlowPiece piece = template.spawn();
         
         workflow.setDefinition((Activity) piece.getHead());
         

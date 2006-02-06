@@ -163,16 +163,9 @@ public class TemplateParser {
             });
             
             FlowPiece piece = parser.parse(sequence);
-            SingleOut tail = piece.getTail();
-            ReturnActivity returnActivity = new ReturnActivity();
-            returnActivity.setCount(0);
-            returnActivity.setExpression(0);
-            returnActivity.setType(Activity.TYPE_RETURN);
-            returnActivity.setPrev((Activity) tail);
-            tail.setNext(returnActivity);
             
             template.setHead((Activity) piece.getHead());
-            template.setTail(returnActivity);
+            template.setTail((Activity) piece.getTail());
             
             GroupActivity method = new GroupActivity(GroupActivity.LEVEL_PMETHOD);
             method.setTemplate(template);
@@ -182,8 +175,6 @@ public class TemplateParser {
             method.setName(template.getName());
             method.setRefId(refId);
             method.setTask(null);
-            
-            returnActivity.setGroup(method);
             
             workflowDAO.saveTemplate(template);
             workflowDAO.saveActivity(method);
@@ -233,16 +224,8 @@ public class TemplateParser {
             });
             
             FlowPiece piece = parser.parse(sequence);
-            SingleOut tail = piece.getTail();
-            ReturnActivity returnActivity = new ReturnActivity();
-            returnActivity.setCount(0);
-            returnActivity.setExpression(0);
-            returnActivity.setType(Activity.TYPE_RETURN);
-            returnActivity.setPrev((Activity) tail);
-            tail.setNext(returnActivity);
-            
             template.setHead((Activity) piece.getHead());
-            template.setTail(returnActivity);
+            template.setTail((Activity) piece.getTail());
             
             GroupActivity meeting = new GroupActivity(GroupActivity.LEVEL_MEETING);
             meeting.setTemplate(template);
@@ -252,8 +235,6 @@ public class TemplateParser {
             meeting.setName(template.getName());
             meeting.setRefId(refId);
             meeting.setTask(null);
-            
-            returnActivity.setGroup(meeting);
             
             workflowDAO.saveTemplate(template);
             workflowDAO.saveActivity(meeting);
@@ -303,16 +284,8 @@ public class TemplateParser {
             });
             
             FlowPiece piece = parser.parse(sequence);
-            SingleOut tail = piece.getTail();
-            ReturnActivity returnActivity = new ReturnActivity();
-            returnActivity.setCount(0);
-            returnActivity.setExpression(0);
-            returnActivity.setType(Activity.TYPE_RETURN);
-            returnActivity.setPrev((Activity) tail);
-            tail.setNext(returnActivity);
-            
             template.setHead((Activity) piece.getHead());
-            template.setTail(returnActivity);
+            template.setTail((Activity) piece.getTail());
             
             GroupActivity situation = new GroupActivity(GroupActivity.LEVEL_SITUATION);
             situation.setTemplate(template);
@@ -322,8 +295,6 @@ public class TemplateParser {
             situation.setName(template.getName());
             situation.setRefId(refId);
             situation.setTask(null);
-            
-            returnActivity.setGroup(situation);
             
             workflowDAO.saveTemplate(template);
             workflowDAO.saveActivity(situation);

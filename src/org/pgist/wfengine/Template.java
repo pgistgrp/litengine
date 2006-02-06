@@ -6,16 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.hibernate.Session;
+import org.hibernate.proxy.HibernateProxy;
 import org.pgist.wfengine.activity.BranchActivity;
 import org.pgist.wfengine.activity.EndSwitchActivity;
-import org.pgist.wfengine.activity.PActActivity;
 import org.pgist.wfengine.activity.GroupActivity;
 import org.pgist.wfengine.activity.JoinActivity;
 import org.pgist.wfengine.activity.JumpActivity;
 import org.pgist.wfengine.activity.LoopActivity;
+import org.pgist.wfengine.activity.PActActivity;
 import org.pgist.wfengine.activity.RepeatActivity;
-import org.pgist.wfengine.activity.ReturnActivity;
 import org.pgist.wfengine.activity.SwitchActivity;
 import org.pgist.wfengine.activity.TerminateActivity;
 import org.pgist.wfengine.activity.UntilActivity;
@@ -50,7 +49,7 @@ import org.pgist.wfengine.activity.WhileActivity;
  * is a two pass process:
  * 
  *    (1) Traverse the template graph, and replicate each activities, the spawned activities are 
- *        saved in a HashMap with the original activities as the keys.
+ *        saved in a HashMap with the ids of original activities as the keys.
  *        
  *    (2) Weave the spawned activities to a flow graph.
  *
@@ -186,7 +185,41 @@ public class Template {
      */
     
     
-    private Map replicate(Session session) {
+    /**
+     * For Hibernate, a persistent object is often proxied by a HibernateProxy which is used to
+     * implement the lazy fetching. In order to get the concreate object of the activity subclass,
+     * use this method to narrow the proxy get recover the real object.
+     * 
+     *  @param object
+     *  @return
+     */
+    private Object narrow(Object object){
+        if(object instanceof HibernateProxy){
+            return ((HibernateProxy)object).getHibernateLazyInitializer().getImplementation();
+        }else {
+            return object;
+        }
+    }//narrow()
+    
+    
+    /**
+     * For each activity in the template flow, generate a new counterpart activity. The new activity
+     * will be stored in a map together with it's origin. Later program will weave the new generated
+     * activities exactly as the struture of the original flow.
+     * 
+     * The returned map has the following struture:
+     *   (Long) origin_id <----> (Activity[]) { newActivity, originActivity }
+     * It can be used to lookup the [new, origin] activity pair from the original activity id.
+     * 
+     * The algorithm to replicate the template is by using a stack. Put the head of template into the
+     * stack. And enter a while loop which will run until the stack is empty. For each loop, one original
+     * activity will be popped out and replicated. Put all subsequent activities of this original
+     * activity on the stack. This algorithm will replicate each activity on the template flow without
+     * using recursion algorithm.
+     * 
+     * @return
+     */
+    private Map replicate() {
         Map map = new HashMap();
         Stack stack = new Stack();
         stack.push(head);
@@ -202,7 +235,7 @@ public class Template {
             //push children on stack
             switch(one.getType()) {
                 case Activity.TYPE_PACT:
-                    one = (PActActivity) session.load(PActActivity.class, one.getId());
+                    one = (PActActivity) narrow(one);
                     PActActivity pactOne = (PActActivity) one;
                     PActActivity pactTwo = new PActActivity();
                     two = pactTwo;
@@ -213,64 +246,60 @@ public class Template {
                 case Activity.TYPE_PGAME:
                 case Activity.TYPE_PMETHOD:
                 case Activity.TYPE_MEETING:
-                    GroupActivity realOne = (GroupActivity) session.load(GroupActivity.class, one.getId());
+                    GroupActivity realOne = (GroupActivity) narrow(one);
                     one = realOne;
                     GroupActivity realTwo = new GroupActivity(realOne.getLevel());
                     two = realTwo;
                     realTwo.setTemplate(realOne.getTemplate());
                     stack.push( realOne.getNext() );
                     break;
-                case Activity.TYPE_RETURN:
-                    one = (ReturnActivity) session.load(ReturnActivity.class, one.getId());
-                    two = new ReturnActivity();
-                    break;
                 case Activity.TYPE_BRANCH:
-                    one = (BranchActivity) session.load(BranchActivity.class, one.getId());
+                    one = (BranchActivity) narrow(one);
                     two = new BranchActivity();
                     stack.addAll(((BranchActivity) one).getBranches());
                     break;
                 case Activity.TYPE_JOIN:
-                    one = (JoinActivity) session.load(JoinActivity.class, one.getId());
+                    one = (JoinActivity) narrow(one);
                     two = new JoinActivity();
                     stack.push( ((JoinActivity) one).getNext() );
                     break;
                 case Activity.TYPE_SWITCH:
-                    one = (SwitchActivity) session.load(SwitchActivity.class, one.getId());
+                    one = (SwitchActivity) narrow(one);
                     two = new SwitchActivity();
                     stack.addAll( ((SwitchActivity) one).getSwitches() );
                     break;
                 case Activity.TYPE_ENDSWITCH:
-                    one = (EndSwitchActivity) session.load(EndSwitchActivity.class, one.getId());
+                    one = (EndSwitchActivity) narrow(one);
                     two = new EndSwitchActivity();
                     stack.push( ((EndSwitchActivity) one).getNext() );
                     break;
                 case Activity.TYPE_WHILE:
-                    one = (WhileActivity) session.load(WhileActivity.class, one.getId());
+                    one = (WhileActivity) narrow(one);
                     two = new WhileActivity();
                     stack.push( ((WhileActivity) one).getNext() );
                     break;
                 case Activity.TYPE_LOOP:
-                    one = (LoopActivity) session.load(LoopActivity.class, one.getId());
+                    one = (LoopActivity) narrow(one);
                     two = new LoopActivity();
                     stack.push( ((LoopActivity) one).getNext() );
                     break;
                 case Activity.TYPE_REPEAT:
-                    one = (RepeatActivity) session.load(RepeatActivity.class, one.getId());
+                    one = (RepeatActivity) narrow(one);
                     two = new RepeatActivity();
                     stack.push( ((RepeatActivity) one).getNext() );
                     break;
                 case Activity.TYPE_UNTIL:
-                    one = (UntilActivity) session.load(UntilActivity.class, one.getId());
+                    one = (UntilActivity) narrow(one);
                     two = new UntilActivity();
                     stack.push( ((UntilActivity) one).getNext() );
                     break;
                 case Activity.TYPE_JUMP:
-                    one = (JumpActivity) session.load(JumpActivity.class, one.getId());
+                    one = (JumpActivity) narrow(one);
                     two = new JumpActivity();
                     stack.push( ((JumpActivity) one).getNext() );
                     break;
                 case Activity.TYPE_TERMINATE:
-                    one = (TerminateActivity) session.load(TerminateActivity.class, one.getId());
+                    one = (TerminateActivity) narrow(one);
                     two = new TerminateActivity();
                     break;
             }//switch
@@ -289,9 +318,9 @@ public class Template {
     /**
      * @return
      */
-    public FlowPiece spawn(Session session, GroupActivity group) {
+    public FlowPiece spawn() {
         //1st pass, replicate all activities
-        Map map = replicate(session);
+        Map map = replicate();
         
         List list = null;
         
@@ -335,16 +364,6 @@ public class Template {
                         pair = (Activity[]) map.get(next.getId());
                         groupTwo.setNext( pair[1] );
                     }
-                    break;
-                case Activity.TYPE_RETURN:
-                    ReturnActivity returnOne = (ReturnActivity) one;
-                    ReturnActivity returnTwo = (ReturnActivity) two;
-                    prev = returnOne.getPrev();
-                    if (prev!=null) {
-                        pair = (Activity[]) map.get(prev.getId());
-                        returnTwo.setPrev( pair[1] );
-                    }
-                    returnTwo.setGroup( group );
                     break;
                 case Activity.TYPE_BRANCH:
                     BranchActivity branchOne = (BranchActivity) one;

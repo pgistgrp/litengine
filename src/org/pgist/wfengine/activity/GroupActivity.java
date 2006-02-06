@@ -199,12 +199,20 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (template!=null && headActivity==null) {
-            //FlowPiece piece = template.spawn();
-            //headActivity = (Activity) piece.getHead();
-            //tailActivity = (Activity) piece.getTail();
+            FlowPiece piece = template.spawn();
+            headActivity = (Activity) piece.getHead();
+            ReturnActivity returnActivity = new ReturnActivity();
+            returnActivity.setCount(0);
+            returnActivity.setExpression(0);
+            returnActivity.setGroup(this);
+            returnActivity.setPrev((Activity)piece.getTail());
+            returnActivity.setType(Activity.TYPE_RETURN);
+            ((SingleOut) returnActivity.getPrev()).setNext(returnActivity);
+            tailActivity = returnActivity;
         } else {
             
         }
+        
         if (getExpression()>0) {//task is finished
             return new Activity[] { next };
         } else {
