@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.pgist.wfengine.ManualTask;
-import org.pgist.wfengine.Workflow;
+import org.pgist.wfengine.RunningContext;
 
 
 /**
@@ -21,7 +21,7 @@ public class InputNameTask extends ManualTask {
     }
     
     
-    protected void execute(Workflow workflow, HttpServletRequest request, HttpServletResponse response) {
+    protected void execute(RunningContext context, HttpServletRequest request, HttpServletResponse response) {
         System.out.println("---> task is executed: InputNameTask");
     }//execute()
     

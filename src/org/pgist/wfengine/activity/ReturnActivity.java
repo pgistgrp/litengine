@@ -2,9 +2,9 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -74,28 +74,15 @@ public class ReturnActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected Activity[] doExecute(Workflow workflow) throws Exception {
-        // TODO Auto-generated method stub
+    protected Activity[] doExecute(RunningContext context) throws Exception {
+        getGroup().setExpression(1);
         return null;
-    }
-    
-    
-    protected void proceed() throws Exception {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    
-    protected void proceed(int decision) throws Exception {
-        // TODO Auto-generated method stub
-        
-    }
+    }//doExecute()
     
     
     public void saveState(Session session) {
-        // TODO Auto-generated method stub
-        
-    }
+        session.saveOrUpdate(this);
+    }//saveState()
 
 
 }//class ReturnActivity

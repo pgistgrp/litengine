@@ -3,10 +3,10 @@ package org.pgist.wfengine.activity;
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.FlowPiece;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Template;
-import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -56,6 +56,8 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     protected Activity prev;
     
     protected Activity next;
+    
+    protected RunningContext context = null;
     
     
     public GroupActivity() {}
@@ -166,20 +168,6 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
 
     /**
      * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" lazy="true" cascade="all"
-     */
-    public Activity getNext() {
-        return next;
-    }
-
-
-    public void setNext(Activity next) {
-        this.next = next;
-    }
-
-
-    /**
-     * @return
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" lazy="true" cascade="all"
      */
     public Activity getPrev() {
@@ -192,44 +180,71 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     }
 
 
+    /**
+     * @return
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" lazy="true" cascade="all"
+     */
+    public Activity getNext() {
+        return next;
+    }
+
+
+    public void setNext(Activity next) {
+        this.next = next;
+    }
+    
+    
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="context_id" class="org.pgist.wfengine.RunningContext" lazy="true" cascade="all"
+     */
+    public RunningContext getContext() {
+        return context;
+    }
+
+
+    public void setContext(RunningContext context) {
+        this.context = context;
+    }
+
+
     /*
      * ------------------------------------------------------------------------------
      */
     
     
-    protected Activity[] doExecute(Workflow workflow) throws Exception {
-        if (template!=null && headActivity==null) {
-            FlowPiece piece = template.spawn();
-            headActivity = (Activity) piece.getHead();
-            ReturnActivity returnActivity = new ReturnActivity();
-            returnActivity.setCount(0);
-            returnActivity.setExpression(0);
-            returnActivity.setGroup(this);
-            returnActivity.setPrev((Activity)piece.getTail());
-            returnActivity.setType(Activity.TYPE_RETURN);
-            ((SingleOut) returnActivity.getPrev()).setNext(returnActivity);
-            tailActivity = returnActivity;
-        } else {
-            
-        }
+    protected Activity[] doExecute(RunningContext context) throws Exception {
+        synchronized (refId) {
+            if (template!=null && headActivity==null) {
+                FlowPiece piece = template.spawn();
+                
+                headActivity = (Activity) piece.getHead();
+                
+                ReturnActivity returnActivity = new ReturnActivity();
+                returnActivity.setCount(0);
+                returnActivity.setExpression(0);
+                returnActivity.setGroup(this);
+                returnActivity.setPrev((Activity)piece.getTail());
+                returnActivity.setType(Activity.TYPE_RETURN);
+                ((SingleOut) returnActivity.getPrev()).setNext(returnActivity);
+                tailActivity = returnActivity;
+                
+                context = new RunningContext(context);
+                context.getRunningActivities().add(headActivity);
+                setExpression(0);
+            }
+        }//synchronized refId
         
         if (getExpression()>0) {//task is finished
+            setHeadActivity(null);
+            setTailActivity(null);
+            setContext(null);
             return new Activity[] { next };
         } else {
             return new Activity[] { this };
         }
     }//doExecute()
-
-
-    protected void proceed() throws Exception {
-        setExpression(1);
-    }//proceed()
-
-
-    protected void proceed(int decision) throws Exception {
-        //discard the decision
-        setExpression(1);
-    }//proceed()
 
 
     public void saveState(Session session) {

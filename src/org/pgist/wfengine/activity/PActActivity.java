@@ -2,10 +2,10 @@ package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Task;
-import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -113,11 +113,11 @@ public class PActActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected Activity[] doExecute(Workflow workflow) throws Exception {
+    protected Activity[] doExecute(RunningContext context) throws Exception {
         if (task==null) {
             setExpression(1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(workflow);
+            task.execute(context);
         }
         
         if (getExpression()>0) {//task is finished
@@ -128,17 +128,6 @@ public class PActActivity extends Activity implements SingleIn, SingleOut {
     }//doExecute()
     
     
-    public void proceed() throws Exception {
-        setExpression(1);
-    }//proceed()
-    
-    
-    protected void proceed(int decision) throws Exception {
-        //discard the decision
-        setExpression(1);
-    }//proceed()
-
-
     public void saveState(Session session) {
         session.save(this);
         if (next!=null) next.saveState(session);

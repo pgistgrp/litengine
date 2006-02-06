@@ -1,7 +1,5 @@
 package org.pgist.servlets;
 
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -68,8 +66,8 @@ public class WorkflowServlet extends HttpServlet {
 
 
     private void showFlowTasks(HttpServletRequest req, HttpServletResponse resp, IWorkflowContext context) throws ServletException, java.io.IOException {
-        List list = context.getWorkflow().getWaitingList();
-        req.setAttribute("runningList", list);
+        //List list = context.getWorkflow().getWaitingList();
+        //req.setAttribute("runningList", list);
         
         req.getRequestDispatcher("/workflow.jsp").forward(req, resp);
     }//showFlowTasks()

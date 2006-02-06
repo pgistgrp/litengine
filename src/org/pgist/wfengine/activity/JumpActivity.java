@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Task;
-import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -104,15 +104,11 @@ public class JumpActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected void doActivate(Workflow workflow) {
-    }//doActivate()
-    
-    
-    protected Activity[] doExecute(Workflow workflow) throws Exception {
+    protected Activity[] doExecute(RunningContext context) throws Exception {
         if (task==null) {
             setExpression(-1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(workflow);
+            task.execute(context);
         }
         
         if (getExpression()>jumps.size()) setExpression(jumps.size());

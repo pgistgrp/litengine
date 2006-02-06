@@ -5,9 +5,8 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.Task;
-import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -86,37 +85,10 @@ public class EndSwitchActivity extends Activity implements SingleOut {
      */
     
     
-    protected Activity[] doExecute(Workflow workflow) throws Exception {
-        if (task==null) {
-            setExpression(1);
-        } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(workflow);
-        }
-            
-        if (getExpression()>0) {//task is finished
-            return new Activity[] { next };
-        } else {
-            return new Activity[] { this };
-        }
+    protected Activity[] doExecute(RunningContext context) throws Exception {
+        return new Activity[] { next };
     }//doActivate()
     
-    
-    public void proceed() throws Exception {
-        setExpression(1);
-    }//proceed()
-    
-    
-    protected void proceed(int decision) throws Exception {
-        setExpression(1);
-    }//proceed()
-
-
-    protected void deActivate(Workflow workflow) {
-        if (task!=null) {
-            workflow.getTracker().record(task);
-        }
-    }//deActivate()
-
     
     public void saveState(Session session) {
         session.save(this);

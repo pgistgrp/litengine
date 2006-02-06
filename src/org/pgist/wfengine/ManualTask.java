@@ -50,11 +50,11 @@ public abstract class ManualTask extends Task {
      * @return
      * @throws Exception
      */
-    public void execute(Workflow workflow) throws Exception {
+    public void execute(RunningContext context) throws Exception {
         //Check Access Permission
         //if (accessManager!=null && !accessManager.check(user)) throw new Exception("User has no access permission!");
         
-        execute(workflow, (HttpServletRequest) properties.get("request"), (HttpServletResponse) properties.get("response"));
+        execute(context, (HttpServletRequest) properties.get("request"), (HttpServletResponse) properties.get("response"));
     }//execute()
     
     
@@ -78,7 +78,7 @@ public abstract class ManualTask extends Task {
      * Give Task object an oppotunity to initialize itself, default implementation
      *
      */
-    public void initialize(Workflow workflow) {
+    public void initialize(RunningContext context) {
     }//initialize()
     
     
@@ -86,7 +86,7 @@ public abstract class ManualTask extends Task {
      * Give Task object an oppotunity to finalize itself, default implementation
      *
      */
-    public void finalize(Workflow workflow) {
+    public void finalize(RunningContext context) {
     }//finalize()
 
 
@@ -97,7 +97,7 @@ public abstract class ManualTask extends Task {
      * @param activity
      * @return
      */
-    abstract protected void execute(Workflow workflow,  HttpServletRequest request, HttpServletResponse response);
+    abstract protected void execute(RunningContext context,  HttpServletRequest request, HttpServletResponse response);
     
     
 }//abstract class ManualTask

@@ -86,7 +86,7 @@ public abstract class Task implements Cloneable {
      * Give Task object an oppotunity to initialize itself
      *
      */
-    abstract public void initialize(Workflow workflow);
+    abstract public void initialize(RunningContext context);
     
     
     /**
@@ -95,14 +95,14 @@ public abstract class Task implements Cloneable {
      * @param activity
      * @return
      */
-    abstract public void execute(Workflow workflow) throws Exception;
+    abstract public void execute(RunningContext context) throws Exception;
     
     
     /**
      * Give Task object an oppotunity to finalize itself
      *
      */
-    abstract public void finalize(Workflow workflow);
+    abstract public void finalize(RunningContext context);
     
     
 }//class Task

@@ -1,10 +1,7 @@
 package org.pgist.wfengine;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Stack;
 
 import org.hibernate.Session;
 
@@ -34,9 +31,6 @@ public class Workflow implements Serializable {
     private WorkflowEnvironment env;
     
     //
-    private List waitingList = new ArrayList(16);
-    
-    //
     private boolean finished;
     
     //
@@ -49,12 +43,7 @@ public class Workflow implements Serializable {
     private Date endTime;
     
     //
-    private WorkflowTracker tracker;
-    
-    //
-    private transient Stack stack = new Stack();
-    private transient Stack parentStack = new Stack();
-    
+    private RunningContext context;
     
     public Workflow() {
     }
@@ -137,25 +126,6 @@ public class Workflow implements Serializable {
 
 
     /**
-     * 
-     * @return
-     * 
-     * @hibernate.list table="litwf_activity" lazy="true" cascade="all"
-     * @hibernate.collection-key column="waiting_id"
-     * @hibernate.collection-index column="order_num"
-     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
-     */
-    public List getWaitingList() {
-        return waitingList;
-    }
-
-
-    public void setWaitingList(List waitingList) {
-        this.waitingList = waitingList;
-    }
-
-
-    /**
      * @return
      * 
      * @hibernate.property unique="false" not-null="true"
@@ -202,45 +172,21 @@ public class Workflow implements Serializable {
 
     /**
      * @return
-     * @hibernate.one-to-one cascade="all" class="org.pgist.wfengine.WorkflowTracker"
+     * @hibernate.many-to-one column="context_id" class="org.pgist.wfengine.RunningContext" cascade="all"
      */
-    public WorkflowTracker getTracker() {
-        return tracker;
+    public RunningContext getContext() {
+        return context;
     }
 
 
-    public void setTracker(WorkflowTracker tracker) {
-        this.tracker = tracker;
+    public void setContext(RunningContext context) {
+        this.context = context;
     }
-    
-    
+
+
     /*
      * -------------------------------------------------------------------
      */
-    
-    
-    private void perform(Activity activity, Activity parent) throws Exception {
-        //Execute this activity
-        Activity[] list = activity.execute(this, parent);
-        
-        if (list==null || list.length==0) {
-            //This activity is executed and flow branch finished
-        } else if (list.length==1 && list[0].getId()==activity.getId()) {
-            //This activity is not executed
-            waitingList.add(activity);
-            return;
-        } else {
-            //This activity is executed, and its successive activities are returned
-            
-            for (int i=0,n=list.length; i<n; i++) {
-                parentStack.push(activity);
-                stack.push(list[i]);
-            }//for i
-            
-            //Deactivate this activity
-            activity.deActivate(this, null);
-        }
-    }//perform()
     
     
     /**
@@ -256,20 +202,8 @@ public class Workflow implements Serializable {
         born = true;
         beginTime = new Date();
         
-        stack.push(definition);
-        parentStack.push(null);
-        
-        while (!stack.empty()) {
-            //Pop out an activity and it's parent
-            Activity activity = (Activity) stack.pop();
-            Activity parent = (Activity) parentStack.pop();
-            
-            //Activity this activity
-            activity.activate(this, parent);
-            
-            perform(activity, parent);
-        }//while
-        
+        context.getRunningActivities().add(definition);
+        context.execute();
     }//execute()
     
     
@@ -280,24 +214,7 @@ public class Workflow implements Serializable {
     synchronized public void proceed(Activity activity) throws Exception {
         if (finished || cancelled || !born) return;
         
-        //check if the activity is current activity in the environment
-        if (!waitingList.contains(activity)) return;
-        
-        waitingList.remove(activity);
-        
-        activity.proceed();
-        perform(activity, null);
-        
-        while (!stack.empty()) {
-            //Pop out an activity and it's parent
-            activity = (Activity) stack.pop();
-            Activity parent = (Activity) parentStack.pop();
-            
-            //Activity this activity
-            activity.activate(this, parent);
-            
-            perform(activity, parent);
-        }//while
+        context.proceed(activity);
     }//proceed()
     
     

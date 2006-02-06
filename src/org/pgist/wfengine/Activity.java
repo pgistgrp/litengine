@@ -141,7 +141,7 @@ public abstract class Activity implements Serializable {
      * @param workflow
      * @param parent
      */
-    final void activate(Workflow workflow, Activity parent) {
+    final void activate(RunningContext context, Activity parent) {
         //Increase Count. That means the total visiting times for this activity.
         setCount(getCount()+1);
         
@@ -149,9 +149,9 @@ public abstract class Activity implements Serializable {
         setExpression(0);
         
         //initialize the task
-        if (task!=null) task.initialize(workflow);
+        if (task!=null) task.initialize(context);
         
-        doActivate(workflow);
+        doActivate(context);
     }//activate
     
     
@@ -159,8 +159,8 @@ public abstract class Activity implements Serializable {
      * Package Accessible
      * @param env
      */
-    final Activity[] execute(Workflow workflow, Activity parent) throws Exception {
-        return doExecute(workflow);
+    final Activity[] execute(RunningContext context, Activity parent) throws Exception {
+        return doExecute(context);
     }//activate
     
     
@@ -168,14 +168,14 @@ public abstract class Activity implements Serializable {
      * Package Accessible
      * @param env
      */
-    final void deActivate(Workflow workflow, Activity parent) {
-        if (task!=null) task.finalize(workflow);
+    final void deActivate(RunningContext context, Activity parent) {
+        if (task!=null) task.finalize(context);
         
-        doDeActivate(workflow);
+        doDeActivate(context);
         
         //Track the task
         if (task!=null) {
-            workflow.getTracker().record(task);
+            context.getRecords().add(task);
         }
     }//activate
     
@@ -184,7 +184,7 @@ public abstract class Activity implements Serializable {
      * default implementation
      * @param workflow
      */
-    protected void doActivate(Workflow workflow) {
+    protected void doActivate(RunningContext context) {
     }//doActivate()
     
     
@@ -192,15 +192,22 @@ public abstract class Activity implements Serializable {
      * default implementation
      * @param workflow
      */
-    protected void doDeActivate(Workflow workflow) {
+    protected void doDeActivate(RunningContext context) {
     }//doDeActivate()
     
     
-    abstract protected Activity[] doExecute(Workflow workflow) throws Exception;
+    abstract protected Activity[] doExecute(RunningContext context) throws Exception;
     
-    abstract protected void proceed() throws Exception;
     
-    abstract protected void proceed(int decision) throws Exception;
+    protected void proceed() throws Exception {
+        setExpression(1);
+    }//proceed()
+    
+    
+    protected void proceed(int decision) throws Exception {
+        setExpression(decision);
+    }//proceed()
+    
     
     abstract public void saveState(Session session);
     

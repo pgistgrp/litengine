@@ -5,9 +5,8 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
-import org.pgist.wfengine.Task;
-import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -91,38 +90,17 @@ public class BranchActivity extends Activity implements SingleIn {
      */
     
     
-    protected Activity[] doExecute(Workflow workflow) throws Exception {
-        if (task==null) {
-            setExpression(1);
-        } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(workflow);
-        }
+    protected Activity[] doExecute(RunningContext context) throws Exception {
+        Activity[] activities = new Activity[branches.size()];
+        for (int i=0; i<activities.length; i++) {
+            activities[i] = (Activity) branches.get(i);
+        }//for i
         
-        if (getExpression()>0) {//task is finished
-            Activity[] activities = new Activity[branches.size()];
-            for (int i=0; i<activities.length; i++) {
-                activities[i] = (Activity) branches.get(i);
-            }//for i
-            
-            //initialize branch/join pair
-            joinActivity.setJoinCount(0);
-            
-            return activities;
-        } else {
-            return new Activity[] { this };
-        }
+        //initialize branch/join pair
+        joinActivity.setJoinCount(0);
+        
+        return activities;
     }//doExecute()
-    
-    
-    public void proceed() throws Exception {
-        setExpression(1);
-    }//proceed()
-    
-    
-    protected void proceed(int decision) throws Exception {
-        //discard the decision
-        setExpression(1);
-    }//proceed()
     
     
     public void saveState(Session session) {

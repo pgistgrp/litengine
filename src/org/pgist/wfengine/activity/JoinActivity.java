@@ -5,9 +5,8 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.Task;
-import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -102,42 +101,21 @@ public class JoinActivity extends Activity implements SingleOut {
      */
     
     
-    protected void doActivate(Workflow workflow) {
+    protected void doActivate(RunningContext context) {
         joinCount++;
     }//doActivate()
     
     
-    protected Activity[] doExecute(Workflow workflow) throws Exception {
+    protected Activity[] doExecute(RunningContext context) throws Exception {
         if (joinCount>=joins.size()) { 
-            if (task==null) {
-                expression = 1;
-            } else if (task.getType()==Task.TASK_AUTOMATIC) {
-                task.execute(workflow);
-                expression = 1;
-            }
+            return new Activity[] { next };
         } else {
             //temporarily kill this thread
             return new Activity[] {};
         }
-        
-        if (expression>0) {//task is finished
-            return new Activity[] { next };
-        } else {
-            return new Activity[] { this };
-        }
     }//doExecute()
     
     
-    public void proceed() throws Exception {
-        setExpression(1);
-    }//proceed()
-    
-    
-    protected void proceed(int decision) throws Exception {
-        setExpression(1);
-    }//proceed()
-
-
     public void saveState(Session session) {
         session.save(this);
         if (next!=null) next.saveState(session);

@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.Task;
-import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -107,11 +107,11 @@ public class SwitchActivity extends Activity implements SingleIn {
      */
     
     
-    protected Activity[] doExecute(Workflow workflow) throws Exception {
+    protected Activity[] doExecute(RunningContext context) throws Exception {
         if (task==null) {
             setExpression(1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(workflow);
+            task.execute(context);
         }
         
         if (getExpression()<0) setExpression(0);
@@ -125,16 +125,6 @@ public class SwitchActivity extends Activity implements SingleIn {
     }//doExecute()
     
     
-    public void proceed() throws Exception {
-        setExpression(1);
-    }//proceed()
-    
-    
-    protected void proceed(int decision) throws Exception {
-        setExpression(decision);
-    }//proceed()
-
-
     public void saveState(Session session) {
         session.saveOrUpdate(this);
         for (int i=0, n=switches.size(); i<n; i++) {

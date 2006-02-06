@@ -132,9 +132,8 @@ public class WorkflowEngine {
     public Workflow spawn(Template template) {
         Workflow workflow = new Workflow();
         
-        WorkflowTracker tracker = new WorkflowTracker();
-        workflow.setTracker(tracker);
-        tracker.setWorkflow(workflow);
+        RunningContext context = new RunningContext();
+        workflow.setContext(context);
         
         WorkflowEnvironment env = new WorkflowEnvironment();
         workflow.setEnv(env);
