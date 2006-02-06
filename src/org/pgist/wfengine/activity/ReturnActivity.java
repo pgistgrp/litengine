@@ -3,6 +3,7 @@ package org.pgist.wfengine.activity;
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.SingleIn;
+import org.pgist.wfengine.SingleOut;
 import org.pgist.wfengine.Workflow;
 
 
@@ -14,7 +15,7 @@ import org.pgist.wfengine.Workflow;
  *                            lazy="true" proxy="org.pgist.wfengine.activity.ReturnActivity"
  * @hibernate.joined-subclass-key column="id"
  */
-public class ReturnActivity extends Activity implements SingleIn {
+public class ReturnActivity extends Activity implements SingleIn, SingleOut {
     
     
     private static final long serialVersionUID = -1550544562044625071L;
@@ -22,6 +23,8 @@ public class ReturnActivity extends Activity implements SingleIn {
     protected GroupActivity group;
     
     protected Activity prev;
+    
+    protected Activity next;
     
     
     /**
@@ -49,6 +52,20 @@ public class ReturnActivity extends Activity implements SingleIn {
 
     public void setPrev(Activity prev) {
         this.prev = prev;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" lazy="true" cascade="all"
+     */
+    public Activity getNext() {
+        return next;
+    }
+
+
+    public void setNext(Activity next) {
+        this.next = next;
     }
 
 

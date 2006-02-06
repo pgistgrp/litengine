@@ -95,6 +95,9 @@ public class TemplateParser {
             FlowPiece piece = parser.parse(sequence);
             SingleOut tail = piece.getTail();
             ReturnActivity returnActivity = new ReturnActivity();
+            returnActivity.setCount(0);
+            returnActivity.setExpression(0);
+            returnActivity.setType(Activity.TYPE_RETURN);
             returnActivity.setPrev((Activity) tail);
             tail.setNext(returnActivity);
             
@@ -162,6 +165,9 @@ public class TemplateParser {
             FlowPiece piece = parser.parse(sequence);
             SingleOut tail = piece.getTail();
             ReturnActivity returnActivity = new ReturnActivity();
+            returnActivity.setCount(0);
+            returnActivity.setExpression(0);
+            returnActivity.setType(Activity.TYPE_RETURN);
             returnActivity.setPrev((Activity) tail);
             tail.setNext(returnActivity);
             
@@ -229,6 +235,9 @@ public class TemplateParser {
             FlowPiece piece = parser.parse(sequence);
             SingleOut tail = piece.getTail();
             ReturnActivity returnActivity = new ReturnActivity();
+            returnActivity.setCount(0);
+            returnActivity.setExpression(0);
+            returnActivity.setType(Activity.TYPE_RETURN);
             returnActivity.setPrev((Activity) tail);
             tail.setNext(returnActivity);
             
@@ -296,6 +305,9 @@ public class TemplateParser {
             FlowPiece piece = parser.parse(sequence);
             SingleOut tail = piece.getTail();
             ReturnActivity returnActivity = new ReturnActivity();
+            returnActivity.setCount(0);
+            returnActivity.setExpression(0);
+            returnActivity.setType(Activity.TYPE_RETURN);
             returnActivity.setPrev((Activity) tail);
             tail.setNext(returnActivity);
             

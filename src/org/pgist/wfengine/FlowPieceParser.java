@@ -90,7 +90,9 @@ public class FlowPieceParser {
     
     private BranchActivity parseBranch(Element element) throws Exception {
         BranchActivity branch = new BranchActivity();
+        branch.setType(Activity.TYPE_BRANCH);
         JoinActivity join = new JoinActivity();
+        join.setType(Activity.TYPE_JOIN);
         branch.setJoinActivity(join);
         join.setBranchActivity(branch);
         
@@ -132,7 +134,9 @@ public class FlowPieceParser {
     
     private SwitchActivity parseSwitch(Element element) throws Exception {
         SwitchActivity switche = new SwitchActivity();
+        switche.setType(Activity.TYPE_SWITCH);
         EndSwitchActivity endSwitch = new EndSwitchActivity();
+        endSwitch.setType(Activity.TYPE_ENDSWITCH);
         switche.setEndSwitchActivity(endSwitch);
         endSwitch.setSwitchActivity(switche);
         
@@ -174,7 +178,9 @@ public class FlowPieceParser {
 
     private WhileActivity parseWhile(Element element) throws Exception {
         WhileActivity whilst = new WhileActivity();
+        whilst.setType(Activity.TYPE_WHILE);
         LoopActivity loop = new LoopActivity();
+        loop.setType(Activity.TYPE_LOOP);
         whilst.setLoop(loop);
         loop.setWhilst(whilst);
         
@@ -213,7 +219,9 @@ public class FlowPieceParser {
 
     private RepeatActivity parseRepeat(Element element) throws Exception {
         RepeatActivity repeat = new RepeatActivity();
+        repeat.setType(Activity.TYPE_REPEAT);
         UntilActivity until = new UntilActivity();
+        until.setType(Activity.TYPE_UNTIL);
         repeat.setUntil(until);
         until.setRepeat(repeat);
         

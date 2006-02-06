@@ -96,7 +96,7 @@ public class WorkflowEngineTest extends TestCase {
         try {
             Template template = engine.getTemplate(new Long(3));
             assertNotNull(template);
-            FlowPiece piece = template.spawn();
+            FlowPiece piece = template.spawn(workflowDAO.getHibernateSession(), null);
             workflowDAO.saveActivity((Activity) piece.getHead());
             System.out.println("Head ---> "+ ((Activity)piece.getHead()).getId());
             System.out.println("Tail ---> "+ ((Activity)piece.getTail()).getId());

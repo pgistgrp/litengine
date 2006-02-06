@@ -199,9 +199,9 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     protected Activity[] doExecute(Workflow workflow) throws Exception {
         if (template!=null && headActivity==null) {
-            FlowPiece piece = template.spawn();
-            headActivity = (Activity) piece.getHead();
-            tailActivity = (Activity) piece.getTail();
+            //FlowPiece piece = template.spawn();
+            //headActivity = (Activity) piece.getHead();
+            //tailActivity = (Activity) piece.getTail();
         } else {
             
         }

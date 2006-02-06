@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.hibernate.Session;
 import org.pgist.wfengine.activity.BranchActivity;
 import org.pgist.wfengine.activity.EndSwitchActivity;
 import org.pgist.wfengine.activity.PActActivity;
@@ -185,7 +186,7 @@ public class Template {
      */
     
     
-    private Map replicate() {
+    private Map replicate(Session session) {
         Map map = new HashMap();
         Stack stack = new Stack();
         stack.push(head);
@@ -201,58 +202,75 @@ public class Template {
             //push children on stack
             switch(one.getType()) {
                 case Activity.TYPE_PACT:
-                    two = new PActActivity();
+                    one = (PActActivity) session.load(PActActivity.class, one.getId());
+                    PActActivity pactOne = (PActActivity) one;
+                    PActActivity pactTwo = new PActActivity();
+                    two = pactTwo;
+                    pactTwo.setName( pactOne.getName() );
+                    pactTwo.setDescription( pactOne.getDescription() );
                     stack.push( ((PActActivity) one).getNext() );
                     break;
                 case Activity.TYPE_PGAME:
                 case Activity.TYPE_PMETHOD:
                 case Activity.TYPE_MEETING:
-                    GroupActivity realOne = (GroupActivity) one;
+                    GroupActivity realOne = (GroupActivity) session.load(GroupActivity.class, one.getId());
+                    one = realOne;
                     GroupActivity realTwo = new GroupActivity(realOne.getLevel());
                     two = realTwo;
                     realTwo.setTemplate(realOne.getTemplate());
                     stack.push( realOne.getNext() );
                     break;
                 case Activity.TYPE_RETURN:
+                    one = (ReturnActivity) session.load(ReturnActivity.class, one.getId());
                     two = new ReturnActivity();
                     break;
                 case Activity.TYPE_BRANCH:
+                    one = (BranchActivity) session.load(BranchActivity.class, one.getId());
                     two = new BranchActivity();
                     stack.addAll(((BranchActivity) one).getBranches());
                     break;
                 case Activity.TYPE_JOIN:
+                    one = (JoinActivity) session.load(JoinActivity.class, one.getId());
                     two = new JoinActivity();
                     stack.push( ((JoinActivity) one).getNext() );
                     break;
                 case Activity.TYPE_SWITCH:
+                    one = (SwitchActivity) session.load(SwitchActivity.class, one.getId());
                     two = new SwitchActivity();
                     stack.addAll( ((SwitchActivity) one).getSwitches() );
                     break;
                 case Activity.TYPE_ENDSWITCH:
+                    one = (EndSwitchActivity) session.load(EndSwitchActivity.class, one.getId());
                     two = new EndSwitchActivity();
                     stack.push( ((EndSwitchActivity) one).getNext() );
                     break;
                 case Activity.TYPE_WHILE:
+                    one = (WhileActivity) session.load(WhileActivity.class, one.getId());
                     two = new WhileActivity();
                     stack.push( ((WhileActivity) one).getNext() );
                     break;
                 case Activity.TYPE_LOOP:
+                    one = (LoopActivity) session.load(LoopActivity.class, one.getId());
                     two = new LoopActivity();
                     stack.push( ((LoopActivity) one).getNext() );
                     break;
                 case Activity.TYPE_REPEAT:
+                    one = (RepeatActivity) session.load(RepeatActivity.class, one.getId());
                     two = new RepeatActivity();
                     stack.push( ((RepeatActivity) one).getNext() );
                     break;
                 case Activity.TYPE_UNTIL:
+                    one = (UntilActivity) session.load(UntilActivity.class, one.getId());
                     two = new UntilActivity();
                     stack.push( ((UntilActivity) one).getNext() );
                     break;
                 case Activity.TYPE_JUMP:
+                    one = (JumpActivity) session.load(JumpActivity.class, one.getId());
                     two = new JumpActivity();
                     stack.push( ((JumpActivity) one).getNext() );
                     break;
                 case Activity.TYPE_TERMINATE:
+                    one = (TerminateActivity) session.load(TerminateActivity.class, one.getId());
                     two = new TerminateActivity();
                     break;
             }//switch
@@ -261,7 +279,7 @@ public class Template {
             two.setExpression(0);
             two.setType(one.getType());
             
-            map.put(one, two);
+            map.put(one.getId(), new Activity[] {one, two});
         }//while
         
         return map;
@@ -271,123 +289,234 @@ public class Template {
     /**
      * @return
      */
-    public FlowPiece spawn() {
+    public FlowPiece spawn(Session session, GroupActivity group) {
         //1st pass, replicate all activities
-        Map map = replicate();
+        Map map = replicate(session);
         
         List list = null;
         
+        Activity prev = null;
+        Activity next = null;
+        Activity[] pair = null;
+        
         //2nd pass, weave the spawned activities
-        for (Iterator iter=map.entrySet().iterator(); iter.hasNext(); ) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            Activity one = (Activity) entry.getKey();
-            Activity two = (Activity) entry.getValue();
+        for (Iterator iter=map.values().iterator(); iter.hasNext(); ) {
+            Activity[] activities = (Activity[]) iter.next();
+            Activity one = activities[0];//old activity
+            Activity two = activities[1];//new activity
             
             switch(one.getType()) {
                 case Activity.TYPE_PACT:
                     PActActivity pactOne = (PActActivity) one;
                     PActActivity pactTwo = (PActActivity) two;
-                    pactTwo.setPrev( (Activity)map.get(pactOne.getPrev()) );
+                    prev = pactOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        pactTwo.setPrev( pair[1] );
+                    }
+                    next = pactOne.getNext();
+                    if (next!=null) {
+                        pair = (Activity[]) map.get(next.getId());
+                        pactTwo.setNext( pair[1] );
+                    }
                     break;
                 case Activity.TYPE_PGAME:
                 case Activity.TYPE_PMETHOD:
                 case Activity.TYPE_MEETING:
                     GroupActivity groupOne = (GroupActivity) one;
                     GroupActivity groupTwo = (GroupActivity) two;
-                    groupTwo.setPrev( (Activity)map.get(groupOne.getPrev()) );
-                    groupTwo.setNext( (Activity)map.get(groupOne.getNext()) );
+                    prev = groupOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        groupTwo.setPrev( pair[1] );
+                    }
+                    next = groupOne.getNext();
+                    if (next!=null) {
+                        pair = (Activity[]) map.get(next.getId());
+                        groupTwo.setNext( pair[1] );
+                    }
                     break;
                 case Activity.TYPE_RETURN:
                     ReturnActivity returnOne = (ReturnActivity) one;
                     ReturnActivity returnTwo = (ReturnActivity) two;
-                    returnTwo.setPrev( (Activity)map.get(returnOne.getPrev()) );
-                    returnTwo.setGroup( (GroupActivity)map.get(returnOne.getGroup()) );
+                    prev = returnOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        returnTwo.setPrev( pair[1] );
+                    }
+                    returnTwo.setGroup( group );
                     break;
                 case Activity.TYPE_BRANCH:
                     BranchActivity branchOne = (BranchActivity) one;
                     BranchActivity branchTwo = (BranchActivity) two;
-                    branchTwo.setPrev( (Activity)map.get(branchOne.getPrev()) );
-                    branchTwo.setJoinActivity( (JoinActivity)map.get(branchOne.getJoinActivity()) );
+                    prev = branchOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        branchTwo.setPrev( pair[1] );
+                    }
+                    JoinActivity join = branchOne.getJoinActivity();
+                    pair = (Activity[]) map.get(join.getId());
+                    branchTwo.setJoinActivity( (JoinActivity)pair[1] );
                     list = branchOne.getBranches();
                     for (int i=0,n=list.size(); i<n; i++) {
-                        branchTwo.getBranches().add( map.get(list.get(i)) );
+                        pair = (Activity[]) map.get( ((Activity)list.get(i)).getId() );
+                        branchTwo.getBranches().add( pair[1] );
                     }//for i
                     break;
                 case Activity.TYPE_JOIN:
                     JoinActivity joinOne = (JoinActivity) one;
                     JoinActivity joinTwo = (JoinActivity) two;
-                    joinTwo.setNext( (Activity)map.get(joinOne.getNext()) );
-                    joinTwo.setBranchActivity( (BranchActivity)map.get(joinOne.getBranchActivity()) );
+                    next = joinOne.getNext();
+                    if (next!=null) {
+                        pair = (Activity[]) map.get(next.getId());
+                        joinTwo.setNext( pair[1] );
+                    }
+                    BranchActivity branch = joinOne.getBranchActivity();
+                    pair = (Activity[]) map.get(branch.getId());
+                    joinTwo.setBranchActivity( (BranchActivity)pair[1] );
                     for (Iterator iter1=joinOne.getJoins().iterator(); iter1.hasNext(); ) {
-                        joinTwo.getJoins().add( map.get(iter1.next()) );
+                        pair = (Activity[]) map.get( ((Activity)iter1.next()).getId() );
+                        joinTwo.getJoins().add( pair[1] );
                     }//for iter
                     break;
                 case Activity.TYPE_SWITCH:
                     SwitchActivity switchOne = (SwitchActivity) one;
                     SwitchActivity switchTwo = (SwitchActivity) two;
-                    switchTwo.setPrev( (Activity)map.get(switchOne.getPrev()) );
-                    switchTwo.setEndSwitchActivity( (EndSwitchActivity)map.get(switchOne.getEndSwitchActivity()) );
+                    prev = switchOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        switchTwo.setPrev( pair[1] );
+                    }
+                    EndSwitchActivity endSwitch = switchOne.getEndSwitchActivity();
+                    pair = (Activity[]) map.get(endSwitch.getId());
+                    switchTwo.setEndSwitchActivity( (EndSwitchActivity)pair[1] );
                     list = switchOne.getSwitches();
                     for (int i=0,n=list.size(); i<n; i++) {
-                        switchTwo.getSwitches().add( map.get(list.get(i)) );
+                        pair = (Activity[]) map.get( ((Activity)list.get(i)).getId() );
+                        switchTwo.getSwitches().add( pair[1] );
                     }//for i
                     break;
                 case Activity.TYPE_ENDSWITCH:
                     EndSwitchActivity endSwitchOne = (EndSwitchActivity) one;
                     EndSwitchActivity endSwitchTwo = (EndSwitchActivity) two;
-                    endSwitchTwo.setNext( (Activity)map.get(endSwitchOne.getNext()) );
-                    endSwitchTwo.setSwitchActivity( (SwitchActivity)map.get(endSwitchOne.getSwitchActivity()) );
+                    next = endSwitchOne.getNext();
+                    if (next!=null) {
+                        pair = (Activity[]) map.get(next.getId());
+                        endSwitchTwo.setNext( pair[1] );
+                    }
+                    SwitchActivity switche = endSwitchOne.getSwitchActivity();
+                    pair = (Activity[]) map.get(switche.getId());
+                    endSwitchTwo.setSwitchActivity( (SwitchActivity) pair[1] );
                     for (Iterator iter1=endSwitchOne.getChoices().iterator(); iter1.hasNext(); ) {
-                        endSwitchTwo.getChoices().add( map.get(iter1.next()) );
+                        pair = (Activity[]) map.get( ((Activity)iter1.next()).getId() );
+                        endSwitchTwo.getChoices().add( pair[1] );
                     }//for iter
                     break;
                 case Activity.TYPE_WHILE:
                     WhileActivity whileOne = (WhileActivity) one;
                     WhileActivity whileTwo = (WhileActivity) two;
-                    whileTwo.setPrev( (Activity)map.get(whileOne.getPrev()) );
-                    whileTwo.setNext( (Activity)map.get(whileOne.getNext()) );
-                    whileTwo.setLoop( (LoopActivity)map.get(whileOne.getLoop()) );
+                    prev = whileOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        whileTwo.setPrev( pair[1] );
+                    }
+                    next = whileOne.getNext();
+                    if (next!=null) {
+                        pair = (Activity[]) map.get(next.getId());
+                        whileTwo.setNext( pair[1] );
+                    }
+                    LoopActivity loop = whileOne.getLoop();
+                    pair = (Activity[]) map.get(loop.getId());
+                    whileTwo.setLoop( (LoopActivity) pair[1] );
                     break;
                 case Activity.TYPE_LOOP:
                     LoopActivity loopOne = (LoopActivity) one;
                     LoopActivity loopTwo = (LoopActivity) two;
-                    loopTwo.setPrev( (Activity)map.get(loopOne.getPrev()) );
-                    loopTwo.setNext( (Activity)map.get(loopOne.getNext()) );
-                    loopTwo.setWhilst( (WhileActivity)map.get(loopOne.getWhilst()) );
+                    prev = loopOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        loopTwo.setPrev( pair[1] );
+                    }
+                    next = loopOne.getNext();
+                    if (next!=null) {
+                        pair = (Activity[]) map.get(next.getId());
+                        loopTwo.setNext( pair[1] );
+                    }
+                    WhileActivity whilst = loopOne.getWhilst();
+                    pair = (Activity[]) map.get(whilst.getId());
+                    loopTwo.setWhilst( (WhileActivity) pair[1] );
                     break;
                 case Activity.TYPE_REPEAT:
                     RepeatActivity repeatOne = (RepeatActivity) one;
                     RepeatActivity repeatTwo = (RepeatActivity) two;
-                    repeatTwo.setPrev( (Activity)map.get(repeatOne.getPrev()) );
-                    repeatTwo.setNext( (Activity)map.get(repeatOne.getNext()) );
-                    repeatTwo.setUntil( (UntilActivity)map.get(repeatOne.getUntil()) );
+                    prev = repeatOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        repeatTwo.setPrev( pair[1] );
+                    }
+                    next = repeatOne.getNext();
+                    if (next!=null) {
+                        pair = (Activity[]) map.get(next.getId());
+                        repeatTwo.setNext( pair[1] );
+                    }
+                    UntilActivity until = repeatOne.getUntil();
+                    pair = (Activity[]) map.get(until.getId());
+                    repeatTwo.setUntil( (UntilActivity) pair[1] );
                     break;
                 case Activity.TYPE_UNTIL:
                     UntilActivity untilOne = (UntilActivity) one;
                     UntilActivity untilTwo = (UntilActivity) two;
-                    untilTwo.setPrev( (Activity)map.get(untilOne.getPrev()) );
-                    untilTwo.setNext( (Activity)map.get(untilOne.getNext()) );
-                    untilTwo.setRepeat( (RepeatActivity)map.get(untilOne.getRepeat()) );
+                    prev = untilOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        untilTwo.setPrev( pair[1] );
+                    }
+                    next = untilOne.getNext();
+                    if (next!=null) {
+                        pair = (Activity[]) map.get(next.getId());
+                        untilTwo.setNext( pair[1] );
+                    }
+                    RepeatActivity repeat = untilOne.getRepeat();
+                    pair = (Activity[]) map.get(repeat.getId());
+                    untilTwo.setRepeat( (RepeatActivity) pair[1] );
                     break;
                 case Activity.TYPE_JUMP:
                     JumpActivity jumpOne = (JumpActivity) one;
                     JumpActivity jumpTwo = (JumpActivity) two;
-                    jumpTwo.setPrev( (Activity)map.get(jumpOne.getPrev()) );
-                    jumpTwo.setNext( (Activity)map.get(jumpOne.getNext()) );
+                    prev = jumpOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        jumpTwo.setPrev( pair[1] );
+                    }
+                    next = jumpOne.getNext();
+                    if (next!=null) {
+                        pair = (Activity[]) map.get(next.getId());
+                        jumpTwo.setNext( pair[1] );
+                    }
                     list = jumpOne.getJumps();
                     for (int i=0,n=list.size(); i<n; i++) {
-                        jumpTwo.getJumps().add( map.get(list.get(i)) );
+                        pair = (Activity[]) map.get(((Activity)list.get(i)).getId());
+                        jumpTwo.getJumps().add( pair[1] );
                     }//for i
                     break;
                 case Activity.TYPE_TERMINATE:
                     TerminateActivity termOne = (TerminateActivity) one;
                     TerminateActivity termTwo = (TerminateActivity) two;
-                    termTwo.setPrev( (Activity)map.get(termOne.getPrev()) );
+                    prev = termOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        termTwo.setPrev( pair[1] );
+                    }
                     break;
             }//switch
         }//for
         
-        return new FlowPiece((SingleIn)map.get(head), (SingleOut)map.get(tail));
+        FlowPiece piece = new FlowPiece();
+        pair = (Activity[]) map.get(head.getId());
+        piece.setHead((SingleIn)pair[1]);
+        pair = (Activity[]) map.get(tail.getId());
+        piece.setTail((SingleOut)pair[1]);
+        return piece;
     }//spawn()
 
 
