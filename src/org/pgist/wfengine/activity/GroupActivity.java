@@ -98,7 +98,7 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
 
     /**
      * @return
-     * @hibernate.property not-null="true"
+     * @hibernate.property
      */
     public String getName() {
         return name;
@@ -112,7 +112,7 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
 
     /**
      * @return
-     * @hibernate.property not-null="true"
+     * @hibernate.property
      */
     public String getDescription() {
         return description;
@@ -214,27 +214,25 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected Activity[] doExecute(RunningContext context) throws Exception {
-        synchronized (refId) {
-            if (template!=null && headActivity==null) {
-                FlowPiece piece = template.spawn();
-                
-                headActivity = (Activity) piece.getHead();
-                
-                ReturnActivity returnActivity = new ReturnActivity();
-                returnActivity.setCount(0);
-                returnActivity.setExpression(0);
-                returnActivity.setGroup(this);
-                returnActivity.setPrev((Activity)piece.getTail());
-                returnActivity.setType(Activity.TYPE_RETURN);
-                ((SingleOut) returnActivity.getPrev()).setNext(returnActivity);
-                tailActivity = returnActivity;
-                
-                context = new RunningContext(context);
-                context.getRunningActivities().add(headActivity);
-                setExpression(0);
-            }
-        }//synchronized refId
+    synchronized protected Activity[] doExecute(RunningContext context) throws Exception {
+        if (template!=null && headActivity==null) {
+            FlowPiece piece = template.spawn();
+            
+            headActivity = (Activity) piece.getHead();
+            
+            ReturnActivity returnActivity = new ReturnActivity();
+            returnActivity.setCount(0);
+            returnActivity.setExpression(0);
+            returnActivity.setGroup(this);
+            returnActivity.setPrev((Activity)piece.getTail());
+            returnActivity.setType(Activity.TYPE_RETURN);
+            ((SingleOut) returnActivity.getPrev()).setNext(returnActivity);
+            tailActivity = returnActivity;
+            
+            context = new RunningContext(context);
+            context.getRunningActivities().add(headActivity);
+            setExpression(0);
+        }
         
         if (getExpression()>0) {//task is finished
             setHeadActivity(null);

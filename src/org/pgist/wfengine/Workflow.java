@@ -202,7 +202,7 @@ public class Workflow implements Serializable {
         born = true;
         beginTime = new Date();
         
-        context.getRunningActivities().add(definition);
+        context.getRunningActivities().add(getDefinition());
         context.execute();
     }//execute()
     

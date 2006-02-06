@@ -26,7 +26,7 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
     }
     
     
-    public Workflow getWorkflow(Long id, boolean finished, boolean cancelled) {
+    public Workflow getWorkflow(Long id, boolean finished, boolean cancelled) throws Exception {
         Workflow workflow = null;
         
         Query query = getSession().createQuery(hql_getWorkflow);
@@ -43,27 +43,35 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
     }//getWorkflow()
     
     
-    public Session getHibernateSession() {
+    public Session getHibernateSession() throws Exception {
         return getSession();
     }//getHibernateSession()
 
 
-    public void saveTemplate(Template template) {
+    public void saveTemplate(Template template) throws Exception {
         //check if another template has the same refid
         //TODO
         getSession().saveOrUpdate(template);
     }//saveTemplate()
 
 
-    public void saveWorkflow(Workflow workflow) {
+    public void saveWorkflow(Workflow workflow) throws Exception {
         getSession().saveOrUpdate(workflow);
     }//saveWorkflow()
 
 
+    private static final String hql_getTemplates = "from Template t where type=? and deleted=?";
+    
+    
+    public List getTemplates(int type) throws Exception {
+        return getHibernateTemplate().find(hql_getTemplates, new Object[] {new Integer(type), new Boolean(false)});
+    }//getTemplates()
+    
+    
     private static final String hql_getTemplate = "from Template t where id=:id and deleted=:deleted";
     
     
-    public Template getTemplate(Long id) {
+    public Template getTemplate(Long id) throws Exception {
         Template template = null;
         
         Query query = getSession().createQuery(hql_getTemplate);
@@ -79,7 +87,7 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
     }//getTemplate()
 
 
-    public void saveActivity(Activity activity) {
+    public void saveActivity(Activity activity) throws Exception {
         //check if another activity has the same refid
         //TODO
         getSession().saveOrUpdate(activity);
@@ -89,7 +97,7 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
     private static final String hql_getPActActivityByRefId = "from PActActivity p where refid=?";
     
     
-    public PActActivity getPActActivityByRefId(Long refId) {
+    public PActActivity getPActActivityByRefId(Long refId) throws Exception {
         List list = getHibernateTemplate().find(hql_getPActActivityByRefId, refId);
         return (list.size()==0) ? null : (PActActivity) list.get(0);
     }//getPActActivity()
@@ -98,10 +106,10 @@ public class WorkflowDAOImpl extends HibernateDaoSupport implements WorkflowDAO 
     private static final String hql_getGroupActivityByRefId = "from GroupActivity g where level=? and refid=?";
     
     
-    public GroupActivity getGroupActivityByRefId(Long level, Long refId) {
+    public GroupActivity getGroupActivityByRefId(Long level, Long refId) throws Exception {
         List list = getHibernateTemplate().find(hql_getGroupActivityByRefId, new Object[] {level, refId});
         return (list.size()==0) ? null : (GroupActivity) list.get(0);
     }//getGroupActivityByRefId()
-    
-    
+
+
 }//class WorkflowDAOImpl

@@ -124,12 +124,19 @@ public class WorkflowEngine {
     }//getTemplate()
     
     
+    public List getSituationTemplates() throws Exception {
+        return workflowDAO.getTemplates(Template.TYPE_SITUATION);
+    }//getSituationTemplates()
+    
+    
     /**
      * Spawn from the given process, generate a new workflow instance
      * @param process
      * @return
      */
-    public Workflow spawn(Template template) {
+    public Workflow spawn(Long id) throws Exception {
+        Template template = getTemplate(id);
+        
         Workflow workflow = new Workflow();
         
         RunningContext context = new RunningContext();
@@ -143,19 +150,23 @@ public class WorkflowEngine {
         
         workflow.setDefinition((Activity) piece.getHead());
         
+        workflowDAO.saveWorkflow(workflow);
+        
         try {
             workflow.execute();
         } catch(Exception e) {
             e.printStackTrace();
         }
         
+        workflowDAO.saveWorkflow(workflow);
+        
         return workflow;
     }//spawn()
     
     
-    public void saveWorkflow(Workflow workflow) {
+    public void saveWorkflow(Workflow workflow) throws Exception {
         workflowDAO.saveWorkflow(workflow);
     }//saveWorkflow()
-
-
+    
+    
 }//class WorkflowEngine

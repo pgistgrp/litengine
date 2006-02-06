@@ -149,6 +149,7 @@ public class TemplateParser {
                     if (ref==null) throw new Exception("GroupActivity (pgame) referenced by refid "+id+" not found!");
                     
                     GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_PGAME);
+                    activity.setType(Activity.TYPE_PGAME);
                     activity.setCount(0);
                     activity.setExpression(0);
                     activity.setPrev(parent);
@@ -210,6 +211,7 @@ public class TemplateParser {
                     if (ref==null) throw new Exception("GroupActivity (pmethod) referenced by refid "+id+" not found!");
                     
                     GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_PMETHOD);
+                    activity.setType(Activity.TYPE_PMETHOD);
                     activity.setCount(0);
                     activity.setExpression(0);
                     activity.setPrev(parent);
@@ -270,6 +272,7 @@ public class TemplateParser {
                     if (ref==null) throw new Exception("GroupActivity (meeting) referenced by refid "+id+" not found!");
                     
                     GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_MEETING);
+                    activity.setType(Activity.TYPE_MEETING);
                     activity.setCount(0);
                     activity.setExpression(0);
                     activity.setPrev(parent);

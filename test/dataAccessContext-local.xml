@@ -27,8 +27,7 @@
            <list>
                <value>org/pgist/wfengine/WorkflowEnvironment.hbm.xml</value>
                <value>org/pgist/wfengine/Workflow.hbm.xml</value>
-               <value>org/pgist/wfengine/WorkflowTracker.hbm.xml</value>
-               <value>org/pgist/wfengine/WorkflowTrackRecord.hbm.xml</value>
+               <value>org/pgist/wfengine/RunningContext.hbm.xml</value>
                <value>org/pgist/wfengine/Activity.hbm.xml</value>
                <value>org/pgist/wfengine/Task.hbm.xml</value>
                <value>org/pgist/wfengine/AccessManager.hbm.xml</value>

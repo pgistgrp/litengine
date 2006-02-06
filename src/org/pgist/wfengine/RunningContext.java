@@ -1,5 +1,6 @@
 package org.pgist.wfengine;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -30,7 +31,7 @@ public class RunningContext {
     
     private Set runningActivities = new HashSet();
     
-    private List records;
+    private List records = new ArrayList();
     
     
     /*
@@ -66,6 +67,10 @@ public class RunningContext {
     }
 
 
+    /**
+     * @return
+     * @hibernate.many-to-one column="parent_id" class="org.pgist.wfengine.RunningContext" cascade="all"
+     */
     public RunningContext getParent() {
         return parent;
     }
@@ -126,7 +131,7 @@ public class RunningContext {
             //This activity is executed and flow branch finished
         } else if (list.length==1 && list[0].getId()==activity.getId()) {
             //This activity is not executed
-            records.add(activity);
+            if (activity.getTask()!=null) records.add(activity.getTask());
             return;
         } else {
             //This activity is executed, and its successive activities are returned
