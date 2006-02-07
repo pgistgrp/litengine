@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
@@ -106,13 +107,13 @@ public class JoinActivity extends Activity implements SingleOut {
     }//doActivate()
     
     
-    protected Activity[] doExecute(RunningContext context) throws Exception {
-        if (joinCount>=joins.size()) { 
-            return new Activity[] { next };
-        } else {
-            //temporarily kill this thread
-            return new Activity[] {};
+    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
+        if (joinCount>=joins.size()) {
+            next.activate(context);
+            stack.push(next);
+            return true;
         }
+        return false;
     }//doExecute()
     
     

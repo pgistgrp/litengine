@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
@@ -85,8 +86,10 @@ public class EndSwitchActivity extends Activity implements SingleOut {
      */
     
     
-    protected Activity[] doExecute(RunningContext context) throws Exception {
-        return new Activity[] { next };
+    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
+        next.activate(context);
+        stack.push(next);
+        return true;
     }//doActivate()
     
     

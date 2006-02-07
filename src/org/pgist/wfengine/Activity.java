@@ -1,6 +1,7 @@
 package org.pgist.wfengine;
 
 import java.io.Serializable;
+import java.util.Stack;
 
 import org.hibernate.Session;
 
@@ -141,7 +142,7 @@ public abstract class Activity implements Serializable {
      * @param workflow
      * @param parent
      */
-    final void activate(RunningContext context, Activity parent) {
+    public final void activate(RunningContext context) {
         //Increase Count. That means the total visiting times for this activity.
         setCount(getCount()+1);
         
@@ -159,8 +160,8 @@ public abstract class Activity implements Serializable {
      * Package Accessible
      * @param env
      */
-    final Activity[] execute(RunningContext context, Activity parent) throws Exception {
-        return doExecute(context);
+    final boolean execute(RunningContext context, Stack stack) throws Exception {
+        return doExecute(context, stack);
     }//activate
     
     
@@ -168,7 +169,7 @@ public abstract class Activity implements Serializable {
      * Package Accessible
      * @param env
      */
-    final void deActivate(RunningContext context, Activity parent) {
+    final void deActivate(RunningContext context) {
         if (task!=null) task.finalize(context);
         
         doDeActivate(context);
@@ -196,7 +197,7 @@ public abstract class Activity implements Serializable {
     }//doDeActivate()
     
     
-    abstract protected Activity[] doExecute(RunningContext context) throws Exception;
+    abstract protected boolean doExecute(RunningContext context, Stack stack) throws Exception;
     
     
     protected void proceed() throws Exception {

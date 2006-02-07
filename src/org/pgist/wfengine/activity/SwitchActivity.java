@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
@@ -107,7 +108,7 @@ public class SwitchActivity extends Activity implements SingleIn {
      */
     
     
-    protected Activity[] doExecute(RunningContext context) throws Exception {
+    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
         if (task==null) {
             setExpression(1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
@@ -118,9 +119,12 @@ public class SwitchActivity extends Activity implements SingleIn {
         if (getExpression()>switches.size()) setExpression(switches.size());
         
         if (getExpression()==0) {
-            return new Activity[] { this };
+            return false;
         } else {
-            return new Activity[] { (Activity) switches.get(getExpression()-1) };
+            Activity activity = (Activity) switches.get(getExpression()-1);
+            activity.activate(context);
+            stack.push(activity);
+            return true;
         }
     }//doExecute()
     

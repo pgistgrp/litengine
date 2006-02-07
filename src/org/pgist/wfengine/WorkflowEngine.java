@@ -8,6 +8,7 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
 import org.pgist.wfengine.activity.PActActivity;
+import org.pgist.wfengine.activity.TerminateActivity;
 
 
 /**
@@ -147,16 +148,16 @@ public class WorkflowEngine {
         env.setWorkflow(workflow);
         
         FlowPiece piece = template.spawn();
+        SingleOut tail = piece.getTail();
+        TerminateActivity terminateActivity = new TerminateActivity();
+        terminateActivity.setCount(0);
+        terminateActivity.setExpression(0);
+        terminateActivity.setPrev((Activity) tail);
+        tail.setNext(terminateActivity);
         
         workflow.setDefinition((Activity) piece.getHead());
         
-        workflowDAO.saveWorkflow(workflow);
-        
-        try {
-            workflow.execute();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        workflow.initialize();
         
         workflowDAO.saveWorkflow(workflow);
         
@@ -167,6 +168,12 @@ public class WorkflowEngine {
     public void saveWorkflow(Workflow workflow) throws Exception {
         workflowDAO.saveWorkflow(workflow);
     }//saveWorkflow()
+    
+    
+    public void executeWorkflow(Workflow workflow) throws Exception {
+        workflow.execute();
+        workflowDAO.saveWorkflow(workflow);
+    }//executeWorkflow()
     
     
 }//class WorkflowEngine

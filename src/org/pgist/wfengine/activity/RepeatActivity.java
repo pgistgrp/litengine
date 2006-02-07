@@ -1,5 +1,7 @@
 package org.pgist.wfengine.activity;
 
+import java.util.Stack;
+
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
@@ -112,8 +114,10 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected Activity[] doExecute(RunningContext context) throws Exception {
-        return new Activity[] { next };
+    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
+        next.activate(context);
+        stack.push(next);
+        return true;
     }//doExecute()
     
     

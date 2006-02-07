@@ -1,5 +1,7 @@
 package org.pgist.wfengine.activity;
 
+import java.util.Stack;
+
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.FlowPiece;
@@ -214,37 +216,44 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    synchronized protected Activity[] doExecute(RunningContext context) throws Exception {
-        if (template!=null && headActivity==null) {
-            FlowPiece piece = template.spawn();
-            
-            headActivity = (Activity) piece.getHead();
-            
-            ReturnActivity returnActivity = new ReturnActivity();
-            returnActivity.setCount(0);
-            returnActivity.setExpression(0);
-            returnActivity.setGroup(this);
-            returnActivity.setPrev((Activity)piece.getTail());
-            returnActivity.setType(Activity.TYPE_RETURN);
-            ((SingleOut) returnActivity.getPrev()).setNext(returnActivity);
-            tailActivity = returnActivity;
-            
-            context = new RunningContext(context);
-            context.getRunningActivities().add(headActivity);
-            setExpression(0);
-        }
+    protected void doActivate(RunningContext context) {
+        FlowPiece piece = template.spawn();
         
+        setHeadActivity((Activity) piece.getHead());
+        
+        ReturnActivity returnActivity = new ReturnActivity();
+        returnActivity.setCount(0);
+        returnActivity.setExpression(0);
+        returnActivity.setGroup(this);
+        returnActivity.setPrev((Activity)piece.getTail());
+        returnActivity.setType(Activity.TYPE_RETURN);
+        ((SingleOut) returnActivity.getPrev()).setNext(returnActivity);
+        setTailActivity(returnActivity);
+        
+        setContext(new RunningContext(context));
+        getContext().addActivity(getHeadActivity());
+        setExpression(0);
+    }//doActivate()
+    
+    
+    synchronized protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
+        getContext().execute();
         if (getExpression()>0) {//task is finished
-            setHeadActivity(null);
-            setTailActivity(null);
-            setContext(null);
-            return new Activity[] { next };
-        } else {
-            return new Activity[] { this };
+            next.activate(context);
+            stack.push(next);
+            return true;
         }
+        return false;
     }//doExecute()
-
-
+    
+    
+    protected void doDeActivate(RunningContext context) {
+        setHeadActivity(null);
+        setTailActivity(null);
+        setContext(null);
+    }//doDeActivate()
+    
+    
     public void saveState(Session session) {
         session.save(this);
         if (next!=null) next.saveState(session);

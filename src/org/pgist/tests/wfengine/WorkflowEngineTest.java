@@ -7,11 +7,8 @@ import junit.framework.TestCase;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.FlowPiece;
 import org.pgist.wfengine.Template;
 import org.pgist.wfengine.Workflow;
-import org.pgist.wfengine.WorkflowDAO;
 import org.pgist.wfengine.WorkflowEngine;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -34,8 +31,6 @@ public class WorkflowEngineTest extends TestCase {
     
     private WorkflowEngine engine = null;
     
-    private WorkflowDAO workflowDAO = null;
-    
     
     protected void setUp() throws Exception {
         super.setUp();
@@ -51,7 +46,6 @@ public class WorkflowEngineTest extends TestCase {
         TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
         
         engine = (WorkflowEngine) appContext.getBean("litengine");
-        workflowDAO = (WorkflowDAO) appContext.getBean("workflowDAO");
     }//setUp()
     
     
@@ -124,10 +118,21 @@ public class WorkflowEngineTest extends TestCase {
         try {
             Workflow workflow = engine.spawn(new Long(75));
             assertNotNull(workflow);
+            System.out.println("New workflow: ---> "+workflow.getId());
         } catch(Exception e) {
             e.printStackTrace();
         }
     }//testGetTemplate()
+    
+    
+    public void testExecuteWorkflow() {
+        try {
+            Workflow workflow = engine.getWorkflow(new Long(85));
+            engine.executeWorkflow(workflow);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }//testExecuteWorkflow()
     
     
 }//class WorkflowEngineTest

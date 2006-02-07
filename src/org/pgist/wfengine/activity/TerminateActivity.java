@@ -1,5 +1,7 @@
 package org.pgist.wfengine.activity;
 
+import java.util.Stack;
+
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
@@ -46,7 +48,7 @@ public class TerminateActivity extends Activity implements SingleIn {
      */
     
     
-    protected Activity[] doExecute(RunningContext context) throws Exception {
+    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
         //Terminate Activity have to be handled differently
         if (task==null) {
             setExpression(1);
@@ -54,11 +56,7 @@ public class TerminateActivity extends Activity implements SingleIn {
             task.execute(context);
         }
         
-        if (getExpression()>0) {//task is finished
-            return new Activity[] {};
-        } else {
-            return new Activity[] { this };
-        }
+        return getExpression()>0;
     }//doExecute()
     
     

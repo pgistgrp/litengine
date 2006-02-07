@@ -191,10 +191,10 @@ public class Workflow implements Serializable {
     
     /**
      * Package Accessible.
-     * Initially execute the workflow.
+     * Initailize this workflow.
      * This method can only be execute exactly ONCE!
      */
-    void execute() throws Exception {
+    void initialize() throws Exception {
         //Check if this workflow already finished, cancelled or born
         if (finished || cancelled || born) return;
         
@@ -202,8 +202,19 @@ public class Workflow implements Serializable {
         born = true;
         beginTime = new Date();
         
-        context.getRunningActivities().add(getDefinition());
-        context.execute();
+        context.addActivity(getDefinition());
+    }//execute()
+    
+    
+    /**
+     * Package Accessible.
+     * Execute this flow.
+     */
+    void execute() throws Exception {
+        //Check if this workflow already finished, cancelled
+        if (finished || cancelled) return;
+        
+        getContext().execute();
     }//execute()
     
     

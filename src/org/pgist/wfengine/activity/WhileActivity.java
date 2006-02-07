@@ -1,5 +1,7 @@
 package org.pgist.wfengine.activity;
 
+import java.util.Stack;
+
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
@@ -119,7 +121,7 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
     }//doActivate()
     
     
-    protected Activity[] doExecute(RunningContext context) throws Exception {
+    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
         if (task==null) {
             setExpression(1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
@@ -127,12 +129,15 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
         }
         
         if (getExpression()==0) {
-            return new Activity[] { this };
+            return false;
         } else if (getExpression()>0) {
-            return new Activity[] { next };
+            next.activate(context);
+            stack.push(next);
         } else {
-            return new Activity[] { loop.getNext() };
+            loop.activate(context);
+            stack.push(loop);
         }
+        return true;
     }//doActivate()
     
     

@@ -2,7 +2,6 @@ package org.pgist.wfengine;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -123,49 +122,43 @@ public class RunningContext {
      */
     
     
-    protected void perform(Stack stack, Stack parentStack, Activity activity, Activity parent) throws Exception {
+    public void addActivity(Activity activity) {
+        //Activate this activity
+        activity.activate(this);
+        getRunningActivities().add(activity);
+    }//addActivity()
+    
+    
+    protected void perform(Stack stack, List activities, Activity activity) throws Exception {
         //Execute this activity
-        Activity[] list = activity.execute(this, parent);
+        boolean finished = activity.execute(this, stack);
         
-        if (list==null || list.length==0) {
-            //This activity is executed and flow branch finished
-        } else if (list.length==1 && list[0].getId()==activity.getId()) {
-            //This activity is not executed
-            if (activity.getTask()!=null) records.add(activity.getTask());
-            return;
-        } else {
-            //This activity is executed, and its successive activities are returned
-            
-            for (int i=0,n=list.length; i<n; i++) {
-                parentStack.push(activity);
-                stack.push(list[i]);
-            }//for i
-            
+        if (finished) {
             //Deactivate this activity
-            activity.deActivate(this, null);
+            activity.deActivate(this);
+        } else {
+            //Return to running list
+            activities.add(activity);
         }
     }//perform()
     
     
     synchronized public void execute() throws Exception {
         Stack stack = new Stack();
-        Stack parentStack = new Stack();
+        List activities = new ArrayList(20);
         
-        for (Iterator iter=runningActivities.iterator(); iter.hasNext(); ) {
-            stack.push(iter.next());
-            parentStack.push(null);
-        }//for iter
+        //Put all running activities into stack
+        stack.addAll(getRunningActivities());
         
         while (!stack.empty()) {
-            //Pop out an activity and it's parent
+            //Pop out an activity
             Activity activity = (Activity) stack.pop();
-            Activity parent = (Activity) parentStack.pop();
-            
-            //Activity this activity
-            activity.activate(this, parent);
-            
-            perform(stack, parentStack, activity, parent);
+            System.out.println(getId()+" ---> "+activity); 
+            perform(stack, activities, activity);
         }//while
+        
+        getRunningActivities().clear();
+        getRunningActivities().addAll(activities);
     }//execute()
     
     
@@ -175,7 +168,7 @@ public class RunningContext {
      */
     synchronized public void proceed(Activity activity) throws Exception {
         Stack stack = new Stack();
-        Stack parentStack = new Stack();
+        List activities = new ArrayList(20);
         
         //check if the activity is current activity in the environment
         if (!runningActivities.contains(activity)) return;
@@ -183,18 +176,20 @@ public class RunningContext {
         runningActivities.remove(activity);
         
         activity.proceed();
-        perform(stack, parentStack, activity, null);
+        perform(stack, activities, activity);
         
         while (!stack.empty()) {
             //Pop out an activity and it's parent
             activity = (Activity) stack.pop();
-            Activity parent = (Activity) parentStack.pop();
             
             //Activity this activity
-            activity.activate(this, parent);
+            activity.activate(this);
             
-            perform(stack, parentStack, activity, parent);
+            perform(stack, activities, activity);
         }//while
+        
+        getRunningActivities().clear();
+        getRunningActivities().addAll(activities);
     }//proceed()
     
     

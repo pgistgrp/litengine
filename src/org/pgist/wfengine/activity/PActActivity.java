@@ -1,5 +1,7 @@
 package org.pgist.wfengine.activity;
 
+import java.util.Stack;
+
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
@@ -113,17 +115,23 @@ public class PActActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected Activity[] doExecute(RunningContext context) throws Exception {
+    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
         if (task==null) {
             setExpression(1);
         } else if (task.getType()==Task.TASK_AUTOMATIC) {
             task.execute(context);
         }
         
+        //temp
+        setExpression(1);
+        System.out.println("---> I am a pact: "+getId());
+        
         if (getExpression()>0) {//task is finished
-            return new Activity[] { next };
+            next.activate(context);
+            stack.push(next);
+            return true;
         } else {
-            return new Activity[] { this };
+            return false;
         }
     }//doExecute()
     

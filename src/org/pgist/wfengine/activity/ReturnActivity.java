@@ -1,5 +1,7 @@
 package org.pgist.wfengine.activity;
 
+import java.util.Stack;
+
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
@@ -74,9 +76,9 @@ public class ReturnActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected Activity[] doExecute(RunningContext context) throws Exception {
+    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
         getGroup().setExpression(1);
-        return null;
+        return true;
     }//doExecute()
     
     

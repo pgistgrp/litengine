@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
@@ -90,16 +91,19 @@ public class BranchActivity extends Activity implements SingleIn {
      */
     
     
-    protected Activity[] doExecute(RunningContext context) throws Exception {
-        Activity[] activities = new Activity[branches.size()];
-        for (int i=0; i<activities.length; i++) {
-            activities[i] = (Activity) branches.get(i);
+    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
+        for (int i=0,n=branches.size(); i<n; i++) {
+            Activity activity = (Activity) branches.get(i);
+            activity.activate(context);
+            stack.push(activity);
         }//for i
         
         //initialize branch/join pair
-        joinActivity.setJoinCount(0);
+        getJoinActivity().setJoinCount(0);
         
-        return activities;
+        //return true;
+        //temp
+        return false;
     }//doExecute()
     
     
