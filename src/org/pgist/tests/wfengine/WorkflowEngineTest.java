@@ -127,7 +127,7 @@ public class WorkflowEngineTest extends TestCase {
     
     public void testExecuteWorkflow() {
         try {
-            Workflow workflow = engine.getWorkflow(new Long(85));
+            Workflow workflow = engine.getWorkflow(new Long(167));
             engine.executeWorkflow(workflow);
         } catch(Exception e) {
             e.printStackTrace();

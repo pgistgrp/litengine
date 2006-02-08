@@ -136,6 +136,7 @@ public class RunningContext {
         if (finished) {
             //Deactivate this activity
             activity.deActivate(this);
+            activities.remove(activity);
         } else {
             //Return to running list
             activities.add(activity);
@@ -153,7 +154,6 @@ public class RunningContext {
         while (!stack.empty()) {
             //Pop out an activity
             Activity activity = (Activity) stack.pop();
-            System.out.println(getId()+" ---> "+activity); 
             perform(stack, activities, activity);
         }//while
         

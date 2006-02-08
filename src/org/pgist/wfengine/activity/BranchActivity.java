@@ -101,9 +101,7 @@ public class BranchActivity extends Activity implements SingleIn {
         //initialize branch/join pair
         getJoinActivity().setJoinCount(0);
         
-        //return true;
-        //temp
-        return false;
+        return true;
     }//doExecute()
     
     
