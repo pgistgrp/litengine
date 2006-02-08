@@ -1,0 +1,297 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass beamer
+\begin_preamble
+%\usetheme{Warsaw}
+%\setbeamercovered{transparent}
+\end_preamble
+\language english
+\inputencoding auto
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 1
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+LIT Workflow Design
+\layout BeginFrame
+
+Outline
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Concepts and Structures
+\layout Subsection
+
+LIT Workflow Framework
+\layout BeginFrame
+
+LIT Workflow Framework
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename LITFlowFramework.eps
+	lyxscale 40
+	width 60text%
+	keepAspectRatio
+
+\end_inset 
+
+
+\layout Subsection
+
+Template-based vs.
+ Instance-based Workflow
+\layout BeginFrame
+
+Template-based vs.
+ Instance-based Workflow
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename Template-Instance-Compare.eps
+	lyxscale 40
+	width 100text%
+	keepAspectRatio
+
+\end_inset 
+
+
+\layout Subsection
+
+Planed vs.
+ Full-Dynamic Workflow
+\layout BeginFrame
+
+Planed vs.
+ Full-Dynamic Workflow
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename Plan-DynamicDiagram.eps
+	lyxscale 40
+	width 65text%
+
+\end_inset 
+
+
+\layout Subsection
+
+Reuse and Granularity of reuse
+\layout BeginFrame
+
+Reuse and Granularity of reuse
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename ReuseDiagram.eps
+	lyxscale 40
+	width 50text%
+
+\end_inset 
+
+
+\layout Section
+
+Implementation
+\layout Subsection
+
+Flow Control
+\layout BeginFrame
+
+Flow Control Implementation
+\layout Itemize
+
+Sequence Activity
+\layout Itemize
+
+Branch-Join
+\layout Itemize
+
+Switch-EndSwitch
+\layout Itemize
+
+Repeat-Until
+\layout Itemize
+
+While-Loop
+\layout Itemize
+
+JumpBack
+\layout BeginFrame
+
+Sequence Activity
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename SequenceFlowScheme.eps
+	lyxscale 40
+	width 65text%
+
+\end_inset 
+
+
+\layout BeginFrame
+
+Branch-Join Activities
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename BranchJoinDiagram.eps
+	lyxscale 40
+	width 65text%
+
+\end_inset 
+
+
+\layout BeginFrame
+
+Switch-EndSwitch Activities
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename SwitchEndSwitchDiagram.eps
+	lyxscale 40
+	width 65text%
+
+\end_inset 
+
+
+\layout BeginFrame
+
+Comparation between Branch-Join and Switch-EndSwitch
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename BranchJoin-SwitchDiagram.eps
+	lyxscale 40
+	width 75text%
+
+\end_inset 
+
+
+\layout BeginFrame
+
+Repeat-Until Activities
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename RepeatUntilDiagram.eps
+	lyxscale 40
+	width 65text%
+
+\end_inset 
+
+
+\layout BeginFrame
+
+While-Loop Activities
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename WhileLoopDiagram.eps
+	lyxscale 40
+	width 65text%
+
+\end_inset 
+
+
+\layout BeginFrame
+
+JumpBack Activity
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename JumpBackDiagram.eps
+	lyxscale 40
+	width 65text%
+
+\end_inset 
+
+
+\layout Subsection
+
+PGIST Tree Data Structure vs.
+ Graph Data Structure
+\layout BeginFrame
+
+Flow Instance Trajectory and Data Storage
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename FlowStorageDiagram.eps
+	lyxscale 40
+	width 45text%
+
+\end_inset 
+
+
+\layout BeginFrame
+
+Another Example
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename FlowStorageDiagram1.eps
+	lyxscale 40
+	width 40text%
+
+\end_inset 
+
+
+\layout Subsection
+
+Timer
+\layout BeginFrame
+
+Timer
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename TimerDiagram.eps
+	width 50text%
+
+\end_inset 
+
+
+\layout EndFrame
+
+\the_end
