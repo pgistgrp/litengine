@@ -53,7 +53,7 @@
     <!-- ========================= DAO DEFINITIONS: HIBERNATE IMPLEMENTATIONS ========================= -->
   
 
-    <bean id="workflowDAO" class="org.pgist.wfengine.WorkflowDAOImpl">
+    <bean id="engineDAO" class="org.pgist.wfengine.WorkflowEngineDAOImpl">
         <property name="sessionFactory">
            <ref local="sessionFactory" />
         </property>

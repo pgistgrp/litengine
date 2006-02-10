@@ -24,7 +24,7 @@ public class WorkflowEngine {
     
     private Cache workflowCache = null;
     
-    private WorkflowDAO workflowDAO;
+    private WorkflowEngineDAO engineDAO;
     
     private TemplateParser templateParser;
     
@@ -43,8 +43,8 @@ public class WorkflowEngine {
     }
     
     
-    public void setWorkflowDAO(WorkflowDAO workflowDAO) {
-        this.workflowDAO = workflowDAO;
+    public void setEngineDAO(WorkflowEngineDAO engineDAO) {
+        this.engineDAO = engineDAO;
     }
     
     
@@ -53,6 +53,11 @@ public class WorkflowEngine {
     }
 
 
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     /**
      * Client programs use this method to get the workflow instance.
      * 
@@ -67,7 +72,7 @@ public class WorkflowEngine {
         if (element!=null) {
             workflow = (Workflow) element.getValue();
         } else {
-            workflow = workflowDAO.getWorkflow(id, false, false);
+            workflow = engineDAO.getWorkflow(id, false, false);
             workflowCache.put(new Element(id, workflow));
         }
         
@@ -100,8 +105,8 @@ public class WorkflowEngine {
         if (list!=null && list.size()>0) {
             for (int i=0,n=list.size(); i<n; i++) {
                 PActActivity pact = (PActActivity) list.get(i);
-                if (workflowDAO.getPActActivityByRefId(pact.getRefId())!=null) throw new Exception("Another PActActivity has this refid: "+pact.getRefId());
-                workflowDAO.saveActivity(pact);
+                if (engineDAO.getPActActivityByRefId(pact.getRefId())!=null) throw new Exception("Another PActActivity has this refid: "+pact.getRefId());
+                engineDAO.saveActivity(pact);
             }//for iter
         }
         return list;
@@ -121,12 +126,12 @@ public class WorkflowEngine {
     
     
     public Template getTemplate(Long id)throws Exception {
-        return workflowDAO.getTemplate(id);
+        return engineDAO.getTemplate(id);
     }//getTemplate()
     
     
     public List getSituationTemplates() throws Exception {
-        return workflowDAO.getTemplates(Template.TYPE_SITUATION);
+        return engineDAO.getTemplates(Template.TYPE_SITUATION);
     }//getSituationTemplates()
     
     
@@ -159,20 +164,20 @@ public class WorkflowEngine {
         
         workflow.initialize();
         
-        workflowDAO.saveWorkflow(workflow);
+        engineDAO.saveWorkflow(workflow);
         
         return workflow;
     }//spawn()
     
     
     public void saveWorkflow(Workflow workflow) throws Exception {
-        workflowDAO.saveWorkflow(workflow);
+        engineDAO.saveWorkflow(workflow);
     }//saveWorkflow()
     
     
     public void executeWorkflow(Workflow workflow) throws Exception {
         workflow.execute();
-        workflowDAO.saveWorkflow(workflow);
+        engineDAO.saveWorkflow(workflow);
     }//executeWorkflow()
     
     
