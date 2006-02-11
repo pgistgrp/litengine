@@ -250,6 +250,8 @@ public class Template {
                     one = realOne;
                     GroupActivity realTwo = new GroupActivity(realOne.getLevel());
                     two = realTwo;
+                    realTwo.setName(realOne.getName());
+                    realTwo.setDescription(realOne.getDescription());
                     realTwo.setTemplate(realOne.getTemplate());
                     stack.push( realOne.getNext() );
                     break;

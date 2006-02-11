@@ -27,7 +27,7 @@ public class WorkflowEngineTest extends TestCase {
     
     private ApplicationContext appContext = null;
     
-    protected SessionFactory sessionFactory = null; 
+    private SessionFactory sessionFactory = null; 
     
     private WorkflowEngine engine = null;
     

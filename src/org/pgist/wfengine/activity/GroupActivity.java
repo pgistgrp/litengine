@@ -1,8 +1,12 @@
 package org.pgist.wfengine.activity;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
+import org.hibernate.proxy.HibernateProxy;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.FlowPiece;
 import org.pgist.wfengine.RunningContext;
@@ -258,6 +262,33 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
+    
+    
+    /**
+     * For Hibernate, a persistent object is often proxied by a HibernateProxy which is used to
+     * implement the lazy fetching. In order to get the concreate object of the activity subclass,
+     * use this method to narrow the proxy get recover the real object.
+     * 
+     *  @param object
+     *  @return
+     */
+    private Object narrow(Object object){
+        if(object instanceof HibernateProxy){
+            return ((HibernateProxy)object).getHibernateLazyInitializer().getImplementation();
+        }else {
+            return object;
+        }
+    }//narrow()
+    
+    
+    public Set getRunningActivities() {
+        Set set = new HashSet();
+        Set activities = context.getRunningActivities();
+        for (Iterator iter=activities.iterator(); iter.hasNext(); ) {
+            set.add(narrow(iter.next()));
+        }//for iter
+        return set;
+    }//getRunningActivities()
     
     
 }//class GroupActivity
