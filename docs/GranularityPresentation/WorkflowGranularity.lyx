@@ -172,6 +172,118 @@ Situation Level
 \end_inset 
 
 
+\layout BeginFrame
+
+The Running Snapshot
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename Running1.eps
+	lyxscale 30
+	scale 30
+	keepAspectRatio
+	rotateAngle 90
+
+\end_inset 
+
+
+\layout BeginFrame
+
+The Running Snapshot
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename Running2.eps
+	lyxscale 30
+	scale 30
+	keepAspectRatio
+	rotateAngle 90
+
+\end_inset 
+
+
+\layout BeginFrame
+
+The Running Snapshot
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename Running3.eps
+	lyxscale 30
+	scale 30
+	keepAspectRatio
+	rotateAngle 90
+
+\end_inset 
+
+
+\layout BeginFrame
+
+The Running Snapshot
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename Running4.eps
+	lyxscale 30
+	scale 30
+	keepAspectRatio
+	rotateAngle 90
+
+\end_inset 
+
+
+\layout BeginFrame
+
+The Running Snapshot
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename Running5.eps
+	lyxscale 30
+	scale 30
+	keepAspectRatio
+	rotateAngle 90
+
+\end_inset 
+
+
+\layout BeginFrame
+
+The Running Snapshot
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename Running2.eps
+	lyxscale 30
+	scale 30
+	keepAspectRatio
+	rotateAngle 90
+
+\end_inset 
+
+
+\layout BeginFrame
+
+The Running Snapshot
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename Running6.eps
+	lyxscale 30
+	scale 30
+	keepAspectRatio
+	rotateAngle 90
+
+\end_inset 
+
+
 \layout EndFrame
 
 \the_end
