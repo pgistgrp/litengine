@@ -9,7 +9,6 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.pgist.wfengine.activity.GroupActivity;
 import org.pgist.wfengine.activity.PActActivity;
-import org.pgist.wfengine.activity.ReturnActivity;
 
 
 /**
@@ -58,7 +57,7 @@ public class TemplateParser {
             Element element = (Element) elements.get(i);
             
             Long refId = new Long(element.attribute("refid").getStringValue());
-            if (engineDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_PGAME), refId)!=null)
+            if (engineDAO.getGroupActivityByRefId(new Integer(GroupActivity.LEVEL_PGAME), refId)!=null)
                 throw new Exception("Another GroupActivity (pgame) has this refid: "+refId);
             
             Template template = new Template();
@@ -75,9 +74,9 @@ public class TemplateParser {
                     String name = element.getName();
                     if (!"pact".equalsIgnoreCase(name)) throw new Exception("element pgame can not contain element "+name+" !");
                     
-                    Long id = new Long(element.attribute("reference").getStringValue());
+                    Long id = new Long(element.attribute("template").getStringValue());
                     PActActivity ref = engineDAO.getPActActivityByRefId(id);
-                    if (ref==null) throw new Exception("PActActivity referenced by refid "+id+" not found!");
+                    if (ref==null) throw new Exception("PActActivity template with refid "+id+" not found!");
                     
                     PActActivity activity = new PActActivity();
                     activity.setCount(0);
@@ -85,6 +84,7 @@ public class TemplateParser {
                     activity.setPrev(parent);
                     activity.setName(ref.getName());
                     activity.setDescription(ref.getDescription());
+                    activity.setAction(ref.getAction());
                     Task task = ref.getTask();
                     if (task!=null) activity.setTask(task.clone(activity));
                     
@@ -93,16 +93,9 @@ public class TemplateParser {
             });
             
             FlowPiece piece = parser.parse(sequence);
-            SingleOut tail = piece.getTail();
-            ReturnActivity returnActivity = new ReturnActivity();
-            returnActivity.setCount(0);
-            returnActivity.setExpression(0);
-            returnActivity.setType(Activity.TYPE_RETURN);
-            returnActivity.setPrev((Activity) tail);
-            tail.setNext(returnActivity);
             
             template.setHead((Activity) piece.getHead());
-            template.setTail(returnActivity);
+            template.setTail((Activity) piece.getTail());
             
             GroupActivity game = new GroupActivity(GroupActivity.LEVEL_PGAME);
             game.setTemplate(template);
@@ -112,8 +105,6 @@ public class TemplateParser {
             game.setName(template.getName());
             game.setRefId(refId);
             game.setTask(null);
-            
-            returnActivity.setGroup(game);
             
             engineDAO.saveTemplate(template);
             engineDAO.saveActivity(game);
@@ -127,7 +118,7 @@ public class TemplateParser {
             Element element = (Element) elements.get(i);
             
             Long refId = new Long(element.attribute("refid").getStringValue());
-            if (engineDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_PMETHOD), refId)!=null)
+            if (engineDAO.getGroupActivityByRefId(new Integer(GroupActivity.LEVEL_PMETHOD), refId)!=null)
                 throw new Exception("Another GroupActivity (pmethod) has this refid: "+refId);
             
             Template template = new Template();
@@ -144,9 +135,9 @@ public class TemplateParser {
                     String name = element.getName();
                     if (!"pgame".equalsIgnoreCase(name)) throw new Exception("element pmethod can not contain element "+name+" !");
                     
-                    Long id = new Long(element.attribute("reference").getStringValue());
-                    GroupActivity ref = engineDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_PGAME), id);
-                    if (ref==null) throw new Exception("GroupActivity (pgame) referenced by refid "+id+" not found!");
+                    Long id = new Long(element.attribute("template").getStringValue());
+                    GroupActivity ref = engineDAO.getGroupActivityByRefId(new Integer(GroupActivity.LEVEL_PGAME), id);
+                    if (ref==null) throw new Exception("GroupActivity (pgame) template with refid "+id+" not found!");
                     
                     GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_PGAME);
                     activity.setType(Activity.TYPE_PGAME);
@@ -189,7 +180,7 @@ public class TemplateParser {
             Element element = (Element) elements.get(i);
             
             Long refId = new Long(element.attribute("refid").getStringValue());
-            if (engineDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_MEETING), refId)!=null)
+            if (engineDAO.getGroupActivityByRefId(new Integer(GroupActivity.LEVEL_MEETING), refId)!=null)
                 throw new Exception("Another GroupActivity (meeting) has this refid: "+refId);
             
             Template template = new Template();
@@ -206,9 +197,9 @@ public class TemplateParser {
                     String name = element.getName();
                     if (!"pmethod".equalsIgnoreCase(name)) throw new Exception("element meeting can not contain element "+name+" !");
                     
-                    Long id = new Long(element.attribute("reference").getStringValue());
-                    GroupActivity ref = engineDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_PMETHOD), id);
-                    if (ref==null) throw new Exception("GroupActivity (pmethod) referenced by refid "+id+" not found!");
+                    Long id = new Long(element.attribute("template").getStringValue());
+                    GroupActivity ref = engineDAO.getGroupActivityByRefId(new Integer(GroupActivity.LEVEL_PMETHOD), id);
+                    if (ref==null) throw new Exception("GroupActivity (pmethod) template with refid "+id+" not found!");
                     
                     GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_PMETHOD);
                     activity.setType(Activity.TYPE_PMETHOD);
@@ -250,7 +241,7 @@ public class TemplateParser {
             Element element = (Element) elements.get(i);
             
             Long refId = new Long(element.attribute("refid").getStringValue());
-            if (engineDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_SITUATION), refId)!=null)
+            if (engineDAO.getGroupActivityByRefId(new Integer(GroupActivity.LEVEL_SITUATION), refId)!=null)
                 throw new Exception("Another GroupActivity (situation) has this refid: "+refId);
             
             Template template = new Template();
@@ -267,9 +258,9 @@ public class TemplateParser {
                     String name = element.getName();
                     if (!"meeting".equalsIgnoreCase(name)) throw new Exception("element situation can not contain element "+name+" !");
                     
-                    Long id = new Long(element.attribute("reference").getStringValue());
-                    GroupActivity ref = engineDAO.getGroupActivityByRefId(new Long(GroupActivity.LEVEL_MEETING), id);
-                    if (ref==null) throw new Exception("GroupActivity (meeting) referenced by refid "+id+" not found!");
+                    Long id = new Long(element.attribute("template").getStringValue());
+                    GroupActivity ref = engineDAO.getGroupActivityByRefId(new Integer(GroupActivity.LEVEL_MEETING), id);
+                    if (ref==null) throw new Exception("GroupActivity (meeting) template with refid "+id+" not found!");
                     
                     GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_MEETING);
                     activity.setType(Activity.TYPE_MEETING);

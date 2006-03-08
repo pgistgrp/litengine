@@ -31,7 +31,7 @@ public interface WorkflowEngineDAO {
     
     PActActivity getPActActivityByRefId(Long refId) throws Exception;
     
-    GroupActivity getGroupActivityByRefId(Long level, Long refId) throws Exception;
+    GroupActivity getGroupActivityByRefId(Integer level, Long refId) throws Exception;
 
     List getTemplates(int type) throws Exception;
     

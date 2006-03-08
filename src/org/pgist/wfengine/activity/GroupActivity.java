@@ -281,11 +281,12 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     }//narrow()
     
     
-    public Set getRunningActivities() {
+    public Set getRunningActivities(int type) {
         Set set = new HashSet();
         Set activities = context.getRunningActivities();
         for (Iterator iter=activities.iterator(); iter.hasNext(); ) {
-            set.add(narrow(iter.next()));
+            Activity one = (Activity) narrow(iter.next());
+            if (type == one.getType()) set.add(one);
         }//for iter
         return set;
     }//getRunningActivities()

@@ -171,7 +171,7 @@ public class RunningContext {
         List activities = new ArrayList(20);
         
         //check if the activity is current activity in the environment
-        if (!runningActivities.contains(activity)) return;
+        //if (!runningActivities.contains(activity)) return;
         
         runningActivities.remove(activity);
         
@@ -181,10 +181,6 @@ public class RunningContext {
         while (!stack.empty()) {
             //Pop out an activity and it's parent
             activity = (Activity) stack.pop();
-            
-            //Activity this activity
-            activity.activate(this);
-            
             perform(stack, activities, activity);
         }//while
         

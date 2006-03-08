@@ -557,7 +557,7 @@
         <dia:point val="16.5575,14.02"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="16.4955,13.958;19.3364,15.2678"/>
+        <dia:rectangle val="16.4955,13.958;19.3365,15.2679"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="16.5575,14.02"/>
@@ -675,7 +675,7 @@
         <dia:point val="16.5575,16.395"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="16.4941,15.0267;19.3567,16.4584"/>
+        <dia:rectangle val="16.4941,15.0266;19.3567,16.4584"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="16.5575,16.395"/>
@@ -706,7 +706,7 @@
         <dia:point val="15.6088,7.72623"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="9.25557,7.66096;15.674,12.9144"/>
+        <dia:rectangle val="9.25557,7.66096;15.6741,12.9144"/>
       </dia:attribute>
       <dia:attribute name="bez_points">
         <dia:point val="15.6088,7.72623"/>
@@ -734,7 +734,7 @@
         <dia:point val="16.3512,7.72623"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="16.2883,7.66326;22.7574,12.9124"/>
+        <dia:rectangle val="16.2882,7.66325;22.7574,12.9124"/>
       </dia:attribute>
       <dia:attribute name="bez_points">
         <dia:point val="16.3512,7.72623"/>
@@ -822,6 +822,36 @@
       <dia:connections>
         <dia:connection handle="3" to="O3" connection="6"/>
       </dia:connections>
+    </dia:object>
+    <dia:object type="Standard - Text" version="0" id="O26">
+      <dia:attribute name="obj_pos">
+        <dia:point val="22.5,14"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="22.5,13.1225;25.8275,14.655"/>
+      </dia:attribute>
+      <dia:attribute name="text">
+        <dia:composite type="text">
+          <dia:attribute name="string">
+            <dia:string>#Return#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="font">
+            <dia:font family="sans" style="80" name="Helvetica"/>
+          </dia:attribute>
+          <dia:attribute name="height">
+            <dia:real val="1.2"/>
+          </dia:attribute>
+          <dia:attribute name="pos">
+            <dia:point val="22.5,14"/>
+          </dia:attribute>
+          <dia:attribute name="color">
+            <dia:color val="#a020f0"/>
+          </dia:attribute>
+          <dia:attribute name="alignment">
+            <dia:enum val="0"/>
+          </dia:attribute>
+        </dia:composite>
+      </dia:attribute>
     </dia:object>
   </dia:layer>
 </dia:diagram>

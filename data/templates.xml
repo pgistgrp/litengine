@@ -3,126 +3,28 @@
 <template>
 
 
-  <pgame refid="100000" name="BrainStorming" description="BrainStorming">
+  <pmethod refid="200000" name="Sequence Test" description="Sequence Test">
     <environment>
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <pact template="100"/>
-      <pact template="100"/>
-      <branch automatic="true">
-        <sequence>
-          <pact template="200"/>
-          <pact template="100"/>
-        </sequence>
-        <sequence>
-          <pact template="200"/>
-          <pact template="200"/>
-        </sequence>
-      </branch>
-    </sequence>
-  </pgame>
-  
-  
-  <pgame refid="101000" name="CST" description="CST" depend="100000">
-    <environment>
-      <var name="totalCount" value="1"/>
-    </environment>
-    <sequence>
-      <pact template="200"/>
-      <pact template="100"/>
-      <branch automatic="true">
-        <sequence>
-          <pact template="100"/>
-          <pact template="100"/>
-        </sequence>
-        <sequence>
-          <pact template="200"/>
-          <pact template="200"/>
-        </sequence>
-      </branch>
-    </sequence>
-  </pgame>
-  
-  
-  <pgame refid="102000" name="Voting" description="Voting">
-    <environment>
-      <var name="totalCount" value="1"/>
-    </environment>
-    <sequence>
-      <pact template="200"/>
-      <pact template="100"/>
-      <branch automatic="true">
-        <sequence>
-          <pact template="100"/>
-          <pact template="100"/>
-        </sequence>
-        <sequence>
-          <pact template="200"/>
-          <pact template="200"/>
-        </sequence>
-      </branch>
-    </sequence>
-  </pgame>
-  
-  
-  <pmethod refid="200000" name="ToP" description="ToP">
-    <environment>
-      <var name="totalCount" value="1"/>
-    </environment>
-    <sequence>
-      <pgame template="100000"/>
-      <pgame template="100000"/>
-      <branch automatic="true">
-        <sequence>
-          <pgame template="101000"/>
-          <pgame template="100000"/>
-        </sequence>
-        <sequence>
-          <pgame template="101000"/>
-          <pgame template="100000"/>
-        </sequence>
-      </branch>
+      <pgame template="100"/>
+      <pgame template="100"/>
     </sequence>
   </pmethod>
   
   
-  <pmethod refid="201000" name="Delphi" description="Delphi">
+  <pmethod refid="201000" name="Parallel Test" description="Parallel Test">
     <environment>
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <pgame template="100000"/>
-      <pgame template="101000"/>
       <branch automatic="true">
         <sequence>
-          <pgame template="100000"/>
-          <pgame template="101000"/>
+          <pgame template="100"/>
         </sequence>
         <sequence>
-          <pgame template="100000"/>
-          <pgame template="100000"/>
-        </sequence>
-      </branch>
-    </sequence>
-  </pmethod>
-  
-  
-  <pmethod refid="202000" name="NGT" description="NGT">
-    <environment>
-      <var name="totalCount" value="1"/>
-    </environment>
-    <sequence>
-      <pgame template="101000"/>
-      <pgame template="101000"/>
-      <branch automatic="true">
-        <sequence>
-          <pgame template="100000"/>
-          <pgame template="100000"/>
-        </sequence>
-        <sequence>
-          <pgame template="100000"/>
-          <pgame template="101000"/>
+          <pgame template="200"/>
         </sequence>
       </branch>
     </sequence>
@@ -135,38 +37,7 @@
     </environment>
     <sequence>
       <pmethod template="200000"/>
-      <pmethod template="202000"/>
-      <branch automatic="true">
-        <sequence>
-          <pmethod template="201000"/>
-          <pmethod template="200000"/>
-        </sequence>
-        <sequence>
-          <pmethod template="200000"/>
-          <pmethod template="202000"/>
-        </sequence>
-      </branch>
-    </sequence>
-  </meeting>
-  
-  
-  <meeting refid="301000" name="Meeting 2" description="Meeting 2">
-    <environment>
-      <var name="totalCount" value="1"/>
-    </environment>
-    <sequence>
-      <pmethod template="200000"/>
-      <pmethod template="202000"/>
-      <branch automatic="true">
-        <sequence>
-          <pmethod template="201000"/>
-          <pmethod template="200000"/>
-        </sequence>
-        <sequence>
-          <pmethod template="200000"/>
-          <pmethod template="202000"/>
-        </sequence>
-      </branch>
+      <pmethod template="201000"/>
     </sequence>
   </meeting>
   
@@ -177,17 +48,6 @@
     </environment>
     <sequence>
       <meeting template="300000"/>
-      <meeting template="301000"/>
-      <branch automatic="true">
-        <sequence>
-          <meeting template="300000"/>
-          <meeting template="301000"/>
-        </sequence>
-        <sequence>
-          <meeting template="301000"/>
-          <meeting template="300000"/>
-        </sequence>
-      </branch>
     </sequence>
   </situation>
   

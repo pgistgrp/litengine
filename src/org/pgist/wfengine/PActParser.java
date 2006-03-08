@@ -72,6 +72,7 @@ public class PActParser {
     private PActActivity parsePAct(Element ele) throws Exception {
         PActActivity pact = new PActActivity();
         pact.setRefId(new Long(ele.attribute("refid").getStringValue()));
+        pact.setAction(ele.elementText("action"));
         pact.setName(ele.attribute("name").getStringValue());
         pact.setDescription(ele.attribute("description").getStringValue());
         pact.setCount(0);

@@ -56,7 +56,7 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
 
 
     public void saveWorkflow(Workflow workflow) throws Exception {
-        getSession().saveOrUpdate(workflow);
+        workflow.saveState(getSession());
     }//saveWorkflow()
 
 
@@ -106,7 +106,7 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
     private static final String hql_getGroupActivityByRefId = "from GroupActivity g where level=? and refid=?";
     
     
-    public GroupActivity getGroupActivityByRefId(Long level, Long refId) throws Exception {
+    public GroupActivity getGroupActivityByRefId(Integer level, Long refId) throws Exception {
         List list = getHibernateTemplate().find(hql_getGroupActivityByRefId, new Object[] {level, refId});
         return (list.size()==0) ? null : (GroupActivity) list.get(0);
     }//getGroupActivityByRefId()

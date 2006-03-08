@@ -241,6 +241,7 @@ public class Template {
                     two = pactTwo;
                     pactTwo.setName( pactOne.getName() );
                     pactTwo.setDescription( pactOne.getDescription() );
+                    pactTwo.setAction(pactOne.getAction());
                     stack.push( ((PActActivity) one).getNext() );
                     break;
                 case Activity.TYPE_PGAME:

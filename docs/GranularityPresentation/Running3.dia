@@ -787,5 +787,35 @@
         </dia:composite>
       </dia:attribute>
     </dia:object>
+    <dia:object type="Standard - Text" version="0" id="O25">
+      <dia:attribute name="obj_pos">
+        <dia:point val="8,11"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="8,10.1225;11.2275,11.655"/>
+      </dia:attribute>
+      <dia:attribute name="text">
+        <dia:composite type="text">
+          <dia:attribute name="string">
+            <dia:string>#Spawn#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="font">
+            <dia:font family="sans" style="80" name="Helvetica"/>
+          </dia:attribute>
+          <dia:attribute name="height">
+            <dia:real val="1.2"/>
+          </dia:attribute>
+          <dia:attribute name="pos">
+            <dia:point val="8,11"/>
+          </dia:attribute>
+          <dia:attribute name="color">
+            <dia:color val="#a020f0"/>
+          </dia:attribute>
+          <dia:attribute name="alignment">
+            <dia:enum val="0"/>
+          </dia:attribute>
+        </dia:composite>
+      </dia:attribute>
+    </dia:object>
   </dia:layer>
 </dia:diagram>

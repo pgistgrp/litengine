@@ -7,7 +7,6 @@ import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.Task;
 
 
 /**
@@ -30,9 +29,13 @@ public class PActActivity extends Activity implements SingleIn, SingleOut {
     
     protected String description = null;
     
+    protected String action = null;
+    
     protected Activity prev;
     
     protected Activity next;
+    
+    protected Activity depending;
     
     
     public PActActivity() {
@@ -69,7 +72,7 @@ public class PActActivity extends Activity implements SingleIn, SingleOut {
 
     /**
      * @return
-     * @hibernate.property not-null="true"
+     * @hibernate.property
      */
     public String getDescription() {
         return description;
@@ -83,7 +86,21 @@ public class PActActivity extends Activity implements SingleIn, SingleOut {
 
     /**
      * @return
-     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
+     * @hibernate.property
+     */
+    public String getAction() {
+        return action;
+    }
+
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all" lazy="true"
      */
     public Activity getPrev() {
         return prev;
@@ -96,9 +113,9 @@ public class PActActivity extends Activity implements SingleIn, SingleOut {
 
 
     /**
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
-
      * @return
+     *
+     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all" lazy="true"
      */
     public Activity getNext() {
         return next;
@@ -110,21 +127,32 @@ public class PActActivity extends Activity implements SingleIn, SingleOut {
     }
 
     
+    /**
+     * @return
+     *
+     * @hibernate.many-to-one column="depend_id" class="org.pgist.wfengine.Activity" cascade="all" lazy="true"
+     */
+    public Activity getDepending() {
+        return depending;
+    }
+
+
+    public void setDepending(Activity depending) {
+        this.depending = depending;
+    }
+
+
     /*
      * ------------------------------------------------------------------------------
      */
     
     
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        if (task==null) {
-            setExpression(1);
-        } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(context);
-        }
-        
-        //temp
-        setExpression(1);
-        System.out.println("---> I am a pact: "+getId());
+//        if (task==null) {
+//            setExpression(1);
+//        } else if (task.getType()==Task.TASK_AUTOMATIC) {
+//            task.execute(context);
+//        }
         
         if (getExpression()>0) {//task is finished
             next.activate(context);
