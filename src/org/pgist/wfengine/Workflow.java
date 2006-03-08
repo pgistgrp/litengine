@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.hibernate.Session;
-import org.hibernate.proxy.HibernateProxy;
+import org.pgist.wfengine.util.Utils;
 
 
 /**
@@ -239,28 +239,11 @@ public class Workflow implements Serializable {
     }//saveState()
     
     
-    /**
-     * For Hibernate, a persistent object is often proxied by a HibernateProxy which is used to
-     * implement the lazy fetching. In order to get the concreate object of the activity subclass,
-     * use this method to narrow the proxy get recover the real object.
-     * 
-     *  @param object
-     *  @return
-     */
-    private Object narrow(Object object){
-        if(object instanceof HibernateProxy){
-            return ((HibernateProxy)object).getHibernateLazyInitializer().getImplementation();
-        }else {
-            return object;
-        }
-    }//narrow()
-    
-    
     public Set getRunningActivities(int type) {
         Set set = new HashSet();
         Set activities = context.getRunningActivities();
         for (Iterator iter=activities.iterator(); iter.hasNext(); ) {
-            Activity one = (Activity) narrow(iter.next());
+            Activity one = (Activity) Utils.narrow(iter.next());
             if (type == one.getType()) set.add(one);
         }//for iter
         return set;

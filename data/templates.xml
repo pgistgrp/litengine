@@ -8,8 +8,8 @@
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <pgame template="100"/>
-      <pgame template="100"/>
+      <pgame id="1" template="100"/>
+      <pgame id="2" template="200" depends="1"/>
     </sequence>
   </pmethod>
   
@@ -21,10 +21,10 @@
     <sequence>
       <branch automatic="true">
         <sequence>
-          <pgame template="100"/>
+          <pgame id="1" template="100"/>
         </sequence>
         <sequence>
-          <pgame template="200"/>
+          <pgame id="2" template="200" depends="1"/>
         </sequence>
       </branch>
     </sequence>

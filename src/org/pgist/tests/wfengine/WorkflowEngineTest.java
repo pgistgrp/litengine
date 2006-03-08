@@ -58,17 +58,17 @@ public class WorkflowEngineTest extends TestCase {
     
     
     /*
-     * Test method for 'org.pgist.wfengine.WorkflowEngine.addPActs(InputStream)'
+     * Test method for 'org.pgist.wfengine.WorkflowEngine.addPGames(InputStream)'
      */
-    public void testAddPActs() {
-        String filePath = "data/pacts.xml";
+    public void testAddPGames() {
+        String filePath = "data/pgames.xml";
         try {
-            List list = engine.addPActs(new FileInputStream(filePath));
+            List list = engine.addPGames(new FileInputStream(filePath));
             assertEquals(2, list.size());
         } catch(Exception e) {
             e.printStackTrace();
         }
-    }//testAddPActs()
+    }//testAddPGames()
     
     
     /*
@@ -78,7 +78,7 @@ public class WorkflowEngineTest extends TestCase {
         String filePath = "data/templates.xml";
         try {
             List list = engine.addTemplates(new FileInputStream(filePath));
-            assertEquals(8, list.size());
+            assertEquals(4, list.size());
         } catch(Exception e) {
             e.printStackTrace();
         }

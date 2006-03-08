@@ -13,12 +13,12 @@
   
   <pgame refid="200" name="Synthesizing" description="Synthesizing">
     <action>/synthesizing.do</action>
-    <depending>100</depending>
+    <depends>100</depends>
     <environment>
       <var name="totalCount" value="1"/>
     </environment>
   </pgame>
   
   
-</pgame>
+</pgames>
 

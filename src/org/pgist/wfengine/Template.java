@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.hibernate.proxy.HibernateProxy;
 import org.pgist.wfengine.activity.BranchActivity;
 import org.pgist.wfengine.activity.EndSwitchActivity;
 import org.pgist.wfengine.activity.GroupActivity;
@@ -14,11 +13,13 @@ import org.pgist.wfengine.activity.JoinActivity;
 import org.pgist.wfengine.activity.JumpActivity;
 import org.pgist.wfengine.activity.LoopActivity;
 import org.pgist.wfengine.activity.PActActivity;
+import org.pgist.wfengine.activity.PGameActivity;
 import org.pgist.wfengine.activity.RepeatActivity;
 import org.pgist.wfengine.activity.SwitchActivity;
 import org.pgist.wfengine.activity.TerminateActivity;
 import org.pgist.wfengine.activity.UntilActivity;
 import org.pgist.wfengine.activity.WhileActivity;
+import org.pgist.wfengine.util.Utils;
 
 
 /**
@@ -186,23 +187,6 @@ public class Template {
     
     
     /**
-     * For Hibernate, a persistent object is often proxied by a HibernateProxy which is used to
-     * implement the lazy fetching. In order to get the concreate object of the activity subclass,
-     * use this method to narrow the proxy get recover the real object.
-     * 
-     *  @param object
-     *  @return
-     */
-    private Object narrow(Object object){
-        if(object instanceof HibernateProxy){
-            return ((HibernateProxy)object).getHibernateLazyInitializer().getImplementation();
-        }else {
-            return object;
-        }
-    }//narrow()
-    
-    
-    /**
      * For each activity in the template flow, generate a new counterpart activity. The new activity
      * will be stored in a map together with it's origin. Later program will weave the new generated
      * activities exactly as the struture of the original flow.
@@ -235,7 +219,7 @@ public class Template {
             //push children on stack
             switch(one.getType()) {
                 case Activity.TYPE_PACT:
-                    one = (PActActivity) narrow(one);
+                    one = (PActActivity) Utils.narrow(one);
                     PActActivity pactOne = (PActActivity) one;
                     PActActivity pactTwo = new PActActivity();
                     two = pactTwo;
@@ -245,9 +229,18 @@ public class Template {
                     stack.push( ((PActActivity) one).getNext() );
                     break;
                 case Activity.TYPE_PGAME:
+                    one = (PGameActivity) Utils.narrow(one);
+                    PGameActivity pgameOne = (PGameActivity) one;
+                    PGameActivity pgameTwo = new PGameActivity();
+                    two = pgameTwo;
+                    pgameTwo.setName( pgameOne.getName() );
+                    pgameTwo.setDescription( pgameOne.getDescription() );
+                    pgameTwo.setAction(pgameOne.getAction());
+                    stack.push( ((PGameActivity) one).getNext() );
+                    break;
                 case Activity.TYPE_PMETHOD:
                 case Activity.TYPE_MEETING:
-                    GroupActivity realOne = (GroupActivity) narrow(one);
+                    GroupActivity realOne = (GroupActivity) Utils.narrow(one);
                     one = realOne;
                     GroupActivity realTwo = new GroupActivity(realOne.getLevel());
                     two = realTwo;
@@ -257,52 +250,52 @@ public class Template {
                     stack.push( realOne.getNext() );
                     break;
                 case Activity.TYPE_BRANCH:
-                    one = (BranchActivity) narrow(one);
+                    one = (BranchActivity) Utils.narrow(one);
                     two = new BranchActivity();
                     stack.addAll(((BranchActivity) one).getBranches());
                     break;
                 case Activity.TYPE_JOIN:
-                    one = (JoinActivity) narrow(one);
+                    one = (JoinActivity) Utils.narrow(one);
                     two = new JoinActivity();
                     stack.push( ((JoinActivity) one).getNext() );
                     break;
                 case Activity.TYPE_SWITCH:
-                    one = (SwitchActivity) narrow(one);
+                    one = (SwitchActivity) Utils.narrow(one);
                     two = new SwitchActivity();
                     stack.addAll( ((SwitchActivity) one).getSwitches() );
                     break;
                 case Activity.TYPE_ENDSWITCH:
-                    one = (EndSwitchActivity) narrow(one);
+                    one = (EndSwitchActivity) Utils.narrow(one);
                     two = new EndSwitchActivity();
                     stack.push( ((EndSwitchActivity) one).getNext() );
                     break;
                 case Activity.TYPE_WHILE:
-                    one = (WhileActivity) narrow(one);
+                    one = (WhileActivity) Utils.narrow(one);
                     two = new WhileActivity();
                     stack.push( ((WhileActivity) one).getNext() );
                     break;
                 case Activity.TYPE_LOOP:
-                    one = (LoopActivity) narrow(one);
+                    one = (LoopActivity) Utils.narrow(one);
                     two = new LoopActivity();
                     stack.push( ((LoopActivity) one).getNext() );
                     break;
                 case Activity.TYPE_REPEAT:
-                    one = (RepeatActivity) narrow(one);
+                    one = (RepeatActivity) Utils.narrow(one);
                     two = new RepeatActivity();
                     stack.push( ((RepeatActivity) one).getNext() );
                     break;
                 case Activity.TYPE_UNTIL:
-                    one = (UntilActivity) narrow(one);
+                    one = (UntilActivity) Utils.narrow(one);
                     two = new UntilActivity();
                     stack.push( ((UntilActivity) one).getNext() );
                     break;
                 case Activity.TYPE_JUMP:
-                    one = (JumpActivity) narrow(one);
+                    one = (JumpActivity) Utils.narrow(one);
                     two = new JumpActivity();
                     stack.push( ((JumpActivity) one).getNext() );
                     break;
                 case Activity.TYPE_TERMINATE:
-                    one = (TerminateActivity) narrow(one);
+                    one = (TerminateActivity) Utils.narrow(one);
                     two = new TerminateActivity();
                     break;
             }//switch
@@ -353,6 +346,26 @@ public class Template {
                     }
                     break;
                 case Activity.TYPE_PGAME:
+                    PGameActivity pgameOne = (PGameActivity) one;
+                    PGameActivity pgameTwo = (PGameActivity) two;
+                    prev = pgameOne.getPrev();
+                    if (prev!=null) {
+                        pair = (Activity[]) map.get(prev.getId());
+                        pgameTwo.setPrev( pair[1] );
+                    }
+                    next = pgameOne.getNext();
+                    if (next!=null) {
+                        pair = (Activity[]) map.get(next.getId());
+                        pgameTwo.setNext( pair[1] );
+                    }
+                    
+                    for (Iterator iterPGameOne=pgameOne.getDepends().iterator(); iterPGameOne.hasNext(); ) {
+                        PGameActivity depend = (PGameActivity) iterPGameOne.next();
+                        pair = (Activity[]) map.get(depend.getId());
+                        pgameTwo.getDepends().add( pair[1] );
+                    }//for iter
+                    
+                    break;
                 case Activity.TYPE_PMETHOD:
                 case Activity.TYPE_MEETING:
                     GroupActivity groupOne = (GroupActivity) one;

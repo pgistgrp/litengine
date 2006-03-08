@@ -2,13 +2,15 @@ package org.pgist.wfengine;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.pgist.wfengine.activity.GroupActivity;
-import org.pgist.wfengine.activity.PActActivity;
+import org.pgist.wfengine.activity.PGameActivity;
 
 
 /**
@@ -51,8 +53,11 @@ public class TemplateParser {
         
         FlowPieceParser parser = new FlowPieceParser();
         
+        List elements = null;
+        
         //parse pgame
-        List elements = root.elements("pgame");
+        /*
+        elements = root.elements("pgame");
         for (int i=0, n=elements.size(); i<n; i++) {
             Element element = (Element) elements.get(i);
             
@@ -111,6 +116,7 @@ public class TemplateParser {
             
             templates.add(template);
         }//for i
+        */
         
         //parse pmethod
         elements = root.elements("pmethod");
@@ -130,25 +136,47 @@ public class TemplateParser {
             Element sequence = (Element) element.element("sequence");
             if (sequence==null) return templates;
             
+            final Map map = new HashMap();
+            
             parser.setVisitor(new ElementVisitor() {
                 public Activity visit(Element element, Activity parent) throws Exception {
                     String name = element.getName();
                     if (!"pgame".equalsIgnoreCase(name)) throw new Exception("element pmethod can not contain element "+name+" !");
                     
-                    Long id = new Long(element.attribute("template").getStringValue());
-                    GroupActivity ref = engineDAO.getGroupActivityByRefId(new Integer(GroupActivity.LEVEL_PGAME), id);
-                    if (ref==null) throw new Exception("GroupActivity (pgame) template with refid "+id+" not found!");
+                    Long id = new Long(element.attributeValue("id"));
+                    Long tid = new Long(element.attributeValue("template"));
+                    PGameActivity ref = engineDAO.getPGameActivityByRefId(tid);
+                    if (ref==null) throw new Exception("PGameActivity template with refid "+tid+" not found!");
                     
-                    GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_PGAME);
+                    PGameActivity activity = (PGameActivity) map.get(""+id);
+                    if (activity==null) {
+                        activity = new PGameActivity();
+                        map.put(""+id, activity);
+                    }
+                    
                     activity.setType(Activity.TYPE_PGAME);
                     activity.setCount(0);
                     activity.setExpression(0);
                     activity.setPrev(parent);
                     activity.setName(ref.getName());
                     activity.setDescription(ref.getDescription());
-                    activity.setTemplate(ref.getTemplate());
+                    activity.setAction(ref.getAction());
                     Task task = ref.getTask();
                     if (task!=null) activity.setTask(task.clone(activity));
+                    
+                    String depends = element.attributeValue("depends");
+                    if (depends!=null) {
+                        String[] s = depends.split(",");
+                        for (int i=0; i<s.length; i++) {
+                            Long sid = new Long(s[i]);
+                            PGameActivity depend = (PGameActivity) map.get(""+sid);
+                            if (depend==null) {
+                                depend = new PGameActivity();
+                                map.put(""+sid, depend);
+                            }
+                            activity.getDepends().add(depend);
+                        }//for i
+                    }
                     
                     return activity;
                 }//visit()

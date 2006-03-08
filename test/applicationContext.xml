@@ -26,10 +26,16 @@
     </bean>
     
     
+    <bean id="pgameParser" class="org.pgist.wfengine.PGameParser">
+        <property name="engineDAO" ref="engineDAO"/>
+    </bean>
+    
+    
     <bean id="litengine" parent="baseTransactionProxy">
       <property name="target">
         <bean class="org.pgist.wfengine.WorkflowEngine">
           <property name="engineDAO" ref="engineDAO"/>
+          <property name="pgameParser" ref="pgameParser"/>
           <property name="templateParser" ref="templateParser"/>
         </bean>
       </property>

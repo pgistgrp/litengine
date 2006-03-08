@@ -7,7 +7,6 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.pgist.wfengine.activity.PActActivity;
 import org.pgist.wfengine.activity.TerminateActivity;
 
 
@@ -25,6 +24,8 @@ public class WorkflowEngine {
     private Cache workflowCache = null;
     
     private WorkflowEngineDAO engineDAO;
+    
+    private PGameParser pgameParser;
     
     private TemplateParser templateParser;
     
@@ -48,6 +49,11 @@ public class WorkflowEngine {
     }
     
     
+    public void setPgameParser(PGameParser pgameParser) {
+        this.pgameParser = pgameParser;
+    }
+
+
     public void setTemplateParser(TemplateParser templateParser) {
         this.templateParser = templateParser;
     }
@@ -92,25 +98,15 @@ public class WorkflowEngine {
     
     
     /**
-     * Client programs use this method to add new definition of pActs
+     * Client programs use this method to add new definition of pGames
      * 
      * @param stream
      * @return
      * @throws Exception
      */
-    public List addPActs(InputStream stream) throws Exception {
-        PActParser parser = new PActParser(stream);
-        parser.parse();
-        List list = parser.getPActs();
-        if (list!=null && list.size()>0) {
-            for (int i=0,n=list.size(); i<n; i++) {
-                PActActivity pact = (PActActivity) list.get(i);
-                if (engineDAO.getPActActivityByRefId(pact.getRefId())!=null) throw new Exception("Another PActActivity has this refid: "+pact.getRefId());
-                engineDAO.saveActivity(pact);
-            }//for iter
-        }
-        return list;
-    }//addPActs()
+    public List addPGames(InputStream stream) throws Exception {
+        return pgameParser.parse(stream);
+    }//addPGames()
     
     
     /**
