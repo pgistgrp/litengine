@@ -19,5 +19,15 @@
   </pact>
   
   
+  <pact refid="300" name="CST" description="CST">
+    <class>org.pgist.cst.CST</class>
+    <previlege>moderator</previlege>
+    <depending>100</depending>
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+  </pact>
+  
+  
 </pacts>
 

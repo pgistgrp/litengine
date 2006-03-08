@@ -8,37 +8,58 @@
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <pact reference="100"/>
-      <pact reference="100"/>
+      <pact template="100"/>
+      <pact template="100"/>
       <branch automatic="true">
         <sequence>
-          <pact reference="200"/>
-          <pact reference="100"/>
+          <pact template="200"/>
+          <pact template="100"/>
         </sequence>
         <sequence>
-          <pact reference="200"/>
-          <pact reference="200"/>
+          <pact template="200"/>
+          <pact template="200"/>
         </sequence>
       </branch>
     </sequence>
   </pgame>
   
   
-  <pgame refid="101000" name="Voting" description="Voting">
+  <pgame refid="101000" name="CST" description="CST" depend="100000">
     <environment>
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <pact reference="200"/>
-      <pact reference="100"/>
+      <pact template="200"/>
+      <pact template="100"/>
       <branch automatic="true">
         <sequence>
-          <pact reference="100"/>
-          <pact reference="100"/>
+          <pact template="100"/>
+          <pact template="100"/>
         </sequence>
         <sequence>
-          <pact reference="200"/>
-          <pact reference="200"/>
+          <pact template="200"/>
+          <pact template="200"/>
+        </sequence>
+      </branch>
+    </sequence>
+  </pgame>
+  
+  
+  <pgame refid="102000" name="Voting" description="Voting">
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+    <sequence>
+      <pact template="200"/>
+      <pact template="100"/>
+      <branch automatic="true">
+        <sequence>
+          <pact template="100"/>
+          <pact template="100"/>
+        </sequence>
+        <sequence>
+          <pact template="200"/>
+          <pact template="200"/>
         </sequence>
       </branch>
     </sequence>
@@ -50,16 +71,16 @@
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <pgame reference="100000"/>
-      <pgame reference="100000"/>
+      <pgame template="100000"/>
+      <pgame template="100000"/>
       <branch automatic="true">
         <sequence>
-          <pgame reference="101000"/>
-          <pgame reference="100000"/>
+          <pgame template="101000"/>
+          <pgame template="100000"/>
         </sequence>
         <sequence>
-          <pgame reference="101000"/>
-          <pgame reference="100000"/>
+          <pgame template="101000"/>
+          <pgame template="100000"/>
         </sequence>
       </branch>
     </sequence>
@@ -71,16 +92,16 @@
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <pgame reference="100000"/>
-      <pgame reference="101000"/>
+      <pgame template="100000"/>
+      <pgame template="101000"/>
       <branch automatic="true">
         <sequence>
-          <pgame reference="100000"/>
-          <pgame reference="101000"/>
+          <pgame template="100000"/>
+          <pgame template="101000"/>
         </sequence>
         <sequence>
-          <pgame reference="100000"/>
-          <pgame reference="100000"/>
+          <pgame template="100000"/>
+          <pgame template="100000"/>
         </sequence>
       </branch>
     </sequence>
@@ -92,16 +113,16 @@
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <pgame reference="101000"/>
-      <pgame reference="101000"/>
+      <pgame template="101000"/>
+      <pgame template="101000"/>
       <branch automatic="true">
         <sequence>
-          <pgame reference="100000"/>
-          <pgame reference="100000"/>
+          <pgame template="100000"/>
+          <pgame template="100000"/>
         </sequence>
         <sequence>
-          <pgame reference="100000"/>
-          <pgame reference="101000"/>
+          <pgame template="100000"/>
+          <pgame template="101000"/>
         </sequence>
       </branch>
     </sequence>
@@ -113,16 +134,16 @@
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <pmethod reference="200000"/>
-      <pmethod reference="202000"/>
+      <pmethod template="200000"/>
+      <pmethod template="202000"/>
       <branch automatic="true">
         <sequence>
-          <pmethod reference="201000"/>
-          <pmethod reference="200000"/>
+          <pmethod template="201000"/>
+          <pmethod template="200000"/>
         </sequence>
         <sequence>
-          <pmethod reference="200000"/>
-          <pmethod reference="202000"/>
+          <pmethod template="200000"/>
+          <pmethod template="202000"/>
         </sequence>
       </branch>
     </sequence>
@@ -134,16 +155,16 @@
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <pmethod reference="200000"/>
-      <pmethod reference="202000"/>
+      <pmethod template="200000"/>
+      <pmethod template="202000"/>
       <branch automatic="true">
         <sequence>
-          <pmethod reference="201000"/>
-          <pmethod reference="200000"/>
+          <pmethod template="201000"/>
+          <pmethod template="200000"/>
         </sequence>
         <sequence>
-          <pmethod reference="200000"/>
-          <pmethod reference="202000"/>
+          <pmethod template="200000"/>
+          <pmethod template="202000"/>
         </sequence>
       </branch>
     </sequence>
@@ -155,16 +176,16 @@
       <var name="totalCount" value="1"/>
     </environment>
     <sequence>
-      <meeting reference="300000"/>
-      <meeting reference="301000"/>
+      <meeting template="300000"/>
+      <meeting template="301000"/>
       <branch automatic="true">
         <sequence>
-          <meeting reference="300000"/>
-          <meeting reference="301000"/>
+          <meeting template="300000"/>
+          <meeting template="301000"/>
         </sequence>
         <sequence>
-          <meeting reference="301000"/>
-          <meeting reference="300000"/>
+          <meeting template="301000"/>
+          <meeting template="300000"/>
         </sequence>
       </branch>
     </sequence>
