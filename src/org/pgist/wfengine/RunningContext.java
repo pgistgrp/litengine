@@ -165,8 +165,9 @@ public class RunningContext {
     /**
      * Execute a specific activity, this activity have to be the active activity in the environment
      * @param activity
+     * @return
      */
-    synchronized public void proceed(Activity activity) throws Exception {
+    synchronized public boolean proceed(Activity activity) throws Exception {
         Stack stack = new Stack();
         List activities = new ArrayList(20);
         
@@ -186,6 +187,8 @@ public class RunningContext {
         
         getRunningActivities().clear();
         getRunningActivities().addAll(activities);
+        
+        return activities.size()==0;
     }//proceed()
     
     

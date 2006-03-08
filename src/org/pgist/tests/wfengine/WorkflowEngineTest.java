@@ -116,7 +116,7 @@ public class WorkflowEngineTest extends TestCase {
      */
     public void testSpawn() {
         try {
-            Workflow workflow = engine.spawn(new Long(75));
+            Workflow workflow = engine.spawn(new Long(7));
             assertNotNull(workflow);
             System.out.println("New workflow: ---> "+workflow.getId());
         } catch(Exception e) {
