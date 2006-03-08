@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/pacts.dtd"-->
+<pgames>
+
+
+  <pgame refid="100" name="Concern Collection" description="Concern Collection">
+    <action>/concernCollection.do</action>
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+  </pgame>
+  
+  
+  <pgame refid="200" name="Synthesizing" description="Synthesizing">
+    <action>/synthesizing.do</action>
+    <depending>100</depending>
+    <environment>
+      <var name="totalCount" value="1"/>
+    </environment>
+  </pgame>
+  
+  
+</pgame>
+
