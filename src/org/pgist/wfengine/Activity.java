@@ -137,6 +137,21 @@ public abstract class Activity implements Serializable {
      */
     
     
+    public boolean equals(Object obj) {
+        if (this==obj) return true;
+        if (!(obj instanceof Activity)) return false;
+        Activity object = (Activity) obj;
+        Long myId = getId();
+        Long id = object.getId();
+        if ( (myId==null && id!=null) || (myId!=null && id==null) ) {
+            return false;
+        } else if (myId!=null && id!=null) {
+            return myId.longValue()==id.longValue();
+        }
+        return false;
+    }//equals()
+    
+    
     /**
      * Package Accessible
      * @param workflow

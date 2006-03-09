@@ -92,8 +92,9 @@ public class BranchActivity extends Activity implements SingleIn {
     
     
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        for (int i=0,n=branches.size(); i<n; i++) {
-            Activity activity = (Activity) branches.get(i);
+        List list = getBranches();
+        for (int i=0,n=list.size(); i<n; i++) {
+            Activity activity = (Activity) list.get(i);
             activity.activate(context);
             stack.push(activity);
         }//for i

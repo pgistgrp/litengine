@@ -2,6 +2,7 @@ package org.pgist.wfengine;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -84,8 +85,8 @@ public class RunningContext {
      * 
      * @return
      * 
-     * @hibernate.set table="litwf_activity" lazy="true" cascade="all"
-     * @hibernate.collection-key  column="context_id"
+     * @hibernate.set table="litwf_activity" lazy="true" cascade="all" order-by="id"
+     * @hibernate.collection-key column="context_id"
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      */
     public Set getRunningActivities() {
@@ -129,14 +130,13 @@ public class RunningContext {
     }//addActivity()
     
     
-    protected void perform(Stack stack, List activities, Activity activity) throws Exception {
+    protected void perform(Stack stack, Set activities, Activity activity) throws Exception {
         //Execute this activity
         boolean finished = activity.execute(this, stack);
         
         if (finished) {
             //Deactivate this activity
             activity.deActivate(this);
-            activities.remove(activity);
         } else {
             //Return to running list
             activities.add(activity);
@@ -146,7 +146,6 @@ public class RunningContext {
     
     synchronized public void execute() throws Exception {
         Stack stack = new Stack();
-        List activities = new ArrayList(20);
         
         //Put all running activities into stack
         stack.addAll(getRunningActivities());
@@ -154,11 +153,18 @@ public class RunningContext {
         while (!stack.empty()) {
             //Pop out an activity
             Activity activity = (Activity) stack.pop();
-            perform(stack, activities, activity);
+            
+            for (Iterator iter=runningActivities.iterator(); iter.hasNext(); ) {
+                Activity one = (Activity) iter.next();
+                if (one.equals(activity)) {
+                    runningActivities.remove(one);
+                    break;
+                }
+            }//for iter
+            
+            perform(stack, runningActivities, activity);
         }//while
         
-        getRunningActivities().clear();
-        getRunningActivities().addAll(activities);
     }//execute()
     
     
@@ -169,26 +175,29 @@ public class RunningContext {
      */
     synchronized public boolean proceed(Activity activity) throws Exception {
         Stack stack = new Stack();
-        List activities = new ArrayList(20);
         
         //check if the activity is current activity in the environment
         //if (!runningActivities.contains(activity)) return;
         
-        runningActivities.remove(activity);
-        
         activity.proceed();
-        perform(stack, activities, activity);
+        stack.push(activity);
         
         while (!stack.empty()) {
             //Pop out an activity and it's parent
             activity = (Activity) stack.pop();
-            perform(stack, activities, activity);
+            
+            for (Iterator iter=runningActivities.iterator(); iter.hasNext(); ) {
+                Activity one = (Activity) iter.next();
+                if (one.equals(activity)) {
+                    runningActivities.remove(one);
+                    break;
+                }
+            }//for iter
+            
+            perform(stack, runningActivities, activity);
         }//while
         
-        getRunningActivities().clear();
-        getRunningActivities().addAll(activities);
-        
-        return activities.size()==0;
+        return runningActivities.size()==0;
     }//proceed()
     
     

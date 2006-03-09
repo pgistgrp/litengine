@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
-import org.hibernate.proxy.HibernateProxy;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.FlowPiece;
 import org.pgist.wfengine.RunningContext;
@@ -242,7 +241,10 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     
     synchronized protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        getContext().execute();
+        RunningContext myContext = getContext();
+        if (myContext!=null) {
+            myContext.execute();
+        }
         if (getExpression()>0) {//task is finished
             next.activate(context);
             stack.push(next);
@@ -267,6 +269,7 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     public Set getRunningActivities(int type) {
         Set set = new HashSet();
+        if (context==null) return set;
         Set activities = context.getRunningActivities();
         for (Iterator iter=activities.iterator(); iter.hasNext(); ) {
             Activity one = (Activity) Utils.narrow(iter.next());
