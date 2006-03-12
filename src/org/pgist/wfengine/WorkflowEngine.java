@@ -151,7 +151,7 @@ public class WorkflowEngine {
         FlowPiece piece = template.spawn();
         SingleOut tail = piece.getTail();
         TerminateActivity terminateActivity = new TerminateActivity();
-        terminateActivity.setCount(0);
+        terminateActivity.setCounts(0);
         terminateActivity.setExpression(0);
         terminateActivity.setPrev((Activity) tail);
         tail.setNext(terminateActivity);

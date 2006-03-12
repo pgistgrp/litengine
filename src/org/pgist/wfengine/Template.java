@@ -300,7 +300,7 @@ public class Template {
                     break;
             }//switch
             
-            two.setCount(0);
+            two.setCounts(0);
             two.setExpression(0);
             two.setType(one.getType());
             

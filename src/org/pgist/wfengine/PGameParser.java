@@ -81,7 +81,7 @@ public class PGameParser {
         pgame.setAction(ele.elementText("action"));
         pgame.setName(ele.attribute("name").getStringValue());
         pgame.setDescription(ele.attribute("description").getStringValue());
-        pgame.setCount(0);
+        pgame.setCounts(0);
         pgame.setExpression(0);
         pgame.setType(Activity.TYPE_PGAME);
         pgame.setTask(null);

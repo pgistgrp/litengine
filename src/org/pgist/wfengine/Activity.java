@@ -50,16 +50,22 @@ public abstract class Activity implements Serializable {
     
     public static final int TYPE_TERMINATE = 14;
     
+    public static final int STATUS_INACTIVE = 0;
+    
+    public static final int STATUS_ACTIVE   = 1;
+    
     
     protected Long id = null;
     
     protected int type;
     
-    protected int count = 0;
+    protected int counts = 0;
     
     protected int expression = 0;
     
     protected Task task;
+    
+    protected int status = STATUS_INACTIVE;
     
     
     /**
@@ -94,13 +100,13 @@ public abstract class Activity implements Serializable {
      * @return
      * @hibernate.property not-null="true"
      */
-    public int getCount() {
-        return count;
+    public int getCounts() {
+        return counts;
     }
 
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setCounts(int count) {
+        this.counts = count;
     }
 
 
@@ -132,6 +138,20 @@ public abstract class Activity implements Serializable {
     }
 
 
+    /**
+     * @return
+     * @hibernate.property not-null="true"
+     */
+    public int getStatus() {
+        return status;
+    }
+
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+
     /*
      * ------------------------------------------------------------------------------
      */
@@ -159,13 +179,16 @@ public abstract class Activity implements Serializable {
      */
     public final void activate(RunningContext context) {
         //Increase Count. That means the total visiting times for this activity.
-        setCount(getCount()+1);
+        setCounts(getCounts()+1);
         
         //expression==0 means for manual task, the task is waiting for performing
         setExpression(0);
         
         //initialize the task
         if (task!=null) task.initialize(context);
+        
+        //set status
+        setStatus(STATUS_ACTIVE);
         
         doActivate(context);
     }//activate
@@ -193,7 +216,10 @@ public abstract class Activity implements Serializable {
         if (task!=null) {
             context.getRecords().add(task);
         }
-    }//activate
+        
+        //set status
+        setStatus(STATUS_INACTIVE);
+    }//deActivate
     
     
     /**

@@ -26,7 +26,23 @@
 
 \layout Title
 
-Workflow Granularity Presentation
+PGIST Workflow Design Presentation
+\layout BeginFrame
+
+Workflow System Composition
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename Architecture.eps
+	lyxscale 50
+	scale 30
+	keepAspectRatio
+	rotateAngle 90
+
+\end_inset 
+
+
 \layout BeginFrame
 
 Activities Classification
@@ -62,23 +78,17 @@ Action Activities (Specific Level)
 \begin_deeper 
 \layout Itemize
 
-PActActivity (PGame Level)
+Single Activity: PGame Activity (PGame Level)
 \layout Itemize
 
-PGroupActivity
+Composite Activity:
 \begin_deeper 
 \layout Itemize
 
-PGame Activity (PMethod Level)
+PMethod Activity (PMethod Level, composed of PGame Activity)
 \layout Itemize
 
-PMethod Activity (Meeting Level)
-\layout Itemize
-
-Meeting Activity (Situation Level)
-\layout Itemize
-
-Situation Activity (Top Level)
+Meeting Activity (Meeting Level, composed of PMethod Activity)
 \end_deeper 
 \end_deeper 
 \layout Column
@@ -113,14 +123,14 @@ Situation Activity (Top Level)
 \end_deeper 
 \layout BeginFrame
 
-PGame Level
+P-Games Constituting a P-Method
 \layout Standard
 \align center 
 
 \begin_inset Graphics
-	filename PGameDiagram.eps
+	filename PMethodDiagram.eps
 	lyxscale 50
-	scale 40
+	scale 30
 	keepAspectRatio
 	rotateAngle 90
 
@@ -129,37 +139,23 @@ PGame Level
 
 \layout BeginFrame
 
-PMethod Level
-\layout Standard
-\align center 
-
-\begin_inset Graphics
-	filename PMethodDiagram.eps
-	lyxscale 50
-	scale 40
-	keepAspectRatio
-
-\end_inset 
-
-
-\layout BeginFrame
-
-Meeting Level
+P-Methods Constituting a Meeting
 \layout Standard
 \align center 
 
 \begin_inset Graphics
 	filename MeetingDiagram.eps
 	lyxscale 50
-	scale 40
+	scale 30
 	keepAspectRatio
+	rotateAngle 90
 
 \end_inset 
 
 
 \layout BeginFrame
 
-Situation Level
+Meetings Constituting a Situation
 \layout Standard
 \align center 
 
@@ -168,20 +164,21 @@ Situation Level
 	lyxscale 50
 	scale 40
 	keepAspectRatio
+	rotateAngle 90
 
 \end_inset 
 
 
 \layout BeginFrame
 
-Relation between levels
+Workflow Modeling
 \layout Standard
 \align center 
 
 \begin_inset Graphics
 	filename Compose-1.eps
 	lyxscale 50
-	scale 20
+	scale 30
 	keepAspectRatio
 	rotateAngle 90
 
@@ -190,14 +187,14 @@ Relation between levels
 
 \layout BeginFrame
 
-Relation between levels
+Workflow Modeling
 \layout Standard
 \align center 
 
 \begin_inset Graphics
 	filename Compose-2.eps
 	lyxscale 50
-	scale 20
+	scale 30
 	keepAspectRatio
 	rotateAngle 90
 
@@ -206,14 +203,14 @@ Relation between levels
 
 \layout BeginFrame
 
-Relation between levels
+Workflow Modeling
 \layout Standard
 \align center 
 
 \begin_inset Graphics
 	filename Compose-3.eps
 	lyxscale 50
-	scale 20
+	scale 30
 	keepAspectRatio
 	rotateAngle 90
 
@@ -326,6 +323,22 @@ The Running Snapshot
 	filename Running6.eps
 	lyxscale 30
 	scale 30
+	keepAspectRatio
+	rotateAngle 90
+
+\end_inset 
+
+
+\layout BeginFrame
+
+General purpose activity design & Reuse
+\layout Standard
+\align center 
+
+\begin_inset Graphics
+	filename AbilityExampleDiagram.eps
+	lyxscale 50
+	scale 40
 	keepAspectRatio
 	rotateAngle 90
 

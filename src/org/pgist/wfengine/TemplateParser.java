@@ -155,7 +155,7 @@ public class TemplateParser {
                     }
                     
                     activity.setType(Activity.TYPE_PGAME);
-                    activity.setCount(0);
+                    activity.setCounts(0);
                     activity.setExpression(0);
                     activity.setPrev(parent);
                     activity.setName(ref.getName());
@@ -189,7 +189,7 @@ public class TemplateParser {
             
             GroupActivity method = new GroupActivity(GroupActivity.LEVEL_PMETHOD);
             method.setTemplate(template);
-            method.setCount(0);
+            method.setCounts(0);
             method.setExpression(0);
             method.setDescription(template.getDescription());
             method.setName(template.getName());
@@ -231,7 +231,7 @@ public class TemplateParser {
                     
                     GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_PMETHOD);
                     activity.setType(Activity.TYPE_PMETHOD);
-                    activity.setCount(0);
+                    activity.setCounts(0);
                     activity.setExpression(0);
                     activity.setPrev(parent);
                     activity.setName(ref.getName());
@@ -250,7 +250,7 @@ public class TemplateParser {
             
             GroupActivity meeting = new GroupActivity(GroupActivity.LEVEL_MEETING);
             meeting.setTemplate(template);
-            meeting.setCount(0);
+            meeting.setCounts(0);
             meeting.setExpression(0);
             meeting.setDescription(template.getDescription());
             meeting.setName(template.getName());
@@ -292,7 +292,7 @@ public class TemplateParser {
                     
                     GroupActivity activity = new GroupActivity(GroupActivity.LEVEL_MEETING);
                     activity.setType(Activity.TYPE_MEETING);
-                    activity.setCount(0);
+                    activity.setCounts(0);
                     activity.setExpression(0);
                     activity.setPrev(parent);
                     activity.setName(ref.getName());
@@ -311,7 +311,7 @@ public class TemplateParser {
             
             GroupActivity situation = new GroupActivity(GroupActivity.LEVEL_SITUATION);
             situation.setTemplate(template);
-            situation.setCount(0);
+            situation.setCounts(0);
             situation.setExpression(0);
             situation.setDescription(template.getDescription());
             situation.setName(template.getName());

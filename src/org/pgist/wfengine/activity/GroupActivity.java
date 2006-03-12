@@ -226,7 +226,7 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
         setHeadActivity((Activity) piece.getHead());
         
         ReturnActivity returnActivity = new ReturnActivity();
-        returnActivity.setCount(0);
+        returnActivity.setCounts(0);
         returnActivity.setExpression(0);
         returnActivity.setGroup(this);
         returnActivity.setPrev((Activity)piece.getTail());

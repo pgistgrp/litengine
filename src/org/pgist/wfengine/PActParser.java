@@ -75,7 +75,7 @@ public class PActParser {
         pact.setAction(ele.elementText("action"));
         pact.setName(ele.attribute("name").getStringValue());
         pact.setDescription(ele.attribute("description").getStringValue());
-        pact.setCount(0);
+        pact.setCounts(0);
         pact.setExpression(0);
         pact.setType(Activity.TYPE_PACT);
         pact.setTask(null);
