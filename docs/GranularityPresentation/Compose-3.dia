@@ -94,7 +94,7 @@
       <dia:attribute name="text">
         <dia:composite type="text">
           <dia:attribute name="string">
-            <dia:string>#XGT#</dia:string>
+            <dia:string>#XXX#</dia:string>
           </dia:attribute>
           <dia:attribute name="font">
             <dia:font family="sans" style="80" name="Helvetica-Bold"/>
@@ -233,7 +233,7 @@
         <dia:point val="16.08,-9.7"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="16.0252,-9.75485;18.9993,-7.68138"/>
+        <dia:rectangle val="16.0252,-9.75485;18.9994,-7.68137"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="16.08,-9.7"/>
@@ -294,7 +294,7 @@
         <dia:point val="10.6412,-8.13123"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="10.586,-10.1422;13.3841,-8.07595"/>
+        <dia:rectangle val="10.5859,-10.1422;13.3841,-8.07595"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="10.6412,-8.13123"/>
@@ -655,7 +655,7 @@
         <dia:point val="4,-20"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="4,-20.7225;27.4725,-19.455"/>
+        <dia:rectangle val="4,-20.7;27.45,-19.5"/>
       </dia:attribute>
       <dia:attribute name="text">
         <dia:composite type="text">

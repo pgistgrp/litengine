@@ -142,7 +142,7 @@
       <dia:attribute name="text">
         <dia:composite type="text">
           <dia:attribute name="string">
-            <dia:string>#PMethod:XGT #</dia:string>
+            <dia:string>#PMethod:XXX#</dia:string>
           </dia:attribute>
           <dia:attribute name="font">
             <dia:font family="sans" style="0" name="Helvetica"/>
@@ -250,7 +250,7 @@
         <dia:point val="25.565,6.8"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="25.5085,4.78156;27.7415,6.85648"/>
+        <dia:rectangle val="25.5085,4.78156;27.7416,6.85648"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="25.565,6.8"/>
@@ -281,7 +281,7 @@
         <dia:point val="25.75,2.79"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="25.6934,2.73343;27.7626,4.81861"/>
+        <dia:rectangle val="25.6934,2.73343;27.7626,4.81862"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="25.75,2.79"/>
@@ -343,7 +343,7 @@
         <dia:point val="20.1759,4.39627"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="20.1194,2.41147;22.1351,4.45283"/>
+        <dia:rectangle val="20.1193,2.41147;22.1351,4.45284"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="20.1759,4.39627"/>
@@ -374,7 +374,7 @@
         <dia:point val="20.1759,5.13873"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="20.1194,5.08219;22.3074,7.19098"/>
+        <dia:rectangle val="20.1194,5.08218;22.3074,7.19098"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="20.1759,5.13873"/>
@@ -678,7 +678,7 @@ Sythesizing#</dia:string>
       <dia:attribute name="text">
         <dia:composite type="text">
           <dia:attribute name="string">
-            <dia:string>#And then we give it a name: XGT, and save it as template for a new PMethod. #</dia:string>
+            <dia:string>#And then we give it a name: XXX, and save it as template for a new PMethod. #</dia:string>
           </dia:attribute>
           <dia:attribute name="font">
             <dia:font family="sans" style="80" name="Helvetica-Bold"/>
