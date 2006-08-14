@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+
+    <!-- Workflow Engine Beans -->
+    
+    
+    <bean id="engineDAO" class="org.pgist.wfengine.WorkflowEngineDAOImpl">
+        <property name="sessionFactory">
+           <ref bean="sessionFactory" />
+        </property>
+    </bean>
+    
+    
+    <bean id="templateParser" class="org.pgist.wfengine.TemplateParser">
+        <property name="engineDAO" ref="engineDAO"/>
+    </bean>
+    
+    
+    <bean id="pgameParser" class="org.pgist.wfengine.PGameParser">
+        <property name="engineDAO" ref="engineDAO"/>
+    </bean>
+    
+    
+    <bean id="engine" parent="baseTransactionProxy">
+      <property name="target">
+        <bean class="org.pgist.wfengine.WorkflowEngine">
+          <property name="engineDAO" ref="engineDAO"/>
+          <property name="templateParser" ref="templateParser"/>
+          <property name="pgameParser" ref="pgameParser"/>
+        </bean>
+      </property>
+      <property name="transactionAttributes">
+        <props>
+          <prop key="spawn*">PROPAGATION_REQUIRED</prop>
+          <prop key="execute*">PROPAGATION_REQUIRED</prop>
+          <prop key="add*">PROPAGATION_REQUIRED</prop>
+          <prop key="save*">PROPAGATION_REQUIRED</prop>
+          <prop key="update*">PROPAGATION_REQUIRED</prop>
+          <prop key="edit*">PROPAGATION_REQUIRED</prop>
+          <prop key="create*">PROPAGATION_REQUIRED</prop>
+          <prop key="delete*">PROPAGATION_REQUIRED</prop>
+          <prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+        </props>
+      </property>
+    </bean>
+    
+    
+    <!-- Workflow Management Beans -->
+    
+    
+    <bean id="workflowDAO" class="org.pgist.workflow.WorkflowDAOImpl">
+        <property name="sessionFactory">
+           <ref bean="sessionFactory" />
+        </property>
+    </bean>
+    
+    
+    <bean id="workflowAgent" parent="baseTransactionProxy">
+      <property name="target">
+        <bean class="org.pgist.workflow.WorkflowAgent">
+          <property name="engine" ref="engine"/>
+          <property name="userDAO" ref="userDAO"/>
+          <property name="workflowDAO" ref="workflowDAO"/>
+        </bean>
+      </property>
+    </bean>
+    
+    
+    <!-- Workflow Modeling -->
+    
+    
+    <bean id="wfModelingAgent" parent="baseTransactionProxy">
+      <property name="target">
+        <bean class="org.pgist.workflow.modeling.WFModelingAgent">
+        </bean>
+      </property>
+    </bean>
+    
+    
+</beans>
+
