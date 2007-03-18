@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/pmethods.dtd"-->
+<pmethods>
+
+    <pmethod name="Faked Auto PGame" description="Faked Auto PGame">
+        <environment>
+            <var type="" name="" value="">
+        </environment>
+        <declaration>
+            <ins>
+                <var name="proj_suite_id" ref="meeting.proj_suite_id"/>
+                <var name="fund_suite_id" ref="meeting.fund_suite_id"/>
+            </ins>
+            <outs>
+                <var name="proj_fake_id" ref="meeting.proj_fake_id"/>
+                <var name="fund_fake_id" ref="meeting.fund_fake_id"/>
+            </outs>
+        </declaration>
+        <sequence>
+            <pgame name="Faked Auto PGame">
+                <declaration>
+                    <ins>
+                        <var name="suite_id" ref="proj_suite_id"/>
+                        <var name="begin_time" value="proj_begin_time"/>
+                    </ins>
+                    <outs>
+                        <var name="fake_id" ref="proj_fake_id"/>
+                    </outs>
+                </declaration>
+                <timer base="begin_time" plusDay="3">
+            </pgame>
+            <pgame name="Faked Auto PGame">
+                <declaration>
+                    <ins>
+                        <var name="suite_id" ref="fund_suite_id"/>
+                    </ins>
+                    <outs>
+                        <var name="fake_id" ref="fund_fake_id"/>
+                    </outs>
+                </declaration>
+            </pgame>
+        </sequence>
+    </pmethod>
+    
+</pmethods>
+

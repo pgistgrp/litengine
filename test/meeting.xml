@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/meetings.dtd"-->
+<meetings>
+
+    <meeting name="Faked Meeting" description="Faked Meeting">
+        <declaration>
+            <ins>
+                <var name="meeting.proj_suite_id" ref="situation.proj_suite_id"/>
+                <var name="meeting.fund_suite_id" ref="situation.fund_suite_id"/>
+            </ins>
+            <outs>
+                <var name="meeting.proj_fake_id" ref="situation.proj_fake_id"/>
+                <var name="meeting.fund_fake_id" ref="situation.fund_fake_id"/>
+            </outs>
+        </declaration>
+        <sequence>
+            <pmethod name="Faked PMethod" />
+            <pmethod name="Faked PMethod" />
+        </sequence>
+    </meeting>
+    
+</meetings>
+

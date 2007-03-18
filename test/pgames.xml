@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/pgames.dtd"-->
+<pgames>
+
+    <pgame name="Faked Auto PGame" description="Faked Auto PGame" auto="true">
+        <taskName>fakedAutoTask</taskName>
+        <declaration>
+            <ins>
+                <var name="suite_id"/>
+            </ins>
+            <outs>
+                <var name="fake_id"/>
+            </outs>
+        </declaration>
+    </pgame>
+    
+    <pgame name="Faked Manual PGame" description="Faked Manual PGame" auto="false">
+        <actionName>fakedManualTask</actionName>
+        <declaration>
+            <ins>
+                <var name="suite_id"/>
+            </ins>
+            <outs>
+                <var name="fake_id"/>
+            </outs>
+        </declaration>
+    </pgame>
+    
+</pgames>
+

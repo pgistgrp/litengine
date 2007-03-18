@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/situations.dtd"-->
+<situations>
+
+    <situation name="Faked Situation" description="Faked Situation">
+        <declaration>
+            <ins>
+                <var name="situation.proj_suite_id" value="100"/>
+                <var name="situation.fund_suite_id" value="200"/>
+            </ins>
+        </declaration>
+        <sequence>
+            <meeting name="Faked Meeting" />
+            <meeting name="Faked Meeting" />
+        </sequence>
+    </situation>
+    
+</situations>
+
