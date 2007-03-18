@@ -26,10 +26,8 @@ import org.pgist.wfengine.SingleIn;
 public class BranchActivity extends Activity implements SingleIn {
     
     
-    private static final long serialVersionUID = 4312508990687343279L;
-    
     protected Activity prev;
-
+    
     protected JoinActivity joinActivity;
     
     protected List branches = new ArrayList();
@@ -113,6 +111,6 @@ public class BranchActivity extends Activity implements SingleIn {
             one.saveState(session);
         }//for i
     }//saveState()
-
-
+    
+    
 }//class SwitchActivity

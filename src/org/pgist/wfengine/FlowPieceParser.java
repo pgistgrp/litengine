@@ -96,22 +96,6 @@ public class FlowPieceParser {
         branch.setJoinActivity(join);
         join.setBranchActivity(branch);
         
-        Element pretask = element.element("pretask");
-        if (pretask!=null) {
-            String className = pretask.attributeValue("class");
-            if (className!=null) {
-                branch.setTask((Task) Class.forName(className).newInstance());
-            }
-        }
-        
-        Element posttask = element.element("posttask");
-        if (posttask!=null) {
-            String className = pretask.attributeValue("class");
-            if (className!=null) {
-                join.setTask((Task) Class.forName(className).newInstance());
-            }
-        }
-        
         List sequences = element.elements("sequence");
         for (int i=0, n=sequences.size(); i<n; i++) {
             Element sequence = (Element) sequences.get(i);
@@ -139,22 +123,6 @@ public class FlowPieceParser {
         endSwitch.setType(Activity.TYPE_ENDSWITCH);
         switche.setEndSwitchActivity(endSwitch);
         endSwitch.setSwitchActivity(switche);
-        
-        Element pretask = element.element("pretask");
-        if (pretask!=null) {
-            String className = pretask.attributeValue("class");
-            if (className!=null) {
-                switche.setTask((Task) Class.forName(className).newInstance());
-            }
-        }
-        
-        Element posttask = element.element("posttask");
-        if (posttask!=null) {
-            String className = pretask.attributeValue("class");
-            if (className!=null) {
-                endSwitch.setTask((Task) Class.forName(className).newInstance());
-            }
-        }
         
         List sequences = element.elements("sequence");
         for (int i=0, n=sequences.size(); i<n; i++) {
@@ -184,22 +152,6 @@ public class FlowPieceParser {
         whilst.setLoop(loop);
         loop.setWhilst(whilst);
         
-        Element pretask = element.element("pretask");
-        if (pretask!=null) {
-            String className = pretask.attributeValue("class");
-            if (className!=null) {
-                whilst.setTask((Task) Class.forName(className).newInstance());
-            }
-        }
-        
-        Element posttask = element.element("posttask");
-        if (posttask!=null) {
-            String className = pretask.attributeValue("class");
-            if (className!=null) {
-                loop.setTask((Task) Class.forName(className).newInstance());
-            }
-        }
-        
         Element sequence = element.element("sequence");
         
         FlowPiece tasks = parseSequence(sequence);
@@ -224,22 +176,6 @@ public class FlowPieceParser {
         until.setType(Activity.TYPE_UNTIL);
         repeat.setUntil(until);
         until.setRepeat(repeat);
-        
-        Element pretask = element.element("pretask");
-        if (pretask!=null) {
-            String className = pretask.attributeValue("class");
-            if (className!=null) {
-                repeat.setTask((Task) Class.forName(className).newInstance());
-            }
-        }
-        
-        Element posttask = element.element("posttask");
-        if (posttask!=null) {
-            String className = pretask.attributeValue("class");
-            if (className!=null) {
-                until.setTask((Task) Class.forName(className).newInstance());
-            }
-        }
         
         Element sequence = element.element("sequence");
         

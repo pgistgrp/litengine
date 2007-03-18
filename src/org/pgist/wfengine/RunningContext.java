@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import org.springframework.beans.factory.BeanFactory;
+
 
 /**
  * RunningContext is a class to management the execution context of a workflow piece.
@@ -31,7 +33,14 @@ public class RunningContext {
     
     private Set runningActivities = new HashSet();
     
+    private Set pendingActivities = new HashSet();
+    
     private List records = new ArrayList();
+    
+    /* workflow environment */
+    private Environment environment = new Environment();
+    
+    private BeanFactory beanFactory;
     
     
     /*
@@ -50,6 +59,11 @@ public class RunningContext {
     /*
      * Getters and Setters
      */
+    
+    
+    public void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+    }//setBeanFactory()
     
     
     /**
@@ -100,12 +114,30 @@ public class RunningContext {
 
 
     /**
+     * 
+     * @return
+     * 
+     * @hibernate.set table="litwf_activity" lazy="true" cascade="all" order-by="id"
+     * @hibernate.collection-key column="context_id"
+     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
+     */
+    public Set getPendingActivities() {
+        return pendingActivities;
+    }
+
+
+    public void setPendingActivities(Set pendingActivities) {
+        this.pendingActivities = pendingActivities;
+    }
+
+
+    /**
      * @return
      * 
      * @hibernate.list table="litwf_task" lazy="true" cascade="all"
      * @hibernate.collection-key column="context_id"
      * @hibernate.collection-index column="task_order"
-     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Task"
+     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      * 
      */
     public List getRecords() {
@@ -118,6 +150,21 @@ public class RunningContext {
     }
     
     
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="environment_id" cascade="all"
+     */
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
+
     /*
      * ------------------------------------------------------------------------------
      */
@@ -201,4 +248,34 @@ public class RunningContext {
     }//proceed()
     
     
+    /*
+     * ------------------------------------------------------------------------
+     */
+    
+    
+    public Integer getIntValue(String name) {
+        return environment.getIntValues().get(name);
+    }//getIntValue()
+    
+    
+    public void setIntValue(String name, Integer value) {
+        environment.getIntValues().put(name, value);
+    }//getIntValue()
+    
+    
+    public String getStrValue(String name) {
+        return environment.getStrValues().get(name);
+    }//getIntValue()
+    
+    
+    public void setStrValue(String name, String value) {
+        environment.getStrValues().put(name, value);
+    }//setStrValue()
+    
+    
+    public Object getTask(String name) {
+        return beanFactory.getBean(name);
+    }
+
+
 }//class RunningContext

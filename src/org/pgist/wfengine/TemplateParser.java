@@ -10,6 +10,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.pgist.wfengine.activity.GroupActivity;
+import org.pgist.wfengine.activity.PAutoGameActivity;
 import org.pgist.wfengine.activity.PGameActivity;
 
 
@@ -90,8 +91,6 @@ public class TemplateParser {
                     activity.setName(ref.getName());
                     activity.setDescription(ref.getDescription());
                     activity.setAction(ref.getAction());
-                    Task task = ref.getTask();
-                    if (task!=null) activity.setTask(task.clone(activity));
                     
                     return activity;
                 }//visit()
@@ -150,7 +149,7 @@ public class TemplateParser {
                     
                     PGameActivity activity = (PGameActivity) map.get(""+id);
                     if (activity==null) {
-                        activity = new PGameActivity();
+                        activity = new PAutoGameActivity();
                         map.put(""+id, activity);
                     }
                     
@@ -160,9 +159,7 @@ public class TemplateParser {
                     activity.setPrev(parent);
                     activity.setName(ref.getName());
                     activity.setDescription(ref.getDescription());
-                    activity.setAction(ref.getAction());
-                    Task task = ref.getTask();
-                    if (task!=null) activity.setTask(task.clone(activity));
+                    //activity.setAction(ref.getAction());
                     
                     String depends = element.attributeValue("depends");
                     if (depends!=null) {
@@ -171,10 +168,9 @@ public class TemplateParser {
                             Long sid = new Long(s[i]);
                             PGameActivity depend = (PGameActivity) map.get(""+sid);
                             if (depend==null) {
-                                depend = new PGameActivity();
+                                depend = new PAutoGameActivity();
                                 map.put(""+sid, depend);
                             }
-                            activity.getDepends().add(depend);
                         }//for i
                     }
                     
@@ -193,8 +189,6 @@ public class TemplateParser {
             method.setExpression(0);
             method.setDescription(template.getDescription());
             method.setName(template.getName());
-            method.setRefId(refId);
-            method.setTask(null);
             
             engineDAO.saveTemplate(template);
             engineDAO.saveActivity(method);
@@ -237,8 +231,6 @@ public class TemplateParser {
                     activity.setName(ref.getName());
                     activity.setDescription(ref.getDescription());
                     activity.setTemplate(ref.getTemplate());
-                    Task task = ref.getTask();
-                    if (task!=null) activity.setTask(task.clone(activity));
                     
                     return activity;
                 }//visit()
@@ -254,8 +246,6 @@ public class TemplateParser {
             meeting.setExpression(0);
             meeting.setDescription(template.getDescription());
             meeting.setName(template.getName());
-            meeting.setRefId(refId);
-            meeting.setTask(null);
             
             engineDAO.saveTemplate(template);
             engineDAO.saveActivity(meeting);
@@ -298,8 +288,6 @@ public class TemplateParser {
                     activity.setName(ref.getName());
                     activity.setDescription(ref.getDescription());
                     activity.setTemplate(ref.getTemplate());
-                    Task task = ref.getTask();
-                    if (task!=null) activity.setTask(task.clone(activity));
                     
                     return activity;
                 }//visit()
@@ -315,8 +303,6 @@ public class TemplateParser {
             situation.setExpression(0);
             situation.setDescription(template.getDescription());
             situation.setName(template.getName());
-            situation.setRefId(refId);
-            situation.setTask(null);
             
             engineDAO.saveTemplate(template);
             engineDAO.saveActivity(situation);

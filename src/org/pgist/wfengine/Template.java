@@ -13,6 +13,7 @@ import org.pgist.wfengine.activity.JoinActivity;
 import org.pgist.wfengine.activity.JumpActivity;
 import org.pgist.wfengine.activity.LoopActivity;
 import org.pgist.wfengine.activity.PActActivity;
+import org.pgist.wfengine.activity.PAutoGameActivity;
 import org.pgist.wfengine.activity.PGameActivity;
 import org.pgist.wfengine.activity.RepeatActivity;
 import org.pgist.wfengine.activity.SwitchActivity;
@@ -231,11 +232,11 @@ public class Template {
                 case Activity.TYPE_PGAME:
                     one = (PGameActivity) Utils.narrow(one);
                     PGameActivity pgameOne = (PGameActivity) one;
-                    PGameActivity pgameTwo = new PGameActivity();
+                    PGameActivity pgameTwo = new PAutoGameActivity();
                     two = pgameTwo;
                     pgameTwo.setName( pgameOne.getName() );
                     pgameTwo.setDescription( pgameOne.getDescription() );
-                    pgameTwo.setAction(pgameOne.getAction());
+                    //pgameTwo.setAction(pgameOne.getAction());
                     stack.push( ((PGameActivity) one).getNext() );
                     break;
                 case Activity.TYPE_PMETHOD:
@@ -358,12 +359,6 @@ public class Template {
                         pair = (Activity[]) map.get(next.getId());
                         pgameTwo.setNext( pair[1] );
                     }
-                    
-                    for (Iterator iterPGameOne=pgameOne.getDepends().iterator(); iterPGameOne.hasNext(); ) {
-                        PGameActivity depend = (PGameActivity) iterPGameOne.next();
-                        pair = (Activity[]) map.get(depend.getId());
-                        pgameTwo.getDepends().add( pair[1] );
-                    }//for iter
                     
                     break;
                 case Activity.TYPE_PMETHOD:

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.util.Utils;
+import org.springframework.beans.factory.BeanFactory;
 
 
 /**
@@ -32,7 +33,7 @@ public class Workflow implements Serializable {
     private boolean born = false;
     
     //
-    private WorkflowEnvironment env;
+    private Environment environment = new Environment();
     
     //
     private boolean finished;
@@ -87,21 +88,21 @@ public class Workflow implements Serializable {
      * 
      * @return
      * 
-     * @hibernate.one-to-one class="org.pgist.wfengine.WorkflowEnvironment" cascade="all"
+     * @hibernate.many-to-one column="environment_id" cascade="all"
      */
-    public WorkflowEnvironment getEnv() {
-        return env;
+    public Environment getEnvironment() {
+        return environment;
     }
     
     
-    public void setEnv(WorkflowEnvironment env) {
-        this.env = env;
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
     
     
     /**
      * @return
-     * @hibernate.many-to-one column="definition_id" class="org.pgist.wfengine.Activity" cascade="all"
+     * @hibernate.many-to-one column="definition_id" cascade="all"
      */
     public Activity getDefinition() {
         return definition;
@@ -176,7 +177,7 @@ public class Workflow implements Serializable {
 
     /**
      * @return
-     * @hibernate.many-to-one column="context_id" class="org.pgist.wfengine.RunningContext" cascade="all"
+     * @hibernate.many-to-one column="context_id" cascade="all"
      */
     public RunningContext getContext() {
         return context;
@@ -207,18 +208,21 @@ public class Workflow implements Serializable {
         beginTime = new Date();
         
         context.addActivity(getDefinition());
-    }//execute()
+    }//initialize()
     
     
     /**
      * Package Accessible.
      * Execute this flow.
      */
-    void execute() throws Exception {
+    void execute(BeanFactory beanFactory) throws Exception {
         //Check if this workflow already finished, cancelled
         if (finished || cancelled) return;
         
-        getContext().execute();
+        RunningContext context = getContext();
+        
+        context.setBeanFactory(beanFactory);
+        context.execute();
     }//execute()
     
     

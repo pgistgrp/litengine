@@ -1,12 +1,15 @@
 package org.pgist.wfengine.activity;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.Declaration;
 import org.pgist.wfengine.FlowPiece;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
@@ -33,8 +36,6 @@ import org.pgist.wfengine.util.Utils;
 public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     
-    private static final long serialVersionUID = -6374034565784447958L;
-    
     public static final int LEVEL_UNKNOWN   = 0;
     
     public static final int LEVEL_SITUATION = 1;
@@ -44,8 +45,6 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     public static final int LEVEL_PMETHOD   = 3;
     
     public static final int LEVEL_PGAME     = 4;
-    
-    protected Long refId = null;
     
     protected int level = LEVEL_UNKNOWN;
     
@@ -58,6 +57,8 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     protected Activity headActivity;
     
     protected Activity tailActivity;
+    
+    protected Declaration declaration;
     
     protected Activity prev;
     
@@ -74,20 +75,6 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     }
     
     
-    /**
-     * @return
-     * @hibernate.property
-     */
-    public Long getRefId() {
-        return refId;
-    }
-
-
-    public void setRefId(Long refId) {
-        this.refId = refId;
-    }
-
-
     /**
      * @return
      * @hibernate.property not-null="true"
@@ -169,6 +156,21 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     public void setTailActivity(Activity tailActivity) {
         this.tailActivity = tailActivity;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="declaration_id" cascade="all" lazy="false"
+     */
+    public Declaration getDeclaration() {
+        return declaration;
+    }
+
+
+    public void setDeclaration(Declaration declaration) {
+        this.declaration = declaration;
     }
 
 

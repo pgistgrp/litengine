@@ -1,18 +1,13 @@
 package org.pgist.wfengine.activity;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
-
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.RunningContext;
+import org.pgist.wfengine.Declaration;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
 
 
 /**
- * The PGameActivity implement the pgame activity.
  * 
  * @author kenny
  *
@@ -20,44 +15,24 @@ import org.pgist.wfengine.SingleOut;
  *                            lazy="true" proxy="org.pgist.wfengine.activity.PGameActivity"
  * @hibernate.joined-subclass-key column="id"
  */
-public class PGameActivity extends Activity implements SingleIn, SingleOut {
+public abstract class PGameActivity extends Activity implements SingleIn, SingleOut {
     
-    
-    private static final long serialVersionUID = 3222935387069104483L;
-    
-    protected Long refId = null;
     
     protected String name = null;
     
     protected String description = null;
     
-    protected String action = null;
+    protected Declaration declaration;
     
     protected Activity prev;
     
     protected Activity next;
-    
-    protected Set depends = new HashSet();
     
     
     public PGameActivity() {
     }
     
     
-    /**
-     * @return
-     * @hibernate.property
-     */
-    public Long getRefId() {
-        return refId;
-    }
-
-
-    public void setRefId(Long refId) {
-        this.refId = refId;
-    }
-
-
     /**
      * @return
      * @hibernate.property not-null="true"
@@ -88,15 +63,16 @@ public class PGameActivity extends Activity implements SingleIn, SingleOut {
 
     /**
      * @return
-     * @hibernate.property
+     * 
+     * @hibernate.many-to-one column="declaration_id" cascade="all" lazy="false"
      */
-    public String getAction() {
-        return action;
+    public Declaration getDeclaration() {
+        return declaration;
     }
 
 
-    public void setAction(String action) {
-        this.action = action;
+    public void setDeclaration(Declaration declaration) {
+        this.declaration = declaration;
     }
 
 
@@ -128,43 +104,10 @@ public class PGameActivity extends Activity implements SingleIn, SingleOut {
         this.next = next;
     }
 
-    
-    /**
-     * @return
-     * @hibernate.set lazy="true" table="litwf_pgame_depend" cascade="all"
-     * @hibernate.collection-key column="pgame_id"
-     * @hibernate.collection-many-to-many column="depend_id" class="org.pgist.wfengine.activity.PGameActivity"
-     */
-    public Set getDepends() {
-        return depends;
-    }
-
-
-    public void setDepends(Set depends) {
-        this.depends = depends;
-    }
-
 
     /*
-     * ------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      */
-    
-    
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-//        if (task==null) {
-//            setExpression(1);
-//        } else if (task.getType()==Task.TASK_AUTOMATIC) {
-//            task.execute(context);
-//        }
-        
-        if (getExpression()>0) {//task is finished
-            next.activate(context);
-            stack.push(next);
-            return true;
-        } else {
-            return false;
-        }
-    }//doExecute()
     
     
     public void saveState(Session session) {

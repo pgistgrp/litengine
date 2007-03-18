@@ -63,8 +63,6 @@ public abstract class Activity implements Serializable {
     
     protected int expression = 0;
     
-    protected Task task;
-    
     protected int status = STATUS_INACTIVE;
     
     
@@ -126,20 +124,6 @@ public abstract class Activity implements Serializable {
 
     /**
      * @return
-     * @hibernate.many-to-one column="task_id" class="org.pgist.wfengine.Task" cascade="all"
-     */
-    public Task getTask() {
-        return task;
-    }
-
-
-    public void setTask(Task task) {
-        this.task = task;
-    }
-
-
-    /**
-     * @return
      * @hibernate.property not-null="true"
      */
     public int getStatus() {
@@ -173,9 +157,8 @@ public abstract class Activity implements Serializable {
     
     
     /**
-     * Package Accessible
-     * @param workflow
-     * @param parent
+     * Package Access Only
+     * @param context
      */
     public final void activate(RunningContext context) {
         //Increase Count. That means the total visiting times for this activity.
@@ -183,9 +166,6 @@ public abstract class Activity implements Serializable {
         
         //expression==0 means for manual task, the task is waiting for performing
         setExpression(0);
-        
-        //initialize the task
-        if (task!=null) task.initialize(context);
         
         //set status
         setStatus(STATUS_ACTIVE);
@@ -195,8 +175,9 @@ public abstract class Activity implements Serializable {
     
     
     /**
-     * Package Accessible
-     * @param env
+     * Package Access Only
+     * @param context
+     * @param stack
      */
     final boolean execute(RunningContext context, Stack stack) throws Exception {
         return doExecute(context, stack);
@@ -204,18 +185,11 @@ public abstract class Activity implements Serializable {
     
     
     /**
-     * Package Accessible
-     * @param env
+     * Package Access Only
+     * @param context
      */
     final void deActivate(RunningContext context) {
-        if (task!=null) task.finalize(context);
-        
         doDeActivate(context);
-        
-        //Track the task
-        if (task!=null) {
-            context.getRecords().add(task);
-        }
         
         //set status
         setStatus(STATUS_INACTIVE);
@@ -224,7 +198,7 @@ public abstract class Activity implements Serializable {
     
     /**
      * default implementation
-     * @param workflow
+     * @param context
      */
     protected void doActivate(RunningContext context) {
     }//doActivate()
@@ -232,10 +206,15 @@ public abstract class Activity implements Serializable {
     
     /**
      * default implementation
-     * @param workflow
+     * @param context
      */
     protected void doDeActivate(RunningContext context) {
     }//doDeActivate()
+    
+    
+    public boolean isAutomatic() {
+        return true;
+    }//isAutomatic()
     
     
     abstract protected boolean doExecute(RunningContext context, Stack stack) throws Exception;

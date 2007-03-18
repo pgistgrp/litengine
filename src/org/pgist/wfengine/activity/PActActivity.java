@@ -21,8 +21,6 @@ import org.pgist.wfengine.SingleOut;
 public class PActActivity extends Activity implements SingleIn, SingleOut {
     
     
-    private static final long serialVersionUID = 3222935387069104483L;
-    
     protected Long refId = null;
     
     protected String name = null;
@@ -168,6 +166,11 @@ public class PActActivity extends Activity implements SingleIn, SingleOut {
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
+
+
+    public boolean isAutomatic() {
+        return false;
+    }//isAutomatic()
 
 
 }//class PActActivity

@@ -9,7 +9,6 @@ import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.Task;
 
 
 /**
@@ -24,8 +23,6 @@ import org.pgist.wfengine.Task;
 public class JumpActivity extends Activity implements SingleIn, SingleOut {
     
     
-    private static final long serialVersionUID = -5876606936184585374L;
-
     protected Activity prev = null;
 
     protected Activity next;
@@ -106,12 +103,6 @@ public class JumpActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        if (task==null) {
-            setExpression(-1);
-        } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(context);
-        }
-        
         if (getExpression()>jumps.size()) setExpression(jumps.size());
         
         if (getExpression()==0) {

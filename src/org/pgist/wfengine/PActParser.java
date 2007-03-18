@@ -78,7 +78,6 @@ public class PActParser {
         pact.setCounts(0);
         pact.setExpression(0);
         pact.setType(Activity.TYPE_PACT);
-        pact.setTask(null);
         
         return pact;
     }//parseProcess()

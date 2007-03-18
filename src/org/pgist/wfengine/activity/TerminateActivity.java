@@ -6,7 +6,6 @@ import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
-import org.pgist.wfengine.Task;
 
 
 /**
@@ -19,8 +18,6 @@ import org.pgist.wfengine.Task;
  */
 public class TerminateActivity extends Activity implements SingleIn {
     
-    
-    private static final long serialVersionUID = 4089087931490531333L;
     
     protected Activity prev = null;
     
@@ -49,14 +46,7 @@ public class TerminateActivity extends Activity implements SingleIn {
     
     
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        //Terminate Activity have to be handled differently
-        if (task==null) {
-            setExpression(1);
-        } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(context);
-        }
-        
-        return getExpression()>0;
+        return true;
     }//doExecute()
     
     

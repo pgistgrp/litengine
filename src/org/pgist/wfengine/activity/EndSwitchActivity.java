@@ -22,8 +22,6 @@ import org.pgist.wfengine.SingleOut;
 public class EndSwitchActivity extends Activity implements SingleOut {
     
     
-    private static final long serialVersionUID = 3209784851120949570L;
-
     protected Activity next;
     
     private SwitchActivity switchActivity;

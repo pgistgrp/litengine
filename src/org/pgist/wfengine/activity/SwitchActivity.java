@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
-import org.pgist.wfengine.Task;
 
 
 /**
@@ -27,8 +26,6 @@ import org.pgist.wfengine.Task;
 public class SwitchActivity extends Activity implements SingleIn {
     
     
-    private static final long serialVersionUID = -6212236874804391823L;
-
     protected EndSwitchActivity endSwitchActivity;
     
     protected List switches = new ArrayList();
@@ -109,12 +106,6 @@ public class SwitchActivity extends Activity implements SingleIn {
     
     
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        if (task==null) {
-            setExpression(1);
-        } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(context);
-        }
-        
         if (getExpression()<0) setExpression(0);
         if (getExpression()>switches.size()) setExpression(switches.size());
         
@@ -137,6 +128,11 @@ public class SwitchActivity extends Activity implements SingleIn {
         }//for i
         if (other!=null) other.saveState(session);
     }//saveState()
+
+
+    public boolean isAutomatic() {
+        return false;
+    }//isAutomatic()
 
 
 }//class SwitchActivity

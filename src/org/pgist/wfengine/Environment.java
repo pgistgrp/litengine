@@ -5,28 +5,38 @@ import java.util.Map;
 
 
 /**
+ * Encapsulate the workflow internal environment.<br>
+ * 
+ * An environment consists of sets of environment values.
  * 
  * @author kenny
  *
- * @hibernate.class table="litwf_env"
+ * @hibernate.class table="litwf_environment"
  */
 public class Environment {
     
     
-    private Long id;
-    
-    private Map map = new HashMap();
-    
+    protected Long id = null;
 
+    private Map<String, Integer> intValues = new HashMap<String, Integer>();
+    
+    private Map<String, String> strValues = new HashMap<String, String>();
+    
+    
+    public Environment() {
+    }
+    
+    
     /**
      * @return
-     * @hibernate.id generator-class="native"
+     * @hibernate.id generator-class="foreign"
+     * @hibernate.generator-param name="property" value="workflow"
      */
     public Long getId() {
         return id;
     }
     
-
+    
     public void setId(Long id) {
         this.id = id;
     }
@@ -35,35 +45,36 @@ public class Environment {
     /**
      * @return
      * 
-     * @hibernate.map table="litwf_env_var_link"
+     * @hibernate.map table="litwf_env_values_map"
      * @hibernate.collection-key column="env_id"
-     * @hibernate.collection-index column="env_var_name" type="string"
-     * @hibernate.collection-many-to-many class="org.pgist.wfengine.EnvironmentVariable" column="env_var_id"
+     * @hibernate.collection-index column="name" type="string" length="255"
+     * @hibernate.collection-element column="int_value" type="integer"
      */
-    public Map getMap() {
-        return map;
+    public Map<String, Integer> getIntValues() {
+        return intValues;
     }
 
 
-    public void setMap(Map map) {
-        this.map = map;
+    public void setIntValues(Map<String, Integer> intValues) {
+        this.intValues = intValues;
     }
-    
-    
-    /*
-     * ------------------------------------------------------------------------
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.map table="litwf_env_values_map"
+     * @hibernate.collection-key column="env_id"
+     * @hibernate.collection-index column="name" type="string" length="255"
+     * @hibernate.collection-element column="str_value" type="string"
      */
-    
-    
-    public Object get(String name) {
-        return map.get(name);
+    public Map<String, String> getStrValues() {
+        return strValues;
     }
-    
-    
-    public void put(String name, Object value) {
-        EnvironmentVariable var = new EnvironmentVariable();
-        var.setObject(value);
-        map.put(name, var);
+
+
+    public void setStrValues(Map<String, String> strValues) {
+        this.strValues = strValues;
     }
 
 

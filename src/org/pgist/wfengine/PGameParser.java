@@ -9,6 +9,7 @@ import java.util.List;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.pgist.wfengine.activity.PAutoGameActivity;
 import org.pgist.wfengine.activity.PGameActivity;
 
 
@@ -76,28 +77,12 @@ public class PGameParser {
 
 
     private PGameActivity parsePGame(Element ele) throws Exception {
-        PGameActivity pgame = new PGameActivity();
-        pgame.setRefId(new Long(ele.attribute("refid").getStringValue()));
-        pgame.setAction(ele.elementText("action"));
+        PGameActivity pgame = new PAutoGameActivity();
         pgame.setName(ele.attribute("name").getStringValue());
         pgame.setDescription(ele.attribute("description").getStringValue());
         pgame.setCounts(0);
         pgame.setExpression(0);
         pgame.setType(Activity.TYPE_PGAME);
-        pgame.setTask(null);
-        
-        if (engineDAO.getPGameActivityByRefId(pgame.getRefId())!=null) throw new Exception("Another PGameActivity has this refid: "+pgame.getRefId());
-        
-        String depends = ele.elementText("depends");
-        if (depends!=null) {
-            String[] s = depends.split(",");
-            for (int i=0; i<s.length; i++) {
-                System.out.println("Depends ---> "+s[i]);
-                Long dependId = new Long(s[i]);
-                PGameActivity one = engineDAO.getPGameActivityByRefId(dependId);
-                if (one!=null) pgame.getDepends().add(one);
-            }//for i
-        }
         
         engineDAO.saveActivity(pgame);
         

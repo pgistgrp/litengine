@@ -20,8 +20,6 @@ import org.pgist.wfengine.SingleOut;
 public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     
     
-    private static final long serialVersionUID = 1399861713508242529L;
-
     protected int loopCount = 0;
     
     protected int expression;

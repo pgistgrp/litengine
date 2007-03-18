@@ -7,7 +7,6 @@ import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
 
@@ -116,12 +115,6 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        if (task==null) {//infinite loop
-            setExpression(1);
-        } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(context);
-        }
-        
         if (getExpression()==0) {//task is not finished
             return false;
         } else if (getExpression()>0) {

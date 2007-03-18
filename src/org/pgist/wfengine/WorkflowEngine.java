@@ -8,6 +8,9 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
 import org.pgist.wfengine.activity.TerminateActivity;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 
 
 /**
@@ -18,7 +21,20 @@ import org.pgist.wfengine.activity.TerminateActivity;
  * @author kenny
  *
  */
-public class WorkflowEngine {
+public class WorkflowEngine implements BeanFactoryAware {
+    
+    
+    private BeanFactory beanFactory;
+    
+    
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
+    }//setBeanFactory()
+    
+    
+    /*
+     * ------------------------------------------------------------------------
+     */
     
     
     private Cache workflowCache = null;
@@ -144,10 +160,6 @@ public class WorkflowEngine {
         RunningContext context = new RunningContext();
         workflow.setContext(context);
         
-        WorkflowEnvironment env = new WorkflowEnvironment();
-        workflow.setEnv(env);
-        env.setWorkflow(workflow);
-        
         FlowPiece piece = template.spawn();
         SingleOut tail = piece.getTail();
         TerminateActivity terminateActivity = new TerminateActivity();
@@ -172,9 +184,9 @@ public class WorkflowEngine {
     
     
     public void executeWorkflow(Workflow workflow) throws Exception {
-        workflow.execute();
+        workflow.execute(beanFactory);
         engineDAO.saveWorkflow(workflow);
     }//executeWorkflow()
-    
-    
+
+
 }//class WorkflowEngine

@@ -60,7 +60,7 @@ public class WorkflowTracker {
      * @hibernate.list table="litwf_task" lazy="true" cascade="all"
      * @hibernate.collection-key column="tracker_id"
      * @hibernate.collection-index column="task_order"
-     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Task"
+     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      * 
      */
     public List getRecords() {
@@ -76,11 +76,6 @@ public class WorkflowTracker {
     /*
      * ------------------------------------------------------------------------------
      */
-    
-    
-    public void record(Task task) {
-        records.add(task);
-    }//record()
     
     
 }//class WorkflowTracker

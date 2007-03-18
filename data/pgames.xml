@@ -2,23 +2,13 @@
 <!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/pacts.dtd"-->
 <pgames>
 
-
-  <pgame refid="100" name="Concern Collection" description="Concern Collection">
-    <action>/concernCollection.do</action>
-    <environment>
-      <var name="totalCount" value="1"/>
-    </environment>
-  </pgame>
-  
-  
-  <pgame refid="200" name="Synthesizing" description="Synthesizing">
-    <action>/synthesizing.do</action>
-    <depends>100</depends>
-    <environment>
-      <var name="totalCount" value="1"/>
-    </environment>
-  </pgame>
-  
-  
+    <pgame name="Faked Task" description="Faked Task" auto="true">
+        <task>fakedTask</task>
+        <environment>
+            <ins>
+                <var name="totalCount" ref="totalCount"/>
+            </ins>
+        </environment>
+    </pgame>
+    
 </pgames>
-

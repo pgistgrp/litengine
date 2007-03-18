@@ -7,7 +7,6 @@ import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.Task;
 import org.pgist.wfengine.Workflow;
 
 
@@ -23,8 +22,6 @@ import org.pgist.wfengine.Workflow;
 public class LoopActivity extends Activity implements SingleIn, SingleOut {
     
     
-    private static final long serialVersionUID = 6198938783718025831L;
-
     protected int expression = 0;
     
     protected WhileActivity whilst;
@@ -100,12 +97,6 @@ public class LoopActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        if (task==null) {
-            setExpression(1);
-        } else if (task.getType()==Task.TASK_AUTOMATIC) {
-            task.execute(context);
-        }
-        
         if (getExpression()>0) {//task is finished
             whilst.activate(context);
             stack.push(whilst);

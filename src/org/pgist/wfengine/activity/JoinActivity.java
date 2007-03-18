@@ -22,8 +22,6 @@ import org.pgist.wfengine.SingleOut;
 public class JoinActivity extends Activity implements SingleOut {
     
     
-    private static final long serialVersionUID = 3802620632662633415L;
-
     protected Activity next;
     
     protected BranchActivity branchActivity;

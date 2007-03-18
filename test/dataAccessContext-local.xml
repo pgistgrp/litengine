@@ -14,7 +14,7 @@
            <value>pgist</value>
         </property>
         <property name="password">
-           <value>pgist</value>
+           <value>ppgis.2005</value>
         </property>
     </bean>
     
@@ -25,13 +25,13 @@
         </property>
         <property name="mappingResources">
            <list>
-               <value>org/pgist/wfengine/WorkflowEnvironment.hbm.xml</value>
-               <value>org/pgist/wfengine/Workflow.hbm.xml</value>
+               <value>org/pgist/wfengine/Environment.hbm.xml</value>
+               <value>org/pgist/wfengine/Declaration.hbm.xml</value>
                <value>org/pgist/wfengine/RunningContext.hbm.xml</value>
                <value>org/pgist/wfengine/Activity.hbm.xml</value>
-               <value>org/pgist/wfengine/Task.hbm.xml</value>
                <value>org/pgist/wfengine/AccessManager.hbm.xml</value>
                <value>org/pgist/wfengine/Template.hbm.xml</value>
+               <value>org/pgist/wfengine/Workflow.hbm.xml</value>
            </list>
         </property>
         <property name="hibernateProperties">
@@ -58,7 +58,13 @@
            <ref local="sessionFactory" />
         </property>
     </bean>
+    
+    
+    <!-- ========================= Workflow Tasks ========================= -->
 
 
+    <bean id="fakedTask" class="org.pgist.tests.wfengine.FakedTask">
+    </bean>
+    
+    
 </beans>
-

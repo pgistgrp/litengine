@@ -20,8 +20,6 @@ import org.pgist.wfengine.SingleOut;
 public class ReturnActivity extends Activity implements SingleIn, SingleOut {
     
     
-    private static final long serialVersionUID = -1550544562044625071L;
-    
     protected GroupActivity group;
     
     protected Activity prev;
