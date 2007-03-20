@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import org.pgist.wfengine.activity.GroupActivity;
 import org.springframework.beans.factory.BeanFactory;
 
 
@@ -29,7 +30,9 @@ public class RunningContext {
     
     private Long id;
     
-    private RunningContext parent = null;
+    private RunningContext parent;
+    
+    private GroupActivity group;
     
     private Set runningActivities = new HashSet();
     
@@ -83,7 +86,8 @@ public class RunningContext {
 
     /**
      * @return
-     * @hibernate.many-to-one column="parent_id" class="org.pgist.wfengine.RunningContext" cascade="all"
+     * 
+     * @hibernate.many-to-one column="parent_id" cascade="all"
      */
     public RunningContext getParent() {
         return parent;
@@ -92,6 +96,21 @@ public class RunningContext {
 
     public void setParent(RunningContext parent) {
         this.parent = parent;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="group_id" cascade="all"
+     */
+    public GroupActivity getGroup() {
+        return group;
+    }
+
+
+    public void setGroup(GroupActivity group) {
+        this.group = group;
     }
 
 

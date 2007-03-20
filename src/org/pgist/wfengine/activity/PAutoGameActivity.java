@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.Stack;
 
+import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
@@ -26,6 +27,25 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
     
     
     public PAutoGameActivity() {
+    }
+    
+    
+    public PAutoGameActivity clone() {
+        PAutoGameActivity act = new PAutoGameActivity();
+        
+        act.getDeclaration().getIns().putAll(getDeclaration().getIns());
+        act.getDeclaration().getOuts().putAll(getDeclaration().getOuts());
+        act.setCounts(0);
+        act.setName(getName());
+        act.setDescription(getDescription());
+        act.setTaskName(getTaskName());
+        act.setExpression(getExpression());
+        act.setPrev(null);
+        act.setNext(null);
+        act.setStatus(Activity.STATUS_INACTIVE);
+        act.setType(getType());
+        
+        return act;
     }
     
     

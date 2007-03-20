@@ -22,7 +22,7 @@ public abstract class PGameActivity extends Activity implements SingleIn, Single
     
     protected String description = null;
     
-    protected Declaration declaration;
+    protected Declaration declaration = new Declaration();
     
     protected Activity prev;
     
@@ -31,6 +31,9 @@ public abstract class PGameActivity extends Activity implements SingleIn, Single
     
     public PGameActivity() {
     }
+    
+    
+    public abstract PGameActivity clone();
     
     
     /**

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.hibernate.Session;
+import org.pgist.wfengine.activity.GroupActivity;
 import org.pgist.wfengine.util.Utils;
 import org.springframework.beans.factory.BeanFactory;
 
@@ -26,14 +27,10 @@ public class Workflow implements Serializable {
     
     protected Long id = null;
     
-    //The definition activity of a workflow instance
-    private Activity definition = null;
+    private GroupActivity situation = null;
     
     //A workflow can't be definitioned more than once
     private boolean born = false;
-    
-    //
-    private Environment environment = new Environment();
     
     //
     private boolean finished;
@@ -47,8 +44,6 @@ public class Workflow implements Serializable {
     //
     private Date endTime;
     
-    //
-    private RunningContext context;
     
     public Workflow() {
     }
@@ -72,6 +67,21 @@ public class Workflow implements Serializable {
     /**
      * @return
      * 
+     * @hibernate.many-to-one column="group_id" cascade="all"
+     */
+    public GroupActivity getSituation() {
+        return situation;
+    }
+
+
+    public void setSituation(GroupActivity situation) {
+        this.situation = situation;
+    }
+
+
+    /**
+     * @return
+     * 
      * @hibernate.property unique="false" not-null="true"
      */
     public boolean isBorn() {
@@ -82,37 +92,6 @@ public class Workflow implements Serializable {
     public void setBorn(boolean born) {
         this.born = born;
     }
-    
-    
-    /**
-     * 
-     * @return
-     * 
-     * @hibernate.many-to-one column="environment_id" cascade="all"
-     */
-    public Environment getEnvironment() {
-        return environment;
-    }
-    
-    
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-    
-    
-    /**
-     * @return
-     * @hibernate.many-to-one column="definition_id" cascade="all"
-     */
-    public Activity getDefinition() {
-        return definition;
-    }
-    
-    
-    public Activity setDefinition(Activity definition) {
-        this.definition = definition;
-        return this.definition;
-    }//setDefinition()
     
     
     /**
@@ -175,20 +154,6 @@ public class Workflow implements Serializable {
     }
 
 
-    /**
-     * @return
-     * @hibernate.many-to-one column="context_id" cascade="all"
-     */
-    public RunningContext getContext() {
-        return context;
-    }
-
-
-    public void setContext(RunningContext context) {
-        this.context = context;
-    }
-
-
     /*
      * -------------------------------------------------------------------
      */
@@ -206,8 +171,6 @@ public class Workflow implements Serializable {
         //Set born
         born = true;
         beginTime = new Date();
-        
-        context.addActivity(getDefinition());
     }//initialize()
     
     
@@ -219,7 +182,7 @@ public class Workflow implements Serializable {
         //Check if this workflow already finished, cancelled
         if (finished || cancelled) return;
         
-        RunningContext context = getContext();
+        RunningContext context = situation.getContext();
         
         context.setBeanFactory(beanFactory);
         context.execute();
@@ -233,19 +196,19 @@ public class Workflow implements Serializable {
     synchronized public void proceed(Activity activity) throws Exception {
         if (finished || cancelled || !born) return;
         
-        context.proceed(activity);
+        situation.getContext().proceed(activity);
     }//proceed()
     
     
     public void saveState(Session session) {
         session.saveOrUpdate(this);
-        definition.saveState(session);
+        situation.saveState(session);
     }//saveState()
     
     
     public Set getRunningActivities(int type) {
         Set set = new HashSet();
-        Set activities = context.getRunningActivities();
+        Set activities = situation.getContext().getRunningActivities();
         for (Iterator iter=activities.iterator(); iter.hasNext(); ) {
             Activity one = (Activity) Utils.narrow(iter.next());
             if (type == one.getType()) set.add(one);

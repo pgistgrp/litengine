@@ -52,19 +52,17 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     protected String description;
     
-    protected Template template;
-    
     protected Activity headActivity;
     
     protected Activity tailActivity;
     
-    protected Declaration declaration;
+    protected Declaration declaration = new Declaration();
     
     protected Activity prev;
     
     protected Activity next;
     
-    protected RunningContext context = null;
+    protected RunningContext context = new RunningContext();
     
     
     public GroupActivity() {}
@@ -119,21 +117,8 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
 
     /**
      * @return
-     * @hibernate.many-to-one column="template_id" class="org.pgist.wfengine.Template" cascade="all"
-     */
-    public Template getTemplate() {
-        return template;
-    }
-
-
-    public void setTemplate(Template template) {
-        this.template = template;
-    }
-
-
-    /**
-     * @return
-     * @hibernate.many-to-one column="head_id" class="org.pgist.wfengine.Activity" lazy="true" cascade="all"
+     * 
+     * @hibernate.many-to-one column="head_id" lazy="true" cascade="all"
      */
     public Activity getHeadActivity() {
         return headActivity;
@@ -147,7 +132,8 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     /**
      * @return
-     * @hibernate.many-to-one column="tail_id" class="org.pgist.wfengine.Activity" lazy="true" cascade="all"
+     * 
+     * @hibernate.many-to-one column="tail_id" lazy="true" cascade="all"
      */
     public Activity getTailActivity() {
         return tailActivity;
@@ -176,7 +162,7 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
 
     /**
      * @return
-     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" lazy="true" cascade="all"
+     * @hibernate.many-to-one column="prev_id" lazy="true" cascade="all"
      */
     public Activity getPrev() {
         return prev;
@@ -190,7 +176,7 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
 
     /**
      * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" lazy="true" cascade="all"
+     * @hibernate.many-to-one column="next_id" lazy="true" cascade="all"
      */
     public Activity getNext() {
         return next;
@@ -205,7 +191,7 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     /**
      * @return
      * 
-     * @hibernate.many-to-one column="context_id" class="org.pgist.wfengine.RunningContext" lazy="true" cascade="all"
+     * @hibernate.many-to-one column="context_id" lazy="true" cascade="all"
      */
     public RunningContext getContext() {
         return context;
@@ -223,15 +209,11 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected void doActivate(RunningContext context) {
-        FlowPiece piece = template.spawn();
-        
-        setHeadActivity((Activity) piece.getHead());
-        
         ReturnActivity returnActivity = new ReturnActivity();
         returnActivity.setCounts(0);
         returnActivity.setExpression(0);
         returnActivity.setGroup(this);
-        returnActivity.setPrev((Activity)piece.getTail());
+        returnActivity.setPrev(getTailActivity());
         returnActivity.setType(Activity.TYPE_RETURN);
         ((SingleOut) returnActivity.getPrev()).setNext(returnActivity);
         setTailActivity(returnActivity);

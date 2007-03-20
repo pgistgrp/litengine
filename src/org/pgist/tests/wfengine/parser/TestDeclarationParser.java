@@ -4,11 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.StringReader;
-
 import org.dom4j.Document;
-import org.dom4j.io.SAXReader;
 import org.junit.Test;
+import org.pgist.tests.wfengine.TestHelper;
 import org.pgist.wfengine.Declaration;
 import org.pgist.wfengine.parser.DeclarationParser;
 
@@ -23,13 +21,6 @@ public class TestDeclarationParser {
     
     private DeclarationParser parser = new DeclarationParser();
     
-    SAXReader saxReader = new SAXReader();
-    
-    
-    private Document getDocument(String xml) throws Exception {
-        return saxReader.read(new StringReader(xml));
-    }//getDocument()
-    
     
     /*
      * ------------------------------------------------------------------------
@@ -43,7 +34,7 @@ public class TestDeclarationParser {
      */
     @Test
     public void test1() throws Exception {
-        Document doc = getDocument("<declaration/>");
+        Document doc = TestHelper.getDocument("<declaration/>");
         
         Declaration declaration = parser.parse(doc.getRootElement());
         
@@ -72,7 +63,7 @@ public class TestDeclarationParser {
             + "    </ins>"
             + "</declaration>";
         
-        Document doc = getDocument(xml);
+        Document doc = TestHelper.getDocument(xml);
         
         Declaration declaration = parser.parse(doc.getRootElement());
         
@@ -113,7 +104,7 @@ public class TestDeclarationParser {
             + "    </outs>"
             + "</declaration>";
         
-        Document doc = getDocument(xml);
+        Document doc = TestHelper.getDocument(xml);
         
         Declaration declaration = parser.parse(doc.getRootElement());
         
@@ -159,7 +150,7 @@ public class TestDeclarationParser {
             + "    </outs>"
             + "</declaration>";
         
-        Document doc = getDocument(xml);
+        Document doc = TestHelper.getDocument(xml);
         
         Declaration declaration = parser.parse(doc.getRootElement());
         
@@ -220,7 +211,7 @@ public class TestDeclarationParser {
             + "    </fuzzy>"
             + "</declaration>";
         
-        Document doc = getDocument(xml);
+        Document doc = TestHelper.getDocument(xml);
         
         Declaration declaration = parser.parse(doc.getRootElement());
         

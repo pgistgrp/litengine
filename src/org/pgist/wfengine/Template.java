@@ -12,7 +12,6 @@ import org.pgist.wfengine.activity.GroupActivity;
 import org.pgist.wfengine.activity.JoinActivity;
 import org.pgist.wfengine.activity.JumpActivity;
 import org.pgist.wfengine.activity.LoopActivity;
-import org.pgist.wfengine.activity.PActActivity;
 import org.pgist.wfengine.activity.PAutoGameActivity;
 import org.pgist.wfengine.activity.PGameActivity;
 import org.pgist.wfengine.activity.RepeatActivity;
@@ -219,16 +218,6 @@ public class Template {
             
             //push children on stack
             switch(one.getType()) {
-                case Activity.TYPE_PACT:
-                    one = (PActActivity) Utils.narrow(one);
-                    PActActivity pactOne = (PActActivity) one;
-                    PActActivity pactTwo = new PActActivity();
-                    two = pactTwo;
-                    pactTwo.setName( pactOne.getName() );
-                    pactTwo.setDescription( pactOne.getDescription() );
-                    pactTwo.setAction(pactOne.getAction());
-                    stack.push( ((PActActivity) one).getNext() );
-                    break;
                 case Activity.TYPE_PGAME:
                     one = (PGameActivity) Utils.narrow(one);
                     PGameActivity pgameOne = (PGameActivity) one;
@@ -247,7 +236,7 @@ public class Template {
                     two = realTwo;
                     realTwo.setName(realOne.getName());
                     realTwo.setDescription(realOne.getDescription());
-                    realTwo.setTemplate(realOne.getTemplate());
+                    //realTwo.setTemplate(realOne.getTemplate());
                     stack.push( realOne.getNext() );
                     break;
                 case Activity.TYPE_BRANCH:
@@ -332,20 +321,6 @@ public class Template {
             Activity two = activities[1];//new activity
             
             switch(one.getType()) {
-                case Activity.TYPE_PACT:
-                    PActActivity pactOne = (PActActivity) one;
-                    PActActivity pactTwo = (PActActivity) two;
-                    prev = pactOne.getPrev();
-                    if (prev!=null) {
-                        pair = (Activity[]) map.get(prev.getId());
-                        pactTwo.setPrev( pair[1] );
-                    }
-                    next = pactOne.getNext();
-                    if (next!=null) {
-                        pair = (Activity[]) map.get(next.getId());
-                        pactTwo.setNext( pair[1] );
-                    }
-                    break;
                 case Activity.TYPE_PGAME:
                     PGameActivity pgameOne = (PGameActivity) one;
                     PGameActivity pgameTwo = (PGameActivity) two;

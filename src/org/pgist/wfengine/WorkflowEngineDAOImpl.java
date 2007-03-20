@@ -6,7 +6,6 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.pgist.wfengine.activity.GroupActivity;
-import org.pgist.wfengine.activity.PActActivity;
 import org.pgist.wfengine.activity.PGameActivity;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -98,12 +97,6 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
     private static final String hql_getPActActivityByRefId = "from PActActivity p where refid=?";
     
     
-    public PActActivity getPActActivityByRefId(Long refId) throws Exception {
-        List list = getHibernateTemplate().find(hql_getPActActivityByRefId, refId);
-        return (list.size()==0) ? null : (PActActivity) list.get(0);
-    }//getPActActivity()
-
-
     private static final String hql_getPGameActivityByRefId = "from PGameActivity p where refid=?";
     
     

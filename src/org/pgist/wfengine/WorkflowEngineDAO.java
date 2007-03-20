@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.activity.GroupActivity;
-import org.pgist.wfengine.activity.PActActivity;
 import org.pgist.wfengine.activity.PGameActivity;
 
 
@@ -29,8 +28,6 @@ public interface WorkflowEngineDAO {
     Template getTemplate(Long id) throws Exception;
     
     void saveActivity(Activity activity) throws Exception;
-    
-    PActActivity getPActActivityByRefId(Long refId) throws Exception;
     
     PGameActivity getPGameActivityByRefId(Long refId) throws Exception;
     

@@ -2,11 +2,9 @@ package org.pgist.tests.wfengine.parser;
 
 import static org.junit.Assert.*;
 
-import java.io.StringReader;
-
 import org.dom4j.Document;
-import org.dom4j.io.SAXReader;
 import org.junit.Test;
+import org.pgist.tests.wfengine.TestHelper;
 import org.pgist.wfengine.Environment;
 import org.pgist.wfengine.parser.EnvironmentParser;
 
@@ -21,13 +19,6 @@ public class TestEnvironmentParser {
     
     private EnvironmentParser parser = new EnvironmentParser();
     
-    SAXReader saxReader = new SAXReader();
-    
-    
-    private Document getDocument(String xml) throws Exception {
-        return saxReader.read(new StringReader(xml));
-    }//getDocument()
-    
     
     /*
      * ------------------------------------------------------------------------
@@ -41,7 +32,7 @@ public class TestEnvironmentParser {
      */
     @Test
     public void test1() throws Exception {
-        Document doc = getDocument("<environment/>");
+        Document doc = TestHelper.getDocument("<environment/>");
         
         Environment environment = parser.parse(doc.getRootElement());
         
@@ -64,15 +55,15 @@ public class TestEnvironmentParser {
     public void test2() throws Exception {
         String xml =
             "<environment>"
-            + "    <var type=\"integer\" name=\" var_1 \" value=\" 100 \"/>"
-            + "    <var type=\"integer\" name=\" var_2 \" value=\" 200 \"/>"
-            + "    <var type=\"string\" name=\" var_3 \" value=\" value_3 \"/>"
-            + "    <var type=\"string\" name=\" var_4 \" value=\" value_4 \"/>"
+            + "    <var type=\" integer \" name=\" var_1 \" value=\" 100 \"/>"
+            + "    <var type=\" integer \" name=\" var_2 \" value=\" 200 \"/>"
+            + "    <var type=\" string \" name=\" var_3 \" value=\" value_3 \"/>"
+            + "    <var type=\" string \" name=\" var_4 \" value=\" value_4 \"/>"
             + "    <var name=\" var_5 \" value=\" value_5 \"/>"
             + "    <var name=\" var_6 \" value=\" value_6 \"/>"
             + "</environment>";
         
-        Document doc = getDocument(xml);
+        Document doc = TestHelper.getDocument(xml);
         
         Environment environment = parser.parse(doc.getRootElement());
         
@@ -85,6 +76,13 @@ public class TestEnvironmentParser {
         assertTrue("'string values' size incorrect", environment.getStrValues().size()==4);
         assertTrue("'integer values' size incorrect", environment.getIntValues().size()==2);
         
+        assertTrue("int value 'var_1' incorrect", environment.getIntValues().get("var_1")==100);
+        assertTrue("int value 'var_2' incorrect", environment.getIntValues().get("var_2")==200);
+        
+        assertEquals("string value 'var_3' incorrect", "value_3", environment.getStrValues().get("var_3"));
+        assertEquals("string value 'var_4' incorrect", "value_4", environment.getStrValues().get("var_4"));
+        assertEquals("string value 'var_5' incorrect", "value_5", environment.getStrValues().get("var_5"));
+        assertEquals("string value 'var_6' incorrect", "value_6", environment.getStrValues().get("var_6"));
         //TODO, check each value
     }//test2()
     

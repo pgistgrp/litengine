@@ -27,6 +27,7 @@ public class EnvironmentParser {
             //type, default is "string"
             String type = var.attributeValue("type");
             if (type==null) type = "string";
+            type = type.trim();
             
             //name
             String name = var.attributeValue("name");
@@ -46,7 +47,7 @@ public class EnvironmentParser {
             
             if ("string".equalsIgnoreCase(type)) {
                 strValues.put(name, value);
-            } else if ("integer".equals(type)) {
+            } else if ("integer".equalsIgnoreCase(type)) {
                 intValues.put(name, new Integer(value));
             } else {
                 throw new ParserException("unknown type '"+type+"'");

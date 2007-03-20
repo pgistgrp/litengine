@@ -2,7 +2,7 @@
 <!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/pmethods.dtd"-->
 <pmethods>
 
-    <pmethod name="Faked Auto PGame" description="Faked Auto PGame">
+    <pmethod name="Faked PMethod" description="Faked PMethod">
         <environment>
             <var type="" name="" value="">
         </environment>

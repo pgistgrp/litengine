@@ -9,7 +9,7 @@ import java.util.Map;
  * 
  * @author kenny
  * 
- * @hibernate.class table="litwf_decalaration"
+ * @hibernate.class table="litwf_declaration"
  */
 public class Declaration {
     

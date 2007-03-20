@@ -184,7 +184,7 @@ public class TemplateParser {
             template.setTail((Activity) piece.getTail());
             
             GroupActivity method = new GroupActivity(GroupActivity.LEVEL_PMETHOD);
-            method.setTemplate(template);
+            //method.setTemplate(template);
             method.setCounts(0);
             method.setExpression(0);
             method.setDescription(template.getDescription());
@@ -230,7 +230,7 @@ public class TemplateParser {
                     activity.setPrev(parent);
                     activity.setName(ref.getName());
                     activity.setDescription(ref.getDescription());
-                    activity.setTemplate(ref.getTemplate());
+                    //activity.setTemplate(ref.getTemplate());
                     
                     return activity;
                 }//visit()
@@ -241,7 +241,7 @@ public class TemplateParser {
             template.setTail((Activity) piece.getTail());
             
             GroupActivity meeting = new GroupActivity(GroupActivity.LEVEL_MEETING);
-            meeting.setTemplate(template);
+            //meeting.setTemplate(template);
             meeting.setCounts(0);
             meeting.setExpression(0);
             meeting.setDescription(template.getDescription());
@@ -287,7 +287,7 @@ public class TemplateParser {
                     activity.setPrev(parent);
                     activity.setName(ref.getName());
                     activity.setDescription(ref.getDescription());
-                    activity.setTemplate(ref.getTemplate());
+                    //activity.setTemplate(ref.getTemplate());
                     
                     return activity;
                 }//visit()
@@ -298,7 +298,7 @@ public class TemplateParser {
             template.setTail((Activity) piece.getTail());
             
             GroupActivity situation = new GroupActivity(GroupActivity.LEVEL_SITUATION);
-            situation.setTemplate(template);
+            //situation.setTemplate(template);
             situation.setCounts(0);
             situation.setExpression(0);
             situation.setDescription(template.getDescription());
