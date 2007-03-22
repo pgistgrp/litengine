@@ -1,7 +1,7 @@
 package org.pgist.wfengine.activity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -26,18 +26,22 @@ public class JoinActivity extends Activity implements SingleOut {
     
     protected BranchActivity branchActivity;
     
-    private Set joins = new HashSet();
+    private List<Activity> joins = new ArrayList<Activity>();
     
     private int joinCount = 0;
     
     
-    public JoinActivity() {
+    public JoinActivity() {}
+    
+    
+    public JoinActivity(BranchActivity branchActivity) {
+        this.branchActivity = branchActivity;
     }
     
     
     /**
      * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
+     * @hibernate.many-to-one column="next_id" cascade="all"
      */
     public Activity getNext() {
         return next;
@@ -51,7 +55,7 @@ public class JoinActivity extends Activity implements SingleOut {
     
     /**
      * @return
-     * @hibernate.many-to-one column="branch_id" class="org.pgist.wfengine.activity.BranchActivity" cascade="all"
+     * @hibernate.many-to-one column="branch_id" cascade="all"
      */
     public BranchActivity getBranchActivity() {
         return branchActivity;
@@ -66,17 +70,18 @@ public class JoinActivity extends Activity implements SingleOut {
     /**
      * @return
      * 
-     * @hibernate.set table="litwf_activity" lazy="true" cascade="all"
+     * @hibernate.list table="litwf_activity" lazy="true" cascade="all"
      * @hibernate.collection-key column="join_id"
+     * @hibernate.collection-index column="join_order"
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      * 
      */
-    public Set getJoins() {
+    public List<Activity> getJoins() {
         return joins;
     }
     
     
-    public void setJoins(Set joins) {
+    public void setJoins(List<Activity> joins) {
         this.joins = joins;
     }
     
@@ -95,6 +100,40 @@ public class JoinActivity extends Activity implements SingleOut {
     }
 
 
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public JoinActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        JoinActivity newJoin = (JoinActivity) clonedStop.peek();
+        newJoin.getJoins().add(clonedPrev);
+        
+        //check to propagate
+        if (newJoin.getJoins().size()==getJoins().size()) {
+            clonedStop.pop();
+            stop.pop();
+            Activity act = getNext();
+            if (act!=null) {
+                Activity newAct = act.clone(newJoin, clonedStop, stop);
+                newJoin.setNext(newAct);
+            }
+        }
+        
+        return newJoin;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        Activity act = getNext();
+        if (act==null) {
+            return this;
+        } else {
+            return act.getEnd();
+        }
+    }//getEnd()
+    
+    
     /*
      * ------------------------------------------------------------------------------
      */

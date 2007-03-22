@@ -19,25 +19,7 @@ public class ParserSuite {
     
     private SequenceParser sequenceParser;
     
-    private WhileParser whileParser;
     
-    private LoopParser loopParser;
-    
-    private BranchParser branchParser;
-    
-    private SwitchParser switchParser;
-    
-    
-    public BranchParser getBranchParser() {
-        return branchParser;
-    }
-
-
-    public void setBranchParser(BranchParser branchParser) {
-        this.branchParser = branchParser;
-    }
-
-
     public DeclarationParser getDeclParser() {
         return declParser;
     }
@@ -58,16 +40,6 @@ public class ParserSuite {
     }
 
 
-    public LoopParser getLoopParser() {
-        return loopParser;
-    }
-
-
-    public void setLoopParser(LoopParser loopParser) {
-        this.loopParser = loopParser;
-    }
-
-
     public PGameParser getPgameParser() {
         return pgameParser;
     }
@@ -85,26 +57,6 @@ public class ParserSuite {
 
     public void setSequenceParser(SequenceParser sequenceParser) {
         this.sequenceParser = sequenceParser;
-    }
-
-
-    public SwitchParser getSwitchParser() {
-        return switchParser;
-    }
-
-
-    public void setSwitchParser(SwitchParser switchParser) {
-        this.switchParser = switchParser;
-    }
-
-
-    public WhileParser getWhileParser() {
-        return whileParser;
-    }
-
-
-    public void setWhileParser(WhileParser whileParser) {
-        this.whileParser = whileParser;
     }
 
 

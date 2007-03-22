@@ -65,6 +65,38 @@ public class PManualGameActivity extends PGameActivity {
      */
     
     
+    public PManualGameActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        PManualGameActivity newGame = new PManualGameActivity();
+        
+        //basic info
+        newGame.setCounts(0);
+        newGame.setPrev(clonedPrev);
+        newGame.setStatus(STATUS_INACTIVE);
+        newGame.setType(TYPE_PGAME);
+        newGame.setName(getName());
+        newGame.setDescription(getDescription());
+        newGame.setActionName(getActionName());
+        
+        Activity act = getNext();
+        if (act!=null) {
+            Activity newAct = act.clone(newGame, clonedStop, stop);
+            newGame.setNext(newAct);
+        }
+        
+        return newGame;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        return (getNext()==null) ? this : getNext().getEnd(); 
+    }//getEnd()
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
         if (getExpression()>0) {//task is finished
             next.activate(context);

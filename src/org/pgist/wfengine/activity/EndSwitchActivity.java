@@ -1,7 +1,7 @@
 package org.pgist.wfengine.activity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -26,10 +26,14 @@ public class EndSwitchActivity extends Activity implements SingleOut {
     
     private SwitchActivity switchActivity;
     
-    private Set choices = new HashSet();
+    private List<Activity> choices = new ArrayList<Activity>();
     
     
-    public EndSwitchActivity() {
+    public EndSwitchActivity() {}
+    
+    
+    public EndSwitchActivity(SwitchActivity switchActivity) {
+        this.switchActivity = switchActivity;
     }
     
     
@@ -64,19 +68,54 @@ public class EndSwitchActivity extends Activity implements SingleOut {
     /**
      * @return
      * 
-     * @hibernate.set table="litwf_activity" lazy="true" cascade="all"
+     * @hibernate.list table="litwf_activity" lazy="true" cascade="all"
      * @hibernate.collection-key column="choice_id"
+     * @hibernate.collection-index column="switch_order"
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      * 
      */
-    public Set getChoices() {
+    public List<Activity> getChoices() {
         return choices;
     }
     
     
-    public void setChoices(Set switches) {
+    public void setChoices(List<Activity> switches) {
         this.choices = switches;
     }
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public EndSwitchActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        EndSwitchActivity newEswt = (EndSwitchActivity) clonedStop.peek();
+        newEswt.getChoices().add(clonedPrev);
+        
+        //check to propagate
+        if (newEswt.getChoices().size()==getChoices().size()) {
+            clonedStop.pop();
+            stop.pop();
+            Activity act = getNext();
+            if (act!=null) {
+                Activity newAct = act.clone(newEswt, clonedStop, stop);
+                newEswt.setNext(newAct);
+            }
+        }
+        
+        return newEswt;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        Activity act = getNext();
+        if (act==null) {
+            return this;
+        } else {
+            return act.getEnd();
+        }
+    }//getEnd()
     
     
     /*

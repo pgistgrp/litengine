@@ -1,6 +1,7 @@
 package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
+import org.pgist.tests.wfengine.Declarable;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.Declaration;
 import org.pgist.wfengine.SingleIn;
@@ -15,7 +16,7 @@ import org.pgist.wfengine.SingleOut;
  *                            lazy="true" proxy="org.pgist.wfengine.activity.PGameActivity"
  * @hibernate.joined-subclass-key column="id"
  */
-public abstract class PGameActivity extends Activity implements SingleIn, SingleOut {
+public abstract class PGameActivity extends Activity implements SingleIn, SingleOut, Declarable {
     
     
     protected String name = null;

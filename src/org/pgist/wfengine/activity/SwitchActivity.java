@@ -26,9 +26,9 @@ import org.pgist.wfengine.SingleIn;
 public class SwitchActivity extends Activity implements SingleIn {
     
     
-    protected EndSwitchActivity endSwitchActivity;
+    protected EndSwitchActivity endSwitchActivity = new EndSwitchActivity(this);
     
-    protected List switches = new ArrayList();
+    protected List<Activity> switches = new ArrayList<Activity>();
     
     protected Activity other = null;
     
@@ -76,12 +76,12 @@ public class SwitchActivity extends Activity implements SingleIn {
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      * 
      */
-    public List getSwitches() {
+    public List<Activity> getSwitches() {
         return switches;
     }
     
     
-    public void setSwitches(List branches) {
+    public void setSwitches(List<Activity> branches) {
         this.switches = branches;
     }
     
@@ -98,6 +98,37 @@ public class SwitchActivity extends Activity implements SingleIn {
     public void setOther(Activity other) {
         this.other = other;
     }
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public SwitchActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        SwitchActivity newSwitch = new SwitchActivity();
+        
+        //basic info
+        newSwitch.setCounts(0);
+        newSwitch.setPrev(clonedPrev);
+        newSwitch.setStatus(STATUS_INACTIVE);
+        newSwitch.setType(TYPE_SWITCH);
+        
+        //branches
+        clonedStop.push(newSwitch.getEndSwitchActivity());
+        stop.push(getEndSwitchActivity());
+        for (Activity one : getSwitches()) {
+            Activity newOne = one.clone(newSwitch, clonedStop, stop);
+            newSwitch.getSwitches().add(newOne);
+        }//for
+        
+        return newSwitch;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        return getEndSwitchActivity().getEnd();
+    }//getEnd()
     
     
     /*

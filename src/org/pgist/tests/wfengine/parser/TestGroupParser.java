@@ -51,7 +51,7 @@ public class TestGroupParser {
         game2.setName("pgame 2");
         pgames.put("pgame 2", game2);
         
-        TestHelper.getParserSuite().getSequenceParser().setPgames(pgames);
+        //TestHelper.getParserSuite().getSequenceParser().setPgames(pgames);
     }//setUp()
     
     
@@ -410,16 +410,20 @@ public class TestGroupParser {
             + "                    <sequence>"
             + "                        <pgame name=\" pgame 1 \"/>"
             + "                        <while>"
-            + "                            <pgame name=\" pgame 1 \"/>"
-            + "                            <pgame name=\" pgame 2 \"/>"
+            + "                            <sequence>"
+            + "                                <pgame name=\" pgame 1 \"/>"
+            + "                                <pgame name=\" pgame 2 \"/>"
+            + "                            </sequence>"
             + "                        </while>"
             + "                        <pgame name=\" pgame 2 \"/>"
             + "                    </sequence>"
             + "                    <sequence>"
             + "                        <pgame name=\" pgame 2 \"/>"
             + "                        <repeat>"
-            + "                            <pgame name=\" pgame 2 \"/>"
-            + "                            <pgame name=\" pgame 1 \"/>"
+            + "                            <sequence>"
+            + "                                <pgame name=\" pgame 2 \"/>"
+            + "                                <pgame name=\" pgame 1 \"/>"
+            + "                            </sequence>"
             + "                        </repeat>"
             + "                        <pgame name=\" pgame 1 \"/>"
             + "                    </sequence>"
@@ -436,16 +440,20 @@ public class TestGroupParser {
             + "                    <sequence>"
             + "                        <pgame name=\" pgame 1 \"/>"
             + "                        <while>"
-            + "                            <pgame name=\" pgame 1 \"/>"
-            + "                            <pgame name=\" pgame 2 \"/>"
+            + "                            <sequence>"
+            + "                                <pgame name=\" pgame 1 \"/>"
+            + "                                <pgame name=\" pgame 2 \"/>"
+            + "                            </sequence>"
             + "                        </while>"
             + "                        <pgame name=\" pgame 2 \"/>"
             + "                    </sequence>"
             + "                    <sequence>"
             + "                        <pgame name=\" pgame 2 \"/>"
             + "                        <repeat>"
-            + "                            <pgame name=\" pgame 2 \"/>"
-            + "                            <pgame name=\" pgame 1 \"/>"
+            + "                            <sequence>"
+            + "                                <pgame name=\" pgame 2 \"/>"
+            + "                                <pgame name=\" pgame 1 \"/>"
+            + "                            </sequence>"
             + "                        </repeat>"
             + "                        <pgame name=\" pgame 1 \"/>"
             + "                    </sequence>"
@@ -476,7 +484,94 @@ public class TestGroupParser {
         
         assertNotSame("tail is the same as head", activity.getHeadActivity(), activity.getTailActivity());
         
-        //TODO
+        //First level, pgame 2 - pgame 1 - switch - pgame 1 - pgame 2
+        assertTrue("first level, first activity is not a PGameActivity", activity.getHeadActivity() instanceof PGameActivity);
+        PGameActivity pgame = (PGameActivity) activity.getHeadActivity();
+        assertEquals("first level, first acitivity is not 'pgame 2'", "pgame 2", pgame.getName());
+        assertTrue("first level, second activity is not a PGameActivity", pgame.getNext() instanceof PGameActivity);
+        pgame = (PGameActivity) pgame.getNext();
+        assertEquals("first level, second acitivity is not 'pgame 1'", "pgame 1", pgame.getName());
+        assertTrue("first level, third activity is not a switch", pgame.getNext() instanceof SwitchActivity);
+        SwitchActivity swt = (SwitchActivity) pgame.getNext();
+        assertNotNull("switch has not matched endswitch", swt.getEndSwitchActivity());
+        EndSwitchActivity endswt = (EndSwitchActivity) swt.getEndSwitchActivity();
+        assertTrue("first level, fourth activity is not a PGameActivity", endswt.getNext() instanceof PGameActivity);
+        pgame = (PGameActivity) endswt.getNext();
+        assertEquals("first level, first acitivity is not 'pgame 1'", "pgame 1", pgame.getName());
+        assertTrue("first level, fifth activity is not a PGameActivity", pgame.getNext() instanceof PGameActivity);
+        pgame = (PGameActivity) pgame.getNext();
+        assertEquals("first level, second acitivity is not 'pgame 2'", "pgame 2", pgame.getName());
+        
+        //second level, in switch
+        assertTrue("switch should have 3 switches", swt.getSwitches().size()==3);
+        assertTrue("endswitch should have 3 choices", endswt.getChoices().size()==3);
+        
+        //first switch, pgame 1 - branch - pgame 2
+        pgame = (PGameActivity) swt.getSwitches().get(0);
+        assertEquals("second level, first acitivity is not 'pgame 1'", "pgame 1", pgame.getName());
+        assertTrue("second level, second activity is not a BranchActivity", pgame.getNext() instanceof BranchActivity);
+        BranchActivity branch = (BranchActivity) pgame.getNext();
+        assertNotNull("", branch.getJoinActivity());
+        JoinActivity join = (JoinActivity) branch.getJoinActivity();
+        assertTrue("second level, third activity is not a PGameActivity", join.getNext() instanceof PGameActivity);
+        pgame = (PGameActivity) join.getNext();
+        assertEquals("second level, third acitivity is not 'pgame 2'", "pgame 2", pgame.getName());
+        
+        //first switch - first branch
+        assertEquals("first switch, first branch should have 2 branches", 2, branch.getBranches().size());
+        
+        //first switch - first branch, pgame 1 - while - pgame 2
+        pgame = (PGameActivity) branch.getBranches().get(0);
+        assertEquals("first switch, first branch, first acitivity is not 'pgame 1'", "pgame 1", pgame.getName());
+        assertTrue("first switch, first branch, second acitivity is not WhileActivity", pgame.getNext() instanceof WhileActivity);
+        WhileActivity whilst = (WhileActivity) pgame.getNext();
+        assertTrue("first switch, first branch, first body acitivity is not PGameActivity", whilst.getNext() instanceof PGameActivity);
+        PGameActivity pgame1 = (PGameActivity) whilst.getNext();
+        assertEquals("first switch, first branch, first body acitivity is not 'pgame 1'", "pgame 1", pgame1.getName());
+        assertNotNull("first switch, first branch, second body acitivity is not PGameActivity", pgame1.getNext());
+        pgame1 = (PGameActivity) pgame1.getNext();
+        assertEquals("first switch, first branch, second body acitivity is not 'pgame 2'", "pgame 2", pgame1.getName());
+        assertTrue("first switch, first branch, second body acitivity is not connected to loop", pgame1.getNext() instanceof LoopActivity);
+        LoopActivity loop = (LoopActivity) pgame1.getNext();
+        assertTrue("loop is not matched for while", loop==whilst.getLoop());
+        assertTrue("while is not matched for loop", whilst==loop.getWhilst());
+        assertTrue("first switch, first branch, third acitivity is not PGameActivity", loop.getNext() instanceof PGameActivity);
+        pgame1 = (PGameActivity) loop.getNext();
+        assertEquals("first switch, first branch, third acitivity is not 'pgame 2'", "pgame 2", pgame1.getName());
+        assertTrue("pgame is not successor of loop", loop==pgame1.getPrev());
+        assertTrue("pgame is not connected to join", pgame1.getNext()==join);
+        
+        //first switch - second branch, pgame 2 - repeat - pgame 1
+        pgame = (PGameActivity) branch.getBranches().get(1);
+        assertEquals("first switch, second branch, first acitivity is not 'pgame 2'", "pgame 2", pgame.getName());
+        assertTrue("first switch, second branch, second acitivity is not RepeatActivity", pgame.getNext() instanceof RepeatActivity);
+        RepeatActivity repeat = (RepeatActivity) pgame.getNext();
+        assertTrue("first switch, second branch, first body acitivity is not PGameActivity", repeat.getNext() instanceof PGameActivity);
+        pgame1 = (PGameActivity) repeat.getNext();
+        assertEquals("first switch, second branch, first body acitivity is not 'pgame 2'", "pgame 2", pgame1.getName());
+        assertNotNull("first switch, second branch, second body acitivity is not PGameActivity", pgame1.getNext());
+        pgame1 = (PGameActivity) pgame1.getNext();
+        assertEquals("first switch, second branch, second body acitivity is not 'pgame 1'", "pgame 1", pgame1.getName());
+        assertTrue("first switch, second branch, second body acitivity is not connected to until", pgame1.getNext() instanceof UntilActivity);
+        UntilActivity until = (UntilActivity) pgame1.getNext();
+        assertTrue("until is not matched for repeat", until==repeat.getUntil());
+        assertTrue("repeat is not matched for until", repeat==until.getRepeat());
+        assertTrue("first switch, second branch, third acitivity is not PGameActivity", repeat.getNext() instanceof PGameActivity);
+        pgame1 = (PGameActivity) until.getNext();
+        assertEquals("first switch, second branch, third acitivity is not 'pgame 1'", "pgame 1", pgame1.getName());
+        assertTrue("pgame is not successor of until", until==pgame1.getPrev());
+        assertTrue("pgame is not connected to join", pgame1.getNext()==join);
+        
+        //second switch - pgame 2 - pgame 1
+        pgame = (PGameActivity) swt.getSwitches().get(1);
+        assertTrue("second switch, first acitivity is not PGameActivity", pgame instanceof PGameActivity);
+        assertEquals("second switch, first acitivity is not 'pgame 2'", "pgame 2", pgame.getName());
+        assertTrue("second switch, second acitivity is not PGameActivity", pgame.getNext() instanceof PGameActivity);
+        pgame = (PGameActivity) pgame.getNext();
+        assertEquals("second switch, second acitivity is not 'pgame 1'", "pgame 1", pgame.getName());
+        assertTrue("pgame is not connected to endswitch", pgame.getNext()==endswt);
+        
+        //third switch - similar to the first switch, omitted
     }//testPMethod6()
     
     

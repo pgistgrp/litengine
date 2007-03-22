@@ -90,24 +90,20 @@ public class GroupParser {
     private void parsePGames(GroupActivity group, Element sequenceElement) throws ParserException {
         if (sequenceElement==null) return;
         
-        FlowPiece piece = suite.getSequenceParser().parsePGames(sequenceElement);
+        FlowPiece piece = suite.getSequenceParser().parsePGames(sequenceElement, new PGameParseStrategy());
         
         group.setHeadActivity((Activity) piece.getHead());
         group.setTailActivity((Activity) piece.getTail());
     }//parsePGames()
     
     
-    private void parsePMethod(GroupActivity group, Element sequenceElement) {
+    private void parsePMethod(GroupActivity group, Element sequenceElement) throws ParserException {
         if (sequenceElement==null) return;
-        
-        
     }//parsePMethod()
 
 
-    private void parseMeeting(GroupActivity group, Element sequenceElement) {
+    private void parseMeeting(GroupActivity group, Element sequenceElement) throws ParserException {
         if (sequenceElement==null) return;
-        
-        
     }//parseMeeting()
 
 

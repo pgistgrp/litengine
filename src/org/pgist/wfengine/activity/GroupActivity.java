@@ -1,39 +1,41 @@
 package org.pgist.wfengine.activity;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
+import org.pgist.tests.wfengine.Declarable;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.Declaration;
 import org.pgist.wfengine.FlowPiece;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.Template;
 import org.pgist.wfengine.util.Utils;
 
 
 /**
- * @author kenny
- * 
- * Class GroupActivity is a special activity which denotes an independent group of activities.
+ * <p>Class GroupActivity is a special activity which denotes a group of activities.
  * Those activities compose a piece of workflow instance, which has ONE head activity and ONE
  * tail activity. The head activity must be a backtracable activity and the tail activity must
  * be a pushdownable activity.
  * 
- * It's possible that head activity is the same as the tail activity, that is, the group contains
+ * <p>It's possible that head activity is the same as the tail activity, that is, the group contains
  * only one activity.
+ * 
+ * <p>GroupActivity with a null definition is template. Before a GroupActivity running,
+ * workflow engine will duplicate the definition.
  * 
  * @hibernate.joined-subclass name="GroupActivity" table="litwf_activity_group"
  *                            lazy="true" proxy="org.pgist.wfengine.activity.GroupActivity"
  * @hibernate.joined-subclass-key column="id"
+ * 
+ * @author kenny
  */
-public class GroupActivity extends Activity implements SingleIn, SingleOut {
+public class GroupActivity extends Activity implements SingleIn, SingleOut, Declarable {
     
     
     public static final int LEVEL_UNKNOWN   = 0;
@@ -44,13 +46,14 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     public static final int LEVEL_PMETHOD   = 3;
     
-    public static final int LEVEL_PGAME     = 4;
     
     protected int level = LEVEL_UNKNOWN;
     
     protected String name;
     
     protected String description;
+    
+    protected GroupActivity definition;
     
     protected Activity headActivity;
     
@@ -112,6 +115,21 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="definition_id" lazy="true" cascade="all"
+     */
+    public GroupActivity getDefinition() {
+        return definition;
+    }
+
+
+    public void setDefinition(GroupActivity definition) {
+        this.definition = definition;
     }
 
 
@@ -208,17 +226,55 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
+    public GroupActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        GroupActivity group = new GroupActivity();
+        
+        //basic info
+        group.setCounts(0);
+        group.setPrev(clonedPrev);
+        group.setStatus(STATUS_INACTIVE);
+        group.setType(getType());
+        group.setName(getName());
+        group.setDescription(getDescription());
+        group.setDefinition(getDefinition());
+        
+        Activity act = getNext();
+        if (act!=null) {
+            Activity newAct = act.clone(group, clonedStop, stop);
+            group.setNext(newAct);
+        }
+        
+        return group;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        return (getNext()==null) ? this : getNext().getEnd(); 
+    }//getEnd()
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     protected void doActivate(RunningContext context) {
+        //create a return activity
         ReturnActivity returnActivity = new ReturnActivity();
         returnActivity.setCounts(0);
         returnActivity.setExpression(0);
         returnActivity.setGroup(this);
-        returnActivity.setPrev(getTailActivity());
         returnActivity.setType(Activity.TYPE_RETURN);
-        ((SingleOut) returnActivity.getPrev()).setNext(returnActivity);
+        
+        //duplicate from the definition
+        //FlowPiece piece = duplicate((SingleIn) getDefinition().getHeadActivity(), (SingleOut) getDefinition().getTailActivity());
+        //piece.getTail().setNext(returnActivity);
+        
+        //set head and tail
+        //setHeadActivity((Activity) piece.getHead());
         setTailActivity(returnActivity);
         
-        setContext(new RunningContext(context));
+        //put head in the context
         getContext().addActivity(getHeadActivity());
         setExpression(0);
     }//doActivate()

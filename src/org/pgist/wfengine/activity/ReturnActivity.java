@@ -5,8 +5,6 @@ import java.util.Stack;
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
-import org.pgist.wfengine.SingleIn;
-import org.pgist.wfengine.SingleOut;
 
 
 /**
@@ -17,14 +15,10 @@ import org.pgist.wfengine.SingleOut;
  *                            lazy="true" proxy="org.pgist.wfengine.activity.ReturnActivity"
  * @hibernate.joined-subclass-key column="id"
  */
-public class ReturnActivity extends Activity implements SingleIn, SingleOut {
+public class ReturnActivity extends Activity {
     
     
     protected GroupActivity group;
-    
-    protected Activity prev;
-    
-    protected Activity next;
     
     
     /**
@@ -41,32 +35,19 @@ public class ReturnActivity extends Activity implements SingleIn, SingleOut {
     }
 
 
-    /**
-     * @return
-     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" lazy="true" cascade="all"
+    /*
+     * ------------------------------------------------------------------------------
      */
-    public Activity getPrev() {
-        return prev;
-    }
+    
+    
+    public Activity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        return null;
+    }//clone()
 
 
-    public void setPrev(Activity prev) {
-        this.prev = prev;
-    }
-
-
-    /**
-     * @return
-     * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" lazy="true" cascade="all"
-     */
-    public Activity getNext() {
-        return next;
-    }
-
-
-    public void setNext(Activity next) {
-        this.next = next;
-    }
+    public Activity getEnd() {
+        return this;
+    }//getEnd()
 
 
     /*

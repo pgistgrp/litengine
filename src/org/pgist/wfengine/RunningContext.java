@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.pgist.wfengine.activity.GroupActivity;
-import org.springframework.beans.factory.BeanFactory;
 
 
 /**
@@ -43,8 +42,6 @@ public class RunningContext {
     /* workflow environment */
     private Environment environment = new Environment();
     
-    private BeanFactory beanFactory;
-    
     
     /*
      * Constructors
@@ -62,11 +59,6 @@ public class RunningContext {
     /*
      * Getters and Setters
      */
-    
-    
-    public void setBeanFactory(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
-    }//setBeanFactory()
     
     
     /**
@@ -292,9 +284,4 @@ public class RunningContext {
     }//setStrValue()
     
     
-    public Object getTask(String name) {
-        return beanFactory.getBean(name);
-    }
-
-
 }//class RunningContext

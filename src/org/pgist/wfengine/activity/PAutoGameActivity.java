@@ -68,8 +68,40 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
      */
     
     
+    public PAutoGameActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        PAutoGameActivity newGame = new PAutoGameActivity();
+        
+        //basic info
+        newGame.setCounts(0);
+        newGame.setPrev(clonedPrev);
+        newGame.setStatus(STATUS_INACTIVE);
+        newGame.setType(TYPE_PGAME);
+        newGame.setName(getName());
+        newGame.setDescription(getDescription());
+        newGame.setTaskName(getTaskName());
+        
+        Activity act = getNext();
+        if (act!=null) {
+            Activity newAct = act.clone(newGame, clonedStop, stop);
+            newGame.setNext(newAct);
+        }
+        
+        return newGame;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        return (getNext()==null) ? this : getNext().getEnd(); 
+    }//getEnd()
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        Object object = context.getTask(getTaskName());
+        Object object = null;//context.getTask(getTaskName());
         if (object instanceof WorkflowTask) {
             WorkflowTask task = (WorkflowTask) object;
             return task.execute(this, context, getDeclaration().getProperties());

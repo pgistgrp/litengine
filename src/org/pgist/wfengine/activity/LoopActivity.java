@@ -96,6 +96,38 @@ public class LoopActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
+    public LoopActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        LoopActivity newLoop = (LoopActivity) clonedStop.peek();
+        newLoop.setPrev(clonedPrev);
+        
+        clonedStop.pop();
+        stop.pop();
+        
+        Activity act = getNext();
+        if (act!=null) {
+            Activity newAct = act.clone(newLoop, clonedStop, stop);
+            newLoop.setNext(newAct);
+        }
+        
+        return newLoop;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        Activity act = getNext();
+        if (act==null) {
+            return this;
+        } else {
+            return act.getEnd();
+        }
+    }//getEnd()
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
         if (getExpression()>0) {//task is finished
             whilst.activate(context);

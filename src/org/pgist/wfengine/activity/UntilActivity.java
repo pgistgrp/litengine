@@ -114,6 +114,38 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
+    public UntilActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        UntilActivity newUntil = (UntilActivity) clonedStop.peek();
+        newUntil.setPrev(clonedPrev);
+        
+        clonedStop.pop();
+        stop.pop();
+        
+        Activity act = getNext();
+        if (act!=null) {
+            Activity newAct = act.clone(newUntil, clonedStop, stop);
+            newUntil.setNext(newAct);
+        }
+        
+        return newUntil;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        Activity act = getNext();
+        if (act==null) {
+            return this;
+        } else {
+            return act.getEnd();
+        }
+    }//getEnd()
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
         if (getExpression()==0) {//task is not finished
             return false;

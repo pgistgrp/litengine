@@ -28,24 +28,25 @@ public class BranchActivity extends Activity implements SingleIn {
     
     protected Activity prev;
     
-    protected JoinActivity joinActivity;
+    protected JoinActivity joinActivity = new JoinActivity(this);
     
-    protected List branches = new ArrayList();
+    protected List<Activity> branches = new ArrayList<Activity>();
     
     
     public BranchActivity() {
     }
     
     
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
+     */
     public Activity getPrev() {
         return prev;
     }
 
 
-    /**
-     * @return
-     * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
-     */
     public void setPrev(Activity prev) {
         this.prev = prev;
     }
@@ -74,14 +75,45 @@ public class BranchActivity extends Activity implements SingleIn {
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      * 
      */
-    public List getBranches() {
+    public List<Activity> getBranches() {
         return branches;
     }
     
     
-    public void setBranches(List branches) {
+    public void setBranches(List<Activity> branches) {
         this.branches = branches;
     }
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public BranchActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        BranchActivity newBranch = new BranchActivity();
+        
+        //basic info
+        newBranch.setCounts(0);
+        newBranch.setPrev(clonedPrev);
+        newBranch.setStatus(STATUS_INACTIVE);
+        newBranch.setType(TYPE_BRANCH);
+        
+        //branches
+        clonedStop.push(newBranch.getJoinActivity());
+        stop.push(getJoinActivity());
+        for (Activity one : getBranches()) {
+            Activity newOne = one.clone(newBranch, clonedStop, stop);
+            newBranch.getBranches().add(newOne);
+        }//for
+        
+        return newBranch;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        return getJoinActivity().getEnd();
+    }//getEnd()
     
     
     /*

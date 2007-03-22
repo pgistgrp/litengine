@@ -73,7 +73,7 @@ public class PGameParser {
         }//for i
         
         return pGames;
-    }//parseWorkflow()
+    }//parse()
 
 
     private PGameActivity parsePGame(Element ele) throws Exception {
@@ -87,7 +87,7 @@ public class PGameParser {
         engineDAO.saveActivity(pgame);
         
         return pgame;
-    }//parseProcess()
+    }//parse()
     
     
 }//class PGameParser

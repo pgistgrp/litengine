@@ -184,7 +184,6 @@ public class Workflow implements Serializable {
         
         RunningContext context = situation.getContext();
         
-        context.setBeanFactory(beanFactory);
         context.execute();
     }//execute()
     

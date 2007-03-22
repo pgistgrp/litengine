@@ -1,8 +1,5 @@
 package org.pgist.wfengine.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.dom4j.Element;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.Declaration;

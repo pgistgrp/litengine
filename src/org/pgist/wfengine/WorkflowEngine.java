@@ -159,11 +159,11 @@ public class WorkflowEngine implements BeanFactoryAware {
         
         FlowPiece piece = template.spawn();
         SingleOut tail = piece.getTail();
-        TerminateActivity terminateActivity = new TerminateActivity();
-        terminateActivity.setCounts(0);
-        terminateActivity.setExpression(0);
-        terminateActivity.setPrev((Activity) tail);
-        tail.setNext(terminateActivity);
+//        TerminateActivity terminateActivity = new TerminateActivity();
+//        terminateActivity.setCounts(0);
+//        terminateActivity.setExpression(0);
+//        terminateActivity.setPrev((Activity) tail);
+//        tail.setNext(terminateActivity);
         
         workflow.initialize();
         

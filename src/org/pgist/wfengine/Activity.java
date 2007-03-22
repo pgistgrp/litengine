@@ -18,9 +18,7 @@ import org.hibernate.Session;
 public abstract class Activity implements Serializable {
     
     
-    public final static int UNDEFINED      = -99999999;
-    
-    public static final int TYPE_PACT      = 0;
+    public final static int TYPE_UNDEFINED = -99999999;
     
     public static final int TYPE_PGAME     = 1;
     
@@ -231,6 +229,11 @@ public abstract class Activity implements Serializable {
     
     
     abstract public void saveState(Session session);
+    
+    
+    abstract public Activity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop);
+    
+    abstract public Activity getEnd();
     
     
 }//abstract class Activity

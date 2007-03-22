@@ -17,7 +17,7 @@ public class Environment {
     
     
     protected Long id = null;
-
+    
     private Map<String, Integer> intValues = new HashMap<String, Integer>();
     
     private Map<String, String> strValues = new HashMap<String, String>();

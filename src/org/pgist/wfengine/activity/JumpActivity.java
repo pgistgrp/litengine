@@ -102,6 +102,21 @@ public class JumpActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
+    public Activity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        return null;
+    }//clone()
+
+
+    public Activity getEnd() {
+        return null;
+    }//getEnd()
+
+
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
         if (getExpression()>jumps.size()) setExpression(jumps.size());
         

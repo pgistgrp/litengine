@@ -24,7 +24,7 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     
     protected int expression;
 
-    protected UntilActivity until;
+    protected UntilActivity until = new UntilActivity();
     
     protected Activity prev;
     
@@ -105,6 +105,38 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     public void setUntil(UntilActivity until) {
         this.until = until;
     }
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public RepeatActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        RepeatActivity newRepeat = new RepeatActivity();
+        
+        //basic info
+        newRepeat.setCounts(0);
+        newRepeat.setPrev(clonedPrev);
+        newRepeat.setStatus(STATUS_INACTIVE);
+        newRepeat.setType(TYPE_REPEAT);
+        
+        //repeat body
+        clonedStop.push(newRepeat.getUntil());
+        stop.push(getUntil());
+        Activity act = getNext();
+        if (act!=null) {
+            Activity newAct = act.clone(newRepeat, clonedStop, stop);
+            newRepeat.setNext(newAct);
+        }
+        
+        return newRepeat;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        return getUntil().getEnd();
+    }//getEnd()
     
     
     /*

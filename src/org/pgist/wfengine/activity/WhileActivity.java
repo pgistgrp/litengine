@@ -28,7 +28,7 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
 
     protected int expression = 0;
     
-    protected LoopActivity loop;
+    protected LoopActivity loop = new LoopActivity();
     
     protected Activity prev;
     
@@ -109,6 +109,38 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
     public void setPrev(Activity prev) {
         this.prev = prev;
     }
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
+    public WhileActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
+        WhileActivity newWhile = new WhileActivity();
+        
+        //basic info
+        newWhile.setCounts(0);
+        newWhile.setPrev(clonedPrev);
+        newWhile.setStatus(STATUS_INACTIVE);
+        newWhile.setType(TYPE_WHILE);
+        
+        //loop body
+        clonedStop.push(newWhile.getLoop());
+        stop.push(getLoop());
+        Activity act = getNext();
+        if (act!=null) {
+            Activity newAct = act.clone(newWhile, clonedStop, stop);
+            newWhile.setNext(newAct);
+        }
+        
+        return newWhile;
+    }//clone()
+    
+    
+    public Activity getEnd() {
+        return getLoop().getEnd();
+    }//getEnd()
     
     
     /*
