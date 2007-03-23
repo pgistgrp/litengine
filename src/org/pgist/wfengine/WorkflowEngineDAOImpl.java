@@ -39,8 +39,7 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
 
 
     public void saveActivity(Activity activity) throws Exception {
-        // TODO Auto-generated method stub
-        
+        getHibernateTemplate().saveOrUpdate(activity);
     }
 
 

@@ -16,7 +16,9 @@ import java.util.Map;
 public class Environment {
     
     
-    protected Long id = null;
+    private Long id;
+    
+    private RunningContext context;
     
     private Map<String, Integer> intValues = new HashMap<String, Integer>();
     
@@ -30,7 +32,7 @@ public class Environment {
     /**
      * @return
      * @hibernate.id generator-class="foreign"
-     * @hibernate.generator-param name="property" value="workflow"
+     * @hibernate.generator-param name="property" value="context"
      */
     public Long getId() {
         return id;
@@ -42,6 +44,21 @@ public class Environment {
     }
     
     
+    /**
+     * @return
+     * 
+     * @hibernate.one-to-one class="org.pgist.wfengine.RunningContext" constrained="true" cascade="none"
+     */
+    public RunningContext getContext() {
+        return context;
+    }
+
+
+    public void setContext(RunningContext context) {
+        this.context = context;
+    }
+
+
     /**
      * @return
      * 

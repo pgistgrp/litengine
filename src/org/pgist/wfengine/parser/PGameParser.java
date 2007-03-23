@@ -28,8 +28,8 @@ public class PGameParser {
      */
 
 
-    public PGameActivity parse(Element ele) throws Exception {
-        String auto = ele.attribute("auto").getStringValue();
+    public PGameActivity parse(Element pgameElement) throws Exception {
+        String auto = pgameElement.attribute("auto").getStringValue();
         
         if (auto==null) auto = "true";
         else {
@@ -42,29 +42,29 @@ public class PGameParser {
         if ("true".equalsIgnoreCase(auto)) {
             PAutoGameActivity autoGame = new PAutoGameActivity();
             pgame = autoGame;
-            autoGame.setTaskName(ele.elementTextTrim("taskName"));
+            autoGame.setTaskName(pgameElement.elementTextTrim("taskName"));
         } else {
             PManualGameActivity manualGame = new PManualGameActivity();
             pgame = manualGame;
-            manualGame.setActionName(ele.elementTextTrim("actionName"));
+            manualGame.setActionName(pgameElement.elementTextTrim("actionName"));
         }
         
         //name
-        String name = ele.attributeValue("name");
+        String name = pgameElement.attributeValue("name");
         if (name==null) throw new ParserException("attribute 'name' is required");
         name = name.trim();
         if (name.length()==0) throw new ParserException("attribute 'name' can't be empty");
         pgame.setName(name);
         
         //description
-        String desc = ele.attributeValue("description");
+        String desc = pgameElement.attributeValue("description");
         if (desc==null) throw new ParserException("attribute 'description' is required");
         desc = desc.trim();
         if (desc.length()==0) throw new ParserException("attribute 'description' can't be empty");
         pgame.setDescription(desc);
         
         //declaration
-        Element declElement = ele.element("declaration");
+        Element declElement = pgameElement.element("declaration");
         if (declElement!=null) {
             Declaration decl = declParser.parse(declElement);
             pgame.setDeclaration(decl);

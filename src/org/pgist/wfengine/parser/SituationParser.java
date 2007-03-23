@@ -232,41 +232,43 @@ public class SituationParser {
     
     
     public SituationActivity parse(Element rootElement) throws ParserException {
-        SituationActivity meeting = new SituationActivity();
+        SituationActivity situation = new SituationActivity();
         
         //name
         String name = rootElement.attributeValue("name");
         if (name==null) throw new ParserException("attribute 'name' for 'meeting' is required");
         name = name.trim();
         if (name.length()==0) throw new ParserException("attribute 'name' for 'meeting' is required");
-        meeting.setName(name);
+        situation.setName(name);
         
         //desc
         String desc = rootElement.attributeValue("description");
         if (desc==null) throw new ParserException("attribute 'description' for 'meeting' is required");
         desc = desc.trim();
         if (desc.length()==0) throw new ParserException("attribute 'description' for 'meeting' is required");
-        meeting.setDescription(desc);
+        situation.setDescription(desc);
         
         //environment
         Element envElement = rootElement.element("environment");
         if (envElement!=null) {
-            meeting.getContext().setEnvironment(envParser.parse(envElement));
+            situation.getContext().getEnvironment().getIntValues().putAll(envParser.parse(envElement).getIntValues());
+            situation.getContext().getEnvironment().getStrValues().putAll(envParser.parse(envElement).getStrValues());
         }
         
         //declaration
         Element declElement = rootElement.element("declaration");
         if (declElement!=null) {
-            meeting.setDeclaration(declParser.parse(declElement));
+            situation.getDeclaration().getIns().putAll(declParser.parse(declElement).getIns());
+            situation.getDeclaration().getOuts().putAll(declParser.parse(declElement).getOuts());
         }
         
         //sequence
         FlowPiece piece = parseSequence(rootElement.element("sequence"));
         
-        meeting.setHeadActivity((Activity) piece.getHead());
-        meeting.setTailActivity((Activity) piece.getTail());
+        situation.setHeadActivity((Activity) piece.getHead());
+        situation.setTailActivity((Activity) piece.getTail());
         
-        return meeting;
+        return situation;
     }//parse()
 
 

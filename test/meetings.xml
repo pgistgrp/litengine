@@ -16,6 +16,16 @@
         <sequence>
             <pmethod name="Faked PMethod" />
             <pmethod name="Faked PMethod" />
+            <branch>
+                <sequence>
+                    <pmethod name="Faked PMethod"/>
+                    <pmethod name="Faked PMethod"/>
+                </sequence>
+                <sequence>
+                    <pmethod name="Faked PMethod"/>
+                    <pmethod name="Faked PMethod"/>
+                </sequence>
+            </branch>
         </sequence>
     </meeting>
     

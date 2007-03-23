@@ -6,6 +6,7 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
+import org.pgist.wfengine.activity.PGameActivity;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -106,6 +107,11 @@ public class WorkflowEngine implements BeanFactoryAware {
         workflow.execute(beanFactory);
         engineDAO.saveWorkflow(workflow);
     }//executeWorkflow()
+
+
+    public void saveActivity(Activity activity) throws Exception {
+        engineDAO.saveActivity(activity);
+    }
 
 
 }//class WorkflowEngine

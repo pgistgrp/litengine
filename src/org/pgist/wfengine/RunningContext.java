@@ -48,7 +48,9 @@ public class RunningContext {
      */
     
     
-    public RunningContext() {}
+    public RunningContext() {
+        environment.setContext(this);
+    }
     
     
     public RunningContext(RunningContext parent) {
@@ -164,7 +166,7 @@ public class RunningContext {
     /**
      * @return
      * 
-     * @hibernate.many-to-one column="environment_id" cascade="all"
+     * @hibernate.one-to-one class="org.pgist.wfengine.Environment" cascade="all"
      */
     public Environment getEnvironment() {
         return environment;

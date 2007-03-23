@@ -251,13 +251,15 @@ public class MeetingParser {
         //environment
         Element envElement = rootElement.element("environment");
         if (envElement!=null) {
-            meeting.getContext().setEnvironment(envParser.parse(envElement));
+            meeting.getContext().getEnvironment().getIntValues().putAll(envParser.parse(envElement).getIntValues());
+            meeting.getContext().getEnvironment().getStrValues().putAll(envParser.parse(envElement).getStrValues());
         }
         
         //declaration
         Element declElement = rootElement.element("declaration");
         if (declElement!=null) {
-            meeting.setDeclaration(declParser.parse(declElement));
+            meeting.getDeclaration().getIns().putAll(declParser.parse(declElement).getIns());
+            meeting.getDeclaration().getOuts().putAll(declParser.parse(declElement).getOuts());
         }
         
         //sequence

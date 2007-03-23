@@ -4,7 +4,8 @@
 
     <pmethod name="Faked PMethod" description="Faked PMethod">
         <environment>
-            <var type="" name="" value="">
+            <var type="string" name="env_var1" value="hello"/>
+            <var type="integer" name="env_var2" value="100"/>
         </environment>
         <declaration>
             <ins>
@@ -27,7 +28,7 @@
                         <var name="fake_id" ref="proj_fake_id"/>
                     </outs>
                 </declaration>
-                <timer base="begin_time" plusDay="3">
+                <timer base="begin_time" plusDay="3"/>
             </pgame>
             <pgame name="Faked Auto PGame">
                 <declaration>
@@ -39,6 +40,16 @@
                     </outs>
                 </declaration>
             </pgame>
+            <branch>
+                <sequence>
+                    <pgame name="Faked Auto PGame"/>
+                    <pgame name="Faked Manual PGame"/>
+                </sequence>
+                <sequence>
+                    <pgame name="Faked Manual PGame"/>
+                    <pgame name="Faked Auto PGame"/>
+                </sequence>
+            </branch>
         </sequence>
     </pmethod>
     

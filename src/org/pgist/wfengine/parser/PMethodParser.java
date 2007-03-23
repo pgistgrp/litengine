@@ -269,13 +269,15 @@ public class PMethodParser {
         //environment
         Element envElement = rootElement.element("environment");
         if (envElement!=null) {
-            pmethod.getContext().setEnvironment(envParser.parse(envElement));
+            pmethod.getContext().getEnvironment().getIntValues().putAll(envParser.parse(envElement).getIntValues());
+            pmethod.getContext().getEnvironment().getStrValues().putAll(envParser.parse(envElement).getStrValues());
         }
         
         //declaration
         Element declElement = rootElement.element("declaration");
         if (declElement!=null) {
-            pmethod.setDeclaration(declParser.parse(declElement));
+            pmethod.getDeclaration().getIns().putAll(declParser.parse(declElement).getIns());
+            pmethod.getDeclaration().getOuts().putAll(declParser.parse(declElement).getOuts());
         }
         
         //sequence
