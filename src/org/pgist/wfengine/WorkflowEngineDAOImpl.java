@@ -24,95 +24,30 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
     
     public WorkflowEngineDAOImpl() {
     }
-    
-    
-    public Workflow getWorkflow(Long id, boolean finished, boolean cancelled) throws Exception {
-        Workflow workflow = null;
-        
-        Query query = getSession().createQuery(hql_getWorkflow);
-        query.setLong("id", id.longValue());
-        query.setBoolean("finished", finished);
-        query.setBoolean("cancelled", cancelled);
-        
-        Iterator iter = query.iterate();
-        if (iter.hasNext()) {
-            workflow = (Workflow) iter.next();
-        }
-        
-        return workflow;
-    }//getWorkflow()
-    
-    
+
+
     public Session getHibernateSession() throws Exception {
-        return getSession();
-    }//getHibernateSession()
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 
-    public void saveTemplate(Template template) throws Exception {
-        //check if another template has the same refid
-        //TODO
-        getSession().saveOrUpdate(template);
-    }//saveTemplate()
-
-
-    public void saveWorkflow(Workflow workflow) throws Exception {
-        workflow.saveState(getSession());
-    }//saveWorkflow()
-
-
-    private static final String hql_getTemplates = "from Template t where type=? and deleted=?";
-    
-    
-    public List getTemplates(int type) throws Exception {
-        return getHibernateTemplate().find(hql_getTemplates, new Object[] {new Integer(type), new Boolean(false)});
-    }//getTemplates()
-    
-    
-    private static final String hql_getTemplate = "from Template t where id=:id and deleted=:deleted";
-    
-    
-    public Template getTemplate(Long id) throws Exception {
-        Template template = null;
-        
-        Query query = getSession().createQuery(hql_getTemplate);
-        query.setLong("id", id.longValue());
-        query.setBoolean("deleted", false);
-        
-        Iterator iter = query.iterate();
-        if (iter.hasNext()) {
-            template = (Template) iter.next();
-        }
-        
-        return template;
-    }//getTemplate()
+    public Workflow getWorkflow(Long id, boolean finished, boolean cancelled) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 
     public void saveActivity(Activity activity) throws Exception {
-        //check if another activity has the same refid
-        //TODO
-        getSession().saveOrUpdate(activity);
-    }//saveActivity()
+        // TODO Auto-generated method stub
+        
+    }
 
 
-    private static final String hql_getPActActivityByRefId = "from PActActivity p where refid=?";
+    public void saveWorkflow(Workflow workflow) throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
     
     
-    private static final String hql_getPGameActivityByRefId = "from PGameActivity p where refid=?";
-    
-    
-    public PGameActivity getPGameActivityByRefId(Long refId) throws Exception {
-        List list = getHibernateTemplate().find(hql_getPGameActivityByRefId, refId);
-        return (list.size()==0) ? null : (PGameActivity) list.get(0);
-    }//getPGameActivityByRefId()
-
-
-    private static final String hql_getGroupActivityByRefId = "from GroupActivity g where level=? and refid=?";
-    
-    
-    public GroupActivity getGroupActivityByRefId(Integer level, Long refId) throws Exception {
-        List list = getHibernateTemplate().find(hql_getGroupActivityByRefId, new Object[] {level, refId});
-        return (list.size()==0) ? null : (GroupActivity) list.get(0);
-    }//getGroupActivityByRefId()
-
-
 }//class WorkflowEngineDAOImpl

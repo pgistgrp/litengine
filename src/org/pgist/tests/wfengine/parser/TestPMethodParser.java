@@ -14,35 +14,32 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pgist.tests.wfengine.TestHelper;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.activity.BranchActivity;
-import org.pgist.wfengine.activity.EndSwitchActivity;
-import org.pgist.wfengine.activity.GroupActivity;
-import org.pgist.wfengine.activity.JoinActivity;
-import org.pgist.wfengine.activity.LoopActivity;
-import org.pgist.wfengine.activity.PAutoGameActivity;
-import org.pgist.wfengine.activity.PGameActivity;
-import org.pgist.wfengine.activity.PManualGameActivity;
-import org.pgist.wfengine.activity.RepeatActivity;
-import org.pgist.wfengine.activity.SwitchActivity;
-import org.pgist.wfengine.activity.UntilActivity;
-import org.pgist.wfengine.activity.WhileActivity;
-import org.pgist.wfengine.parser.GroupParser;
+import org.pgist.wfengine.activity.*;
+import org.pgist.wfengine.parser.*;
 
 
 /**
- * Test for GroupParser.
+ * Test for PMethodParser.
  * 
  * @author kenny
  */
-public class TestGroupParser {
+public class TestPMethodParser {
     
     
-    private static GroupParser parser = TestHelper.getParserSuite().getGroupParser();
+    static PMethodParser pmethodParser = new PMethodParser();
+    
+    static Map<String, PGameActivity> pgames = new HashMap<String, PGameActivity>();
     
     
     @BeforeClass
     public static void setUp() {
-        Map<String, PGameActivity> pgames = new HashMap<String, PGameActivity>();
+        DeclarationParser declParser = new DeclarationParser();
+        EnvironmentParser envParser = new EnvironmentParser();
+        
+        pmethodParser.setPgames(pgames);
+        pmethodParser.setDeclParser(declParser);
+        pmethodParser.setEnvParser(envParser);
+        
         PAutoGameActivity game1 = new PAutoGameActivity();
         game1.setName("pgame 1");
         pgames.put("pgame 1", game1);
@@ -50,8 +47,6 @@ public class TestGroupParser {
         PManualGameActivity game2 = new PManualGameActivity();
         game2.setName("pgame 2");
         pgames.put("pgame 2", game2);
-        
-        //TestHelper.getParserSuite().getSequenceParser().setPgames(pgames);
     }//setUp()
     
     
@@ -61,7 +56,7 @@ public class TestGroupParser {
      * @throws Exception
      */
     @Test
-    public void testPMethod1() throws Exception {
+    public void test1() throws Exception {
         String xml =
             "<pmethod name=\" pmethod 1 \" description=\" pmethod 1 \">"
             + "    <environment>"
@@ -91,7 +86,7 @@ public class TestGroupParser {
             + "                </outs>"
             + "            </declaration>"
             + "        </pgame>"
-            + "        <pgame name=\" pgame 1 \">"
+            + "        <pgame name=\" pgame 2 \">"
             + "            <declaration>"
             + "                <ins>"
             + "                    <var name=\" ins_var_1 \" ref=\" parent.ins_var_A \"/>"
@@ -108,25 +103,23 @@ public class TestGroupParser {
         
         Document doc = TestHelper.getDocument(xml);
         
-        GroupActivity activity = parser.parse(doc.getRootElement());
+        PMethodActivity pmethod = pmethodParser.parse(doc.getRootElement());
         
-        assertNotNull("activity is null", activity);
-        assertNotNull("activity.context is null", activity.getContext());
-        assertNotNull("activity.declaration is null", activity.getDeclaration());
-        assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
+        assertNotNull("activity is null", pmethod);
+        assertNotNull("activity.context is null", pmethod.getContext());
+        assertNotNull("activity.declaration is null", pmethod.getDeclaration());
+        assertNotNull("activity.context.environment is null", pmethod.getContext().getEnvironment());
         
-        assertTrue("activity is not 'pmethod'", activity.getLevel()==GroupActivity.LEVEL_PMETHOD);
+        assertEquals("'name' incorrect", "pmethod 1", pmethod.getName());
         
-        assertEquals("'name' incorrect", "pmethod 1", activity.getName());
+        assertNotNull("group's head activity is null", pmethod.getHeadActivity());
+        assertNotNull("group's tail activity is null", pmethod.getTailActivity());
         
-        assertNotNull("group's head activity is null", activity.getHeadActivity());
-        assertNotNull("group's tail activity is null", activity.getTailActivity());
+        assertNotSame("tail is the same as head", pmethod.getHeadActivity(), pmethod.getTailActivity());
         
-        assertNotSame("tail is the same as head", activity.getHeadActivity(), activity.getTailActivity());
-        
-        assertEquals("head is not 'pgame 1'", "pgame 1", ((PGameActivity) activity.getHeadActivity()).getName());
-        assertEquals("tail is not 'pgame 1'", "pgame 1", ((PGameActivity) activity.getTailActivity()).getName());
-    }//testPMethod1()
+        assertEquals("head is not 'pgame 1'", "pgame 1", ((PGameActivity) pmethod.getHeadActivity()).getName());
+        assertEquals("tail is not 'pgame 2'", "pgame 2", ((PGameActivity) pmethod.getTailActivity()).getName());
+    }//test1()
     
     
     /**
@@ -135,7 +128,7 @@ public class TestGroupParser {
      * @throws Exception
      */
     @Test
-    public void testPMethod2() throws Exception {
+    public void test2() throws Exception {
         String xml =
             "<pmethod name=\" pmethod 1 \" description=\" pmethod 1 \">"
             + "    <sequence>"
@@ -150,14 +143,12 @@ public class TestGroupParser {
         
         Document doc = TestHelper.getDocument(xml);
         
-        GroupActivity activity = parser.parse(doc.getRootElement());
+        PMethodActivity activity = pmethodParser.parse(doc.getRootElement());
         
         assertNotNull("activity is null", activity);
         assertNotNull("activity.context is null", activity.getContext());
         assertNotNull("activity.declaration is null", activity.getDeclaration());
         assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
-        
-        assertTrue("activity is not 'pmethod'", activity.getLevel()==GroupActivity.LEVEL_PMETHOD);
         
         assertEquals("'name' incorrect", "pmethod 1", activity.getName());
         
@@ -185,7 +176,7 @@ public class TestGroupParser {
         assertEquals("pgame2 is not successor of pgame1", pgame2, pgame1.getNext());
         assertEquals("pgame2 is not predecessor of loop", pgame2, loop.getPrev());
         assertEquals("loop is not successor of pgame2", loop, pgame2.getNext());
-    }//testPMethod2()
+    }//test2()
     
     
     /**
@@ -194,7 +185,7 @@ public class TestGroupParser {
      * @throws Exception
      */
     @Test
-    public void testPMethod3() throws Exception {
+    public void test3() throws Exception {
         String xml =
             "<pmethod name=\" pmethod 1 \" description=\" pmethod 1 \">"
             + "    <sequence>"
@@ -209,14 +200,12 @@ public class TestGroupParser {
         
         Document doc = TestHelper.getDocument(xml);
         
-        GroupActivity activity = parser.parse(doc.getRootElement());
+        PMethodActivity activity = pmethodParser.parse(doc.getRootElement());
         
         assertNotNull("activity is null", activity);
         assertNotNull("activity.context is null", activity.getContext());
         assertNotNull("activity.declaration is null", activity.getDeclaration());
         assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
-        
-        assertTrue("activity is not 'pmethod'", activity.getLevel()==GroupActivity.LEVEL_PMETHOD);
         
         assertEquals("'name' incorrect", "pmethod 1", activity.getName());
         
@@ -244,7 +233,7 @@ public class TestGroupParser {
         assertEquals("pgame2 is not successor of pgame1", pgame2, pgame1.getNext());
         assertEquals("pgame2 is not predecessor of until", pgame2, until.getPrev());
         assertEquals("until is not successor of pgame2", until, pgame2.getNext());
-    }//testPMethod3()
+    }//test3()
     
     
     /**
@@ -253,7 +242,7 @@ public class TestGroupParser {
      * @throws Exception
      */
     @Test
-    public void testPMethod4() throws Exception {
+    public void test4() throws Exception {
         String xml =
             "<pmethod name=\" pmethod 1 \" description=\" pmethod 1 \">"
             + "    <sequence>"
@@ -272,14 +261,12 @@ public class TestGroupParser {
         
         Document doc = TestHelper.getDocument(xml);
         
-        GroupActivity activity = parser.parse(doc.getRootElement());
+        PMethodActivity activity = pmethodParser.parse(doc.getRootElement());
         
         assertNotNull("activity is null", activity);
         assertNotNull("activity.context is null", activity.getContext());
         assertNotNull("activity.declaration is null", activity.getDeclaration());
         assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
-        
-        assertTrue("activity is not 'pmethod'", activity.getLevel()==GroupActivity.LEVEL_PMETHOD);
         
         assertEquals("'name' incorrect", "pmethod 1", activity.getName());
         
@@ -316,7 +303,7 @@ public class TestGroupParser {
         assertEquals("join is not successor of pgame12", join, pgame12.getNext());
         assertTrue("pgame22 is not predecessor of join", join.getJoins().contains(pgame22));
         assertEquals("join is not successor of pgame22", join, pgame22.getNext());
-    }//testPMethod4()
+    }//test4()
     
     
     /**
@@ -325,7 +312,7 @@ public class TestGroupParser {
      * @throws Exception
      */
     @Test
-    public void testPMethod5() throws Exception {
+    public void test5() throws Exception {
         String xml =
             "<pmethod name=\" pmethod 1 \" description=\" pmethod 1 \">"
             + "    <sequence>"
@@ -344,14 +331,12 @@ public class TestGroupParser {
         
         Document doc = TestHelper.getDocument(xml);
         
-        GroupActivity activity = parser.parse(doc.getRootElement());
+        PMethodActivity activity = pmethodParser.parse(doc.getRootElement());
         
         assertNotNull("activity is null", activity);
         assertNotNull("activity.context is null", activity.getContext());
         assertNotNull("activity.declaration is null", activity.getDeclaration());
         assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
-        
-        assertTrue("activity is not 'pmethod'", activity.getLevel()==GroupActivity.LEVEL_PMETHOD);
         
         assertEquals("'name' incorrect", "pmethod 1", activity.getName());
         
@@ -388,7 +373,7 @@ public class TestGroupParser {
         assertEquals("end switch is not successor of pgame12", endswt, pgame12.getNext());
         assertTrue("pgame22 is not predecessor of join", endswt.getChoices().contains(pgame22));
         assertEquals("end switch is not successor of pgame22", endswt, pgame22.getNext());
-    }//testPMethod5()
+    }//test5()
     
     
     /**
@@ -397,7 +382,7 @@ public class TestGroupParser {
      * @throws Exception
      */
     @Test
-    public void testPMethod6() throws Exception {
+    public void test6() throws Exception {
         String xml =
             "<pmethod name=\" pmethod 1 \" description=\" pmethod 1 \">"
             + "    <sequence>"
@@ -468,14 +453,12 @@ public class TestGroupParser {
         
         Document doc = TestHelper.getDocument(xml);
         
-        GroupActivity activity = parser.parse(doc.getRootElement());
+        PMethodActivity activity = pmethodParser.parse(doc.getRootElement());
         
         assertNotNull("activity is null", activity);
         assertNotNull("activity.context is null", activity.getContext());
         assertNotNull("activity.declaration is null", activity.getDeclaration());
         assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
-        
-        assertTrue("activity is not 'pmethod'", activity.getLevel()==GroupActivity.LEVEL_PMETHOD);
         
         assertEquals("'name' incorrect", "pmethod 1", activity.getName());
         
@@ -572,7 +555,7 @@ public class TestGroupParser {
         assertTrue("pgame is not connected to endswitch", pgame.getNext()==endswt);
         
         //third switch - similar to the first switch, omitted
-    }//testPMethod6()
+    }//test6()
     
     
-}//class TestGroupParser
+}//class TestPMethodParser

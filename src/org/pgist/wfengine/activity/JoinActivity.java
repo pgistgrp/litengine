@@ -31,7 +31,9 @@ public class JoinActivity extends Activity implements SingleOut {
     private int joinCount = 0;
     
     
-    public JoinActivity() {}
+    public JoinActivity() {
+        type = TYPE_JOIN;
+    }
     
     
     public JoinActivity(BranchActivity branchActivity) {

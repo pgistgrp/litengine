@@ -23,7 +23,7 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     protected int loopCount = 0;
     
     protected int expression;
-
+    
     protected UntilActivity until = new UntilActivity();
     
     protected Activity prev;
@@ -31,9 +31,10 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     protected Activity next;
     
     protected transient UntilActivity embryoUntil;
-
+    
     
     public RepeatActivity() {
+        type = TYPE_REPEAT;
     }
     
     
@@ -119,7 +120,6 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
         newRepeat.setCounts(0);
         newRepeat.setPrev(clonedPrev);
         newRepeat.setStatus(STATUS_INACTIVE);
-        newRepeat.setType(TYPE_REPEAT);
         
         //repeat body
         clonedStop.push(newRepeat.getUntil());

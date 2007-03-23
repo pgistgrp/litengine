@@ -1,6 +1,5 @@
-package org.pgist.tests.wfengine;
+package org.pgist.wfengine;
 
-import org.pgist.wfengine.Declaration;
 
 
 /**

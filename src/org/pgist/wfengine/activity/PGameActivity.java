@@ -1,8 +1,8 @@
 package org.pgist.wfengine.activity;
 
 import org.hibernate.Session;
-import org.pgist.tests.wfengine.Declarable;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.Declarable;
 import org.pgist.wfengine.Declaration;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;

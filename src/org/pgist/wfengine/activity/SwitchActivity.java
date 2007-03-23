@@ -36,6 +36,7 @@ public class SwitchActivity extends Activity implements SingleIn {
     
     
     public SwitchActivity() {
+        type = TYPE_SWITCH;
     }
     
     
@@ -112,7 +113,6 @@ public class SwitchActivity extends Activity implements SingleIn {
         newSwitch.setCounts(0);
         newSwitch.setPrev(clonedPrev);
         newSwitch.setStatus(STATUS_INACTIVE);
-        newSwitch.setType(TYPE_SWITCH);
         
         //branches
         clonedStop.push(newSwitch.getEndSwitchActivity());

@@ -1,7 +1,6 @@
 package org.pgist.wfengine.parser;
 
 import org.dom4j.Element;
-import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.Declaration;
 import org.pgist.wfengine.activity.PAutoGameActivity;
 import org.pgist.wfengine.activity.PGameActivity;
@@ -16,19 +15,14 @@ import org.pgist.wfengine.activity.PManualGameActivity;
 public class PGameParser {
     
     
-    private ParserSuite suite;
+    private DeclarationParser declParser;
     
     
-    public ParserSuite getSuite() {
-        return suite;
+    public void setDeclParser(DeclarationParser declParser) {
+        this.declParser = declParser;
     }
-    
-    
-    public void setSuite(ParserSuite suite) {
-        this.suite = suite;
-    }
-    
-    
+
+
     /*
      * ------------------------------------------------------------------------------
      */
@@ -72,13 +66,12 @@ public class PGameParser {
         //declaration
         Element declElement = ele.element("declaration");
         if (declElement!=null) {
-            Declaration decl = suite.getDeclParser().parse(declElement);
+            Declaration decl = declParser.parse(declElement);
             pgame.setDeclaration(decl);
         }
         
         pgame.setCounts(0);
         pgame.setExpression(0);
-        pgame.setType(Activity.TYPE_PGAME);
         
         return pgame;
     }//parse()

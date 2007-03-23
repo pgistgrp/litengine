@@ -21,7 +21,6 @@
         <mapping resource="org/pgist/wfengine/RunningContext.hbm.xml"/>
         <mapping resource="org/pgist/wfengine/Activity.hbm.xml"/>
         <mapping resource="org/pgist/wfengine/AccessManager.hbm.xml"/>
-        <mapping resource="org/pgist/wfengine/Template.hbm.xml"/>
         <mapping resource="org/pgist/wfengine/Workflow.hbm.xml"/>
         
         

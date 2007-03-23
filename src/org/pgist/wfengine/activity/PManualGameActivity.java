@@ -24,6 +24,7 @@ public class PManualGameActivity extends PGameActivity {
     
     
     public PManualGameActivity() {
+        type = TYPE_PMANUALGAME;
     }
     
     
@@ -40,7 +41,6 @@ public class PManualGameActivity extends PGameActivity {
         act.setPrev(null);
         act.setNext(null);
         act.setStatus(Activity.STATUS_INACTIVE);
-        act.setType(getType());
         
         return act;
     }//clone()
@@ -72,7 +72,6 @@ public class PManualGameActivity extends PGameActivity {
         newGame.setCounts(0);
         newGame.setPrev(clonedPrev);
         newGame.setStatus(STATUS_INACTIVE);
-        newGame.setType(TYPE_PGAME);
         newGame.setName(getName());
         newGame.setDescription(getDescription());
         newGame.setActionName(getActionName());

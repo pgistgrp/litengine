@@ -34,6 +34,7 @@ public class BranchActivity extends Activity implements SingleIn {
     
     
     public BranchActivity() {
+        type = TYPE_BRANCH;
     }
     
     

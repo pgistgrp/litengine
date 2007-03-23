@@ -20,7 +20,9 @@ public abstract class Activity implements Serializable {
     
     public final static int TYPE_UNDEFINED = -99999999;
     
-    public static final int TYPE_PGAME     = 1;
+    public static final int TYPE_PAUTOGAME = 0;
+    
+    public static final int TYPE_PMANUALGAME = 1;
     
     public static final int TYPE_PMETHOD   = 2;
     

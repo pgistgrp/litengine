@@ -29,7 +29,9 @@ public class EndSwitchActivity extends Activity implements SingleOut {
     private List<Activity> choices = new ArrayList<Activity>();
     
     
-    public EndSwitchActivity() {}
+    public EndSwitchActivity() {
+        type = TYPE_ENDSWITCH;
+    }
     
     
     public EndSwitchActivity(SwitchActivity switchActivity) {

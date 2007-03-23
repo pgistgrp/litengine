@@ -1,87 +1,50 @@
 package org.pgist.wfengine.parser;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.dom4j.Element;
-import org.pgist.tests.wfengine.Declarable;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.Declaration;
 import org.pgist.wfengine.FlowPiece;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.activity.BranchActivity;
-import org.pgist.wfengine.activity.EndSwitchActivity;
-import org.pgist.wfengine.activity.GroupActivity;
-import org.pgist.wfengine.activity.JoinActivity;
-import org.pgist.wfengine.activity.LoopActivity;
-import org.pgist.wfengine.activity.PGameActivity;
-import org.pgist.wfengine.activity.RepeatActivity;
-import org.pgist.wfengine.activity.SwitchActivity;
-import org.pgist.wfengine.activity.UntilActivity;
-import org.pgist.wfengine.activity.WhileActivity;
+import org.pgist.wfengine.activity.*;
 
 
 /**
- * Parser for sequence elements.
+ * Parser for MeetingActivity
  * 
  * @author kenny
  */
-public class SequenceParser {
+public class MeetingParser {
     
     
-    private ParserSuite suite;
+    private DeclarationParser declParser;
     
-    private ParseStrategy strategy;
+    private EnvironmentParser envParser;
     
-    //private Map<String, PGameActivity> pgames = new HashMap<String, PGameActivity>();
-    
-//    private Map<String, GroupActivity> pmethods = new HashMap<String, GroupActivity>();
-//    
-//    private Map<String, GroupActivity> meetings = new HashMap<String, GroupActivity>();
-//    
-//    private Map<String, GroupActivity> situations = new HashMap<String, GroupActivity>();
+    private Map<String, PMethodActivity> pmethods;
     
     
-    public ParserSuite getSuite() {
-        return suite;
-    }
+    /*
+     * ------------------------ Getters and Setters ---------------------------
+     */
     
     
-    public void setSuite(ParserSuite suite) {
-        this.suite = suite;
-    }
-    
-    
-    public ParseStrategy getStrategy() {
-        return strategy;
+    public void setDeclParser(DeclarationParser declParser) {
+        this.declParser = declParser;
     }
 
 
-    public void setStrategy(ParseStrategy strategy) {
-        this.strategy = strategy;
+    public void setEnvParser(EnvironmentParser envParser) {
+        this.envParser = envParser;
     }
 
 
-//    public void setMeetings(Map<String, GroupActivity> meetings) {
-//        this.meetings = meetings;
-//    }
-//    
-//    
-//    public void setPgames(Map<String, PGameActivity> pgames) {
-//        this.pgames = pgames;
-//    }
-//    
-//    
-//    public void setPmethods(Map<String, GroupActivity> pmethods) {
-//        this.pmethods = pmethods;
-//    }
-//    
-//    
-//    public void setSituations(Map<String, GroupActivity> situations) {
-//        this.situations = situations;
-//    }
+    public void setPmethods(Map<String, PMethodActivity> pmethods) {
+        this.pmethods = pmethods;
+    }
 
 
     /*
@@ -89,7 +52,7 @@ public class SequenceParser {
      */
     
     
-    public FlowPiece parsePGames(Element sequenceElement, ParseStrategy strategy) throws ParserException {
+    public FlowPiece parseSequence(Element sequenceElement) throws ParserException {
         if (sequenceElement==null) return null;
         
         FlowPiece piece = new FlowPiece();
@@ -99,33 +62,36 @@ public class SequenceParser {
         for (Element node : nodes) {
             String nodeName = node.getName();
             
-            if (strategy.getComponentName().equalsIgnoreCase(nodeName)) {
-                String name = node.attributeValue("name");
-                if (name==null) throw new ParserException("attribute 'name' of "+strategy.getComponentName()+" is required");
-                name = name.trim();
-                if (name.length()==0) throw new ParserException("attribute 'name' of "+strategy.getComponentName()+" is required");
+            if ("pmethod".equalsIgnoreCase(nodeName)) {
+                String attrName = node.attributeValue("name");
+                if (attrName==null) throw new ParserException("attribute 'name' of pmethod is required");
+                attrName = attrName.trim();
+                if (attrName.length()==0) throw new ParserException("attribute 'name' of pmethod is required");
                 
-                Activity pgame = strategy.getActivity(name);
-                if (pgame==null) throw new ParserException(strategy.getComponentName()+" '"+name+"' is not found");
+                PMethodActivity pmethod = pmethods.get(attrName);
+                if (pmethod==null) throw new ParserException("pmethod '"+attrName+"' is not found");
                 
-                Activity newGame = strategy.clone(pgame);
-                SingleIn singleIn = (SingleIn) newGame;
-                SingleOut singleOut = (SingleOut) newGame;
+                PMethodActivity newPmethod = new PMethodActivity();
+                newPmethod.setName(pmethod.getName());
+                newPmethod.setDescription(pmethod.getDescription());
+                newPmethod.setDefinition(pmethod);
+                
+                SingleIn singleIn = (SingleIn) newPmethod;
+                SingleOut singleOut = (SingleOut) newPmethod;
                 
                 //declaration override
                 Element declElement = node.element("declaration");
                 if (declElement!=null) {
-                    Declaration decl = suite.getDeclParser().parse(declElement);
-                    Declarable declarable = (Declarable) newGame;
-                    declarable.getDeclaration().getIns().putAll(decl.getIns());
-                    declarable.getDeclaration().getOuts().putAll(decl.getOuts());
+                    Declaration decl = declParser.parse(declElement);
+                    newPmethod.getDeclaration().getIns().putAll(decl.getIns());
+                    newPmethod.getDeclaration().getOuts().putAll(decl.getOuts());
                 }
                 
                 if (piece.getHead()==null) {
                     piece.setHead(singleIn);
                     piece.setTail(singleOut);
                 } else {
-                    piece.getTail().setNext(newGame);
+                    piece.getTail().setNext(newPmethod);
                     singleIn.setPrev((Activity) piece.getTail());
                     piece.setTail(singleOut);
                 }
@@ -139,7 +105,7 @@ public class SequenceParser {
                 loop.setCounts(0);
                 loop.setWhilst(whilst);
                 
-                FlowPiece body = parsePGames(node.element("sequence"), strategy);
+                FlowPiece body = parseSequence(node.element("sequence"));
                 
                 if (body!=null) {
                     whilst.setNext((Activity) body.getHead());
@@ -169,7 +135,7 @@ public class SequenceParser {
                 until.setCounts(0);
                 until.setRepeat(repeat);
                 
-                FlowPiece body = parsePGames(node.element("sequence"), strategy);
+                FlowPiece body = parseSequence(node.element("sequence"));
                 
                 if (body!=null) {
                     repeat.setNext((Activity) body.getHead());
@@ -202,12 +168,12 @@ public class SequenceParser {
                 List<Element> elements = node.elements("sequence");
                 
                 for (Element seqElement : elements) {
-                    FlowPiece body = parsePGames(seqElement, strategy);
+                    FlowPiece body = parseSequence(seqElement);
                     
                     if (body!=null) {
-                        branch.getBranches().add(body.getHead());
+                        branch.getBranches().add((Activity) body.getHead());
                         body.getHead().setPrev(branch);
-                        join.getJoins().add(body.getTail());
+                        join.getJoins().add((Activity) body.getTail());
                         body.getTail().setNext(join);
                     }
                 }//for
@@ -233,12 +199,12 @@ public class SequenceParser {
                 List<Element> elements = node.elements("sequence");
                 
                 for (Element seqElement : elements) {
-                    FlowPiece body = parsePGames(seqElement, strategy);
+                    FlowPiece body = parseSequence(seqElement);
                     
                     if (body!=null) {
-                        swtch.getSwitches().add(body.getHead());
+                        swtch.getSwitches().add((Activity) body.getHead());
                         body.getHead().setPrev(swtch);
-                        eswtch.getChoices().add(body.getTail());
+                        eswtch.getChoices().add((Activity) body.getTail());
                         body.getTail().setNext(eswtch);
                     }
                 }//for
@@ -257,7 +223,51 @@ public class SequenceParser {
         }//for
         
         return piece;
-    }//parsePGames()
+    }//parseSequence()
     
     
-}//class SequenceParser
+    /*
+     * ------------------------------------------------------------------------
+     */
+    
+    
+    public MeetingActivity parse(Element rootElement) throws ParserException {
+        MeetingActivity meeting = new MeetingActivity();
+        
+        //name
+        String name = rootElement.attributeValue("name");
+        if (name==null) throw new ParserException("attribute 'name' for 'meeting' is required");
+        name = name.trim();
+        if (name.length()==0) throw new ParserException("attribute 'name' for 'meeting' is required");
+        meeting.setName(name);
+        
+        //desc
+        String desc = rootElement.attributeValue("description");
+        if (desc==null) throw new ParserException("attribute 'description' for 'meeting' is required");
+        desc = desc.trim();
+        if (desc.length()==0) throw new ParserException("attribute 'description' for 'meeting' is required");
+        meeting.setDescription(desc);
+        
+        //environment
+        Element envElement = rootElement.element("environment");
+        if (envElement!=null) {
+            meeting.getContext().setEnvironment(envParser.parse(envElement));
+        }
+        
+        //declaration
+        Element declElement = rootElement.element("declaration");
+        if (declElement!=null) {
+            meeting.setDeclaration(declParser.parse(declElement));
+        }
+        
+        //sequence
+        FlowPiece piece = parseSequence(rootElement.element("sequence"));
+        
+        meeting.setHeadActivity((Activity) piece.getHead());
+        meeting.setTailActivity((Activity) piece.getTail());
+        
+        return meeting;
+    }//parse()
+
+
+}//class MeetingParser

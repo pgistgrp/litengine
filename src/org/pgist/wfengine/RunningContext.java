@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import org.pgist.wfengine.activity.GroupActivity;
+import org.pgist.wfengine.activity.SituationActivity;
 
 
 /**
@@ -31,7 +31,7 @@ public class RunningContext {
     
     private RunningContext parent;
     
-    private GroupActivity group;
+    private SituationActivity situation;
     
     private Set runningActivities = new HashSet();
     
@@ -96,13 +96,13 @@ public class RunningContext {
      * 
      * @hibernate.many-to-one column="group_id" cascade="all"
      */
-    public GroupActivity getGroup() {
-        return group;
+    public SituationActivity getSituation() {
+        return situation;
     }
 
 
-    public void setGroup(GroupActivity group) {
-        this.group = group;
+    public void setSituation(SituationActivity situation) {
+        this.situation = situation;
     }
 
 

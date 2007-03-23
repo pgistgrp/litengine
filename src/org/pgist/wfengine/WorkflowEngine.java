@@ -1,13 +1,11 @@
 package org.pgist.wfengine;
 
-import java.io.InputStream;
 import java.util.List;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.pgist.wfengine.activity.TerminateActivity;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -41,10 +39,6 @@ public class WorkflowEngine implements BeanFactoryAware {
     
     private WorkflowEngineDAO engineDAO;
     
-    private PGameParser pgameParser;
-    
-    private TemplateParser templateParser;
-    
     
     public WorkflowEngine() {
         try {
@@ -65,16 +59,6 @@ public class WorkflowEngine implements BeanFactoryAware {
     }
     
     
-    public void setPgameParser(PGameParser pgameParser) {
-        this.pgameParser = pgameParser;
-    }
-
-
-    public void setTemplateParser(TemplateParser templateParser) {
-        this.templateParser = templateParser;
-    }
-
-
     /*
      * ------------------------------------------------------------------------------
      */
@@ -111,66 +95,6 @@ public class WorkflowEngine implements BeanFactoryAware {
     public List getRunningActivities(Long workflowId) {
         return null;
     }//getRunningActivities()
-    
-    
-    /**
-     * Client programs use this method to add new definition of pGames
-     * 
-     * @param stream
-     * @return
-     * @throws Exception
-     */
-    public List addPGames(InputStream stream) throws Exception {
-        return pgameParser.parse(stream);
-    }//addPGames()
-    
-    
-    /**
-     * Client programs use this method to add new definition of templates
-     * 
-     * @param stream
-     * @return
-     * @throws
-     */
-    public List addTemplates(InputStream stream) throws Exception{
-        return templateParser.parse(stream);
-    }//addTemplates()
-    
-    
-    public Template getTemplate(Long id)throws Exception {
-        return engineDAO.getTemplate(id);
-    }//getTemplate()
-    
-    
-    public List getSituationTemplates() throws Exception {
-        return engineDAO.getTemplates(Template.TYPE_SITUATION);
-    }//getSituationTemplates()
-    
-    
-    /**
-     * Spawn from the given process, generate a new workflow instance
-     * @param process
-     * @return
-     */
-    public Workflow spawn(Long id) throws Exception {
-        Template template = getTemplate(id);
-        
-        Workflow workflow = new Workflow();
-        
-        FlowPiece piece = template.spawn();
-        SingleOut tail = piece.getTail();
-//        TerminateActivity terminateActivity = new TerminateActivity();
-//        terminateActivity.setCounts(0);
-//        terminateActivity.setExpression(0);
-//        terminateActivity.setPrev((Activity) tail);
-//        tail.setNext(terminateActivity);
-        
-        workflow.initialize();
-        
-        engineDAO.saveWorkflow(workflow);
-        
-        return workflow;
-    }//spawn()
     
     
     public void saveWorkflow(Workflow workflow) throws Exception {

@@ -21,6 +21,11 @@ public class ReturnActivity extends Activity {
     protected GroupActivity group;
     
     
+    public ReturnActivity() {
+        type = TYPE_RETURN;
+    }
+    
+    
     /**
      * @return
      * @hibernate.many-to-one column="group_id" class="org.pgist.wfengine.activity.GroupActivity" lazy="true" cascade="all"

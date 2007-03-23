@@ -27,7 +27,7 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     protected int loopCount = 0;
     
     protected int expression;
-
+    
     private RepeatActivity repeat;
     
     private Activity prev;
@@ -36,6 +36,7 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     
     
     public UntilActivity() {
+        type = TYPE_UNTIL;
     }
     
     

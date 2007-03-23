@@ -30,7 +30,6 @@
                <value>org/pgist/wfengine/RunningContext.hbm.xml</value>
                <value>org/pgist/wfengine/Activity.hbm.xml</value>
                <value>org/pgist/wfengine/AccessManager.hbm.xml</value>
-               <value>org/pgist/wfengine/Template.hbm.xml</value>
                <value>org/pgist/wfengine/Workflow.hbm.xml</value>
            </list>
         </property>

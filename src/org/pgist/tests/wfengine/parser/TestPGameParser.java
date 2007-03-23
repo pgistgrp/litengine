@@ -5,12 +5,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.dom4j.Document;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pgist.tests.wfengine.TestHelper;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.activity.PAutoGameActivity;
 import org.pgist.wfengine.activity.PGameActivity;
 import org.pgist.wfengine.activity.PManualGameActivity;
+import org.pgist.wfengine.parser.DeclarationParser;
 import org.pgist.wfengine.parser.PGameParser;
 
 
@@ -22,8 +24,16 @@ import org.pgist.wfengine.parser.PGameParser;
 public class TestPGameParser {
     
     
-    private static PGameParser parser = TestHelper.getParserSuite().getPgameParser();
+    private static PGameParser parser;
     
+    
+    @BeforeClass
+    public static void setUp() {
+        parser = new PGameParser();
+        
+        DeclarationParser declParser = new DeclarationParser();
+        parser.setDeclParser(declParser);
+    }//setUp()
     
     /*
      * ------------------------------------------------------------------------
@@ -63,7 +73,7 @@ public class TestPGameParser {
         assertEquals("pgame 'description' incorrect", "pgame1", pgame.getDescription());
         
         assertTrue("member counts of pgame is not 0", pgame.getCounts()==0);
-        assertTrue("member type of pgame is not "+Activity.TYPE_PGAME, pgame.getType()==Activity.TYPE_PGAME);
+        assertTrue("member type of pgame is not "+Activity.TYPE_PAUTOGAME, pgame.getType()==Activity.TYPE_PAUTOGAME);
         
         assertEquals("ins value 'in_var_1' incorrect", "in_var_1", pgame.getDeclaration().getIns().get("in_var_1"));
         assertEquals("outs value 'out_var_1' incorrect", "out_var_1", pgame.getDeclaration().getOuts().get("out_var_1"));
@@ -106,7 +116,7 @@ public class TestPGameParser {
         assertEquals("pgame 'description' incorrect", "pgame1", pgame.getDescription());
         
         assertTrue("member counts of pgame is not 0", pgame.getCounts()==0);
-        assertTrue("member type of pgame is not "+Activity.TYPE_PGAME, pgame.getType()==Activity.TYPE_PGAME);
+        assertTrue("member type of pgame is not "+Activity.TYPE_PMANUALGAME, pgame.getType()==Activity.TYPE_PMANUALGAME);
         
         assertEquals("ins value 'in_var_1' incorrect", "in_var_1", pgame.getDeclaration().getIns().get("in_var_1"));
         assertEquals("outs value 'out_var_1' incorrect", "out_var_1", pgame.getDeclaration().getOuts().get("out_var_1"));

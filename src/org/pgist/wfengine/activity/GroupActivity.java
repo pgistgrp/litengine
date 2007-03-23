@@ -2,15 +2,13 @@ package org.pgist.wfengine.activity;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
-import org.pgist.tests.wfengine.Declarable;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.Declarable;
 import org.pgist.wfengine.Declaration;
-import org.pgist.wfengine.FlowPiece;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
@@ -35,25 +33,12 @@ import org.pgist.wfengine.util.Utils;
  * 
  * @author kenny
  */
-public class GroupActivity extends Activity implements SingleIn, SingleOut, Declarable {
+public abstract class GroupActivity extends Activity implements SingleIn, SingleOut, Declarable {
     
-    
-    public static final int LEVEL_UNKNOWN   = 0;
-    
-    public static final int LEVEL_SITUATION = 1;
-    
-    public static final int LEVEL_MEETING   = 2;
-    
-    public static final int LEVEL_PMETHOD   = 3;
-    
-    
-    protected int level = LEVEL_UNKNOWN;
     
     protected String name;
     
     protected String description;
-    
-    protected GroupActivity definition;
     
     protected Activity headActivity;
     
@@ -71,25 +56,6 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut, Decl
     public GroupActivity() {}
     
     
-    public GroupActivity(int level) {
-        this.level = level;
-    }
-    
-    
-    /**
-     * @return
-     * @hibernate.property not-null="true"
-     */
-    public int getLevel() {
-        return level;
-    }
-
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-
     /**
      * @return
      * @hibernate.property
@@ -115,21 +81,6 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut, Decl
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-
-    /**
-     * @return
-     * 
-     * @hibernate.many-to-one column="definition_id" lazy="true" cascade="all"
-     */
-    public GroupActivity getDefinition() {
-        return definition;
-    }
-
-
-    public void setDefinition(GroupActivity definition) {
-        this.definition = definition;
     }
 
 
@@ -226,36 +177,9 @@ public class GroupActivity extends Activity implements SingleIn, SingleOut, Decl
      */
     
     
-    public GroupActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
-        GroupActivity group = new GroupActivity();
-        
-        //basic info
-        group.setCounts(0);
-        group.setPrev(clonedPrev);
-        group.setStatus(STATUS_INACTIVE);
-        group.setType(getType());
-        group.setName(getName());
-        group.setDescription(getDescription());
-        group.setDefinition(getDefinition());
-        
-        Activity act = getNext();
-        if (act!=null) {
-            Activity newAct = act.clone(group, clonedStop, stop);
-            group.setNext(newAct);
-        }
-        
-        return group;
-    }//clone()
-    
-    
     public Activity getEnd() {
         return (getNext()==null) ? this : getNext().getEnd(); 
     }//getEnd()
-    
-    
-    /*
-     * ------------------------------------------------------------------------------
-     */
     
     
     protected void doActivate(RunningContext context) {
