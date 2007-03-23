@@ -26,6 +26,9 @@ import org.pgist.wfengine.SingleIn;
 public class BranchActivity extends Activity implements SingleIn {
     
     
+    private static final long serialVersionUID = 5281548477173534413L;
+    
+
     protected Activity prev;
     
     protected JoinActivity joinActivity = new JoinActivity(this);
@@ -122,16 +125,13 @@ public class BranchActivity extends Activity implements SingleIn {
      */
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        List list = getBranches();
-        for (int i=0,n=list.size(); i<n; i++) {
-            Activity activity = (Activity) list.get(i);
-            activity.activate(context);
-            stack.push(activity);
-        }//for i
-        
-        //initialize branch/join pair
-        getJoinActivity().setJoinCount(0);
+    protected boolean doExecute(RunningContext context) throws Exception {
+        /*
+         * Push all branches into the stack
+         */
+        for (Activity activity : getBranches()) {
+            context.getStack().push(activity);
+        }//for
         
         return true;
     }//doExecute()

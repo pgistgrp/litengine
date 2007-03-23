@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/situations.dtd"-->
+<workflow>
+    
+    <pgames>
+        <pgame name="pgame1" description="pgame1" auto="true">
+            <taskName>pgame1</taskName>
+        </pgame>
+        <pgame name="pgame2" description="pgame2" auto="true">
+            <taskName>pgame2</taskName>
+        </pgame>
+        <pgame name="pgame3" description="pgame3" auto="true">
+            <taskName>pgame3</taskName>
+        </pgame>
+    </pgames>
+    
+    <pmethods>
+        <pmethod name="pmethod1" description="pmethod1">
+            <sequence>
+                <pgame name="pgame1"/>
+                <branch>
+                    <sequence>
+                        <pgame name="pgame2"/>
+                        <pgame name="pgame1"/>
+                    </sequence>
+                    <sequence>
+                        <pgame name="pgame3"/>
+                        <pgame name="pgame2"/>
+                    </sequence>
+                </branch>
+                <pgame name="pgame3"/>
+            </sequence>
+        </pmethod>
+    </pmethods>
+    
+    <meetings>
+        <meeting name="meeting1" description="meeting1">
+            <sequence>
+                <pmethod name="pmethod1"/>
+            </sequence>
+        </meeting>
+    </meetings>
+    
+    <situations>
+        <situation name="situation1" description="situation1">
+            <sequence>
+                <meeting name="meeting1"/>
+            </sequence>
+        </situation>
+    </situations>
+    
+</workflow>
+

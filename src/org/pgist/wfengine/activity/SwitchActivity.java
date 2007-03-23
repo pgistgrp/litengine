@@ -26,6 +26,9 @@ import org.pgist.wfengine.SingleIn;
 public class SwitchActivity extends Activity implements SingleIn {
     
     
+    private static final long serialVersionUID = 8853658605696294187L;
+    
+    
     protected EndSwitchActivity endSwitchActivity = new EndSwitchActivity(this);
     
     protected List<Activity> switches = new ArrayList<Activity>();
@@ -136,18 +139,18 @@ public class SwitchActivity extends Activity implements SingleIn {
      */
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
+    protected boolean doExecute(RunningContext context) throws Exception {
         if (getExpression()<0) setExpression(0);
         if (getExpression()>switches.size()) setExpression(switches.size());
         
         if (getExpression()==0) {
-            return false;
         } else {
             Activity activity = (Activity) switches.get(getExpression()-1);
             activity.activate(context);
-            stack.push(activity);
-            return true;
+            context.getStack().push(activity);
         }
+        
+        return true;
     }//doExecute()
     
     

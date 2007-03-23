@@ -22,6 +22,9 @@ import org.pgist.wfengine.SingleOut;
 public class EndSwitchActivity extends Activity implements SingleOut {
     
     
+    private static final long serialVersionUID = -1212634166705377596L;
+    
+    
     protected Activity next;
     
     private SwitchActivity switchActivity;
@@ -125,11 +128,11 @@ public class EndSwitchActivity extends Activity implements SingleOut {
      */
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        next.activate(context);
-        stack.push(next);
+    protected boolean doExecute(RunningContext context) throws Exception {
+        context.getStack().push(next);
+        
         return true;
-    }//doActivate()
+    }//doExecute()
     
     
     public void saveState(Session session) {

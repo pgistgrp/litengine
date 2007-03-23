@@ -23,6 +23,9 @@ import org.pgist.wfengine.WorkflowTask;
 public class PAutoGameActivity extends PGameActivity implements SingleIn, SingleOut {
     
     
+    private static final long serialVersionUID = 4257849359571840340L;
+    
+    
     protected String taskName = null;
     
     
@@ -99,21 +102,20 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
      */
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        Object object = null;//context.getTask(getTaskName());
-        if (object instanceof WorkflowTask) {
-            WorkflowTask task = (WorkflowTask) object;
-            return task.execute(this, context, getDeclaration().getProperties());
-        }
+    protected boolean doExecute(RunningContext context) throws Exception {
+        WorkflowTask task = null;
         
-        return false;
-//        if (getExpression()>0) {//task is finished
-//            next.activate(context);
-//            stack.push(next);
-//            return true;
-//        } else {
-//            return false;
-//        }
+        try {
+            task = context.getRegistry().getTask(getTaskName());
+            if (task!=null) task.execute(this, context, getDeclaration().getProperties());
+            
+            context.getStack().add(getNext());
+            
+            return true;
+        } catch (Exception e) {
+            context.getHaltingActivities().add(this);
+            return false;
+        }
     }//doExecute()
     
     

@@ -7,7 +7,6 @@ import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -22,6 +21,9 @@ import org.pgist.wfengine.Workflow;
 public class LoopActivity extends Activity implements SingleIn, SingleOut {
     
     
+    private static final long serialVersionUID = -5478838368057460061L;
+    
+
     protected int expression = 0;
     
     protected WhileActivity whilst;
@@ -32,11 +34,19 @@ public class LoopActivity extends Activity implements SingleIn, SingleOut {
     
     
     public LoopActivity() {
+        type = TYPE_LOOP;
+    }
+    
+    
+    public LoopActivity(WhileActivity whilst) {
+        type = TYPE_LOOP;
+        this.whilst = whilst;
     }
     
     
     /**
      * @return
+     * 
      * @hibernate.property not-null="true"
      */
     public int getExpression() {
@@ -51,6 +61,7 @@ public class LoopActivity extends Activity implements SingleIn, SingleOut {
 
     /**
      * @return
+     * 
      * @hibernate.many-to-one column="while_id" class="org.pgist.wfengine.activity.WhileActivity" cascade="all"
      */
     public WhileActivity getWhilst() {
@@ -65,6 +76,7 @@ public class LoopActivity extends Activity implements SingleIn, SingleOut {
     
     /**
      * @return
+     * 
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getPrev() {
@@ -79,6 +91,7 @@ public class LoopActivity extends Activity implements SingleIn, SingleOut {
     
     /**
      * @return
+     * 
      * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
      */
     public Activity getNext() {
@@ -128,20 +141,11 @@ public class LoopActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        if (getExpression()>0) {//task is finished
-            whilst.activate(context);
-            stack.push(whilst);
-            return true;
-        }
-        return false;
+    protected boolean doExecute(RunningContext context) throws Exception {
+        context.getStack().push(getWhilst());
+        
+        return true;
     }//doExecute()
-    
-    
-    protected void doDeActivate(Workflow workflow) {
-        //reset loopCount before leaving the loop
-        whilst.setLoopCount(0);
-    }//doDeActivate()
     
     
     public void proceed() throws Exception {

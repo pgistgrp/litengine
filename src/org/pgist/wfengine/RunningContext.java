@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import org.pgist.wfengine.activity.GroupActivity;
 import org.pgist.wfengine.activity.SituationActivity;
 
 
@@ -31,16 +32,20 @@ public class RunningContext {
     
     private RunningContext parent;
     
-    private SituationActivity situation;
+    private GroupActivity group;
     
-    private Set runningActivities = new HashSet();
+    private Set<Activity> runningActivities = new HashSet<Activity>();
     
-    private Set pendingActivities = new HashSet();
+    private Set<Activity> pendingActivities = new HashSet<Activity>();
+    
+    private Set<Activity> haltingActivities = new HashSet<Activity>();
     
     private List records = new ArrayList();
     
     /* workflow environment */
     private Environment environment = new Environment();
+    
+    Stack<Activity> stack = new Stack<Activity>();
     
     
     /*
@@ -98,13 +103,13 @@ public class RunningContext {
      * 
      * @hibernate.many-to-one column="group_id" cascade="all"
      */
-    public SituationActivity getSituation() {
-        return situation;
+    public GroupActivity getGroup() {
+        return group;
     }
 
 
-    public void setSituation(SituationActivity situation) {
-        this.situation = situation;
+    public void setGroup(GroupActivity group) {
+        this.group = group;
     }
 
 
@@ -112,16 +117,16 @@ public class RunningContext {
      * 
      * @return
      * 
-     * @hibernate.set table="litwf_activity" lazy="true" cascade="all" order-by="id"
-     * @hibernate.collection-key column="context_id"
+     * @hibernate.set lazy="true" cascade="all" order-by="id"
+     * @hibernate.collection-key column="running_id"
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      */
-    public Set getRunningActivities() {
+    public Set<Activity> getRunningActivities() {
         return runningActivities;
     }
 
 
-    public void setRunningActivities(Set runningActivity) {
+    public void setRunningActivities(Set<Activity> runningActivity) {
         this.runningActivities = runningActivity;
     }
 
@@ -130,17 +135,35 @@ public class RunningContext {
      * 
      * @return
      * 
-     * @hibernate.set table="litwf_activity" lazy="true" cascade="all" order-by="id"
-     * @hibernate.collection-key column="context_id"
+     * @hibernate.set lazy="true" cascade="all" order-by="id"
+     * @hibernate.collection-key column="pending_id"
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      */
-    public Set getPendingActivities() {
+    public Set<Activity> getPendingActivities() {
         return pendingActivities;
     }
 
 
-    public void setPendingActivities(Set pendingActivities) {
+    public void setPendingActivities(Set<Activity> pendingActivities) {
         this.pendingActivities = pendingActivities;
+    }
+
+
+    /**
+     * 
+     * @return
+     * 
+     * @hibernate.set lazy="true" cascade="all" order-by="id"
+     * @hibernate.collection-key column="halting_id"
+     * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
+     */
+    public Set<Activity> getHaltingActivities() {
+        return haltingActivities;
+    }
+
+
+    public void setHaltingActivities(Set<Activity> haltingActivities) {
+        this.haltingActivities = haltingActivities;
     }
 
 
@@ -148,7 +171,7 @@ public class RunningContext {
      * @return
      * 
      * @hibernate.list table="litwf_task" lazy="true" cascade="all"
-     * @hibernate.collection-key column="context_id"
+     * @hibernate.collection-key column="record_id"
      * @hibernate.collection-index column="task_order"
      * @hibernate.collection-one-to-many class="org.pgist.wfengine.Activity"
      * 
@@ -166,7 +189,7 @@ public class RunningContext {
     /**
      * @return
      * 
-     * @hibernate.one-to-one class="org.pgist.wfengine.Environment" cascade="all"
+     * @hibernate.one-to-one cascade="all"
      */
     public Environment getEnvironment() {
         return environment;
@@ -183,48 +206,41 @@ public class RunningContext {
      */
     
     
-    public void addActivity(Activity activity) {
-        //Activate this activity
-        activity.activate(this);
-        getRunningActivities().add(activity);
-    }//addActivity()
-    
-    
-    protected void perform(Stack stack, Set activities, Activity activity) throws Exception {
-        //Execute this activity
-        boolean finished = activity.execute(this, stack);
-        
-        if (finished) {
-            //Deactivate this activity
-            activity.deActivate(this);
+    public Stack<Activity> getStack() {
+        return stack;
+    }
+
+
+    public WorkflowTaskRegistry getRegistry() {
+        if (getParent()!=null) {
+            return getParent().getRegistry();
         } else {
-            //Return to running list
-            activities.add(activity);
+            SituationActivity situation = (SituationActivity) group;
+            return situation.getWorkflow().getRegistry();
+        }
+    }//getRegistry()
+
+
+    protected void perform(Stack<Activity> stack, Set activities, Activity activity) throws Exception {
+        //Execute this activity
+        try {
+            activity.execute(this);
+            activity.deActivate(this);
+        } catch (Exception e) {
+            getHaltingActivities().add(activity);
         }
     }//perform()
     
     
     synchronized public void execute() throws Exception {
-        Stack stack = new Stack();
-        
-        //Put all running activities into stack
-        stack.addAll(getRunningActivities());
-        
         while (!stack.empty()) {
             //Pop out an activity
-            Activity activity = (Activity) stack.pop();
-            
-            for (Iterator iter=runningActivities.iterator(); iter.hasNext(); ) {
-                Activity one = (Activity) iter.next();
-                if (one.equals(activity)) {
-                    runningActivities.remove(one);
-                    break;
-                }
-            }//for iter
-            
-            perform(stack, runningActivities, activity);
+            Activity activity = stack.pop();
+            activity.activate(this);
+            if (activity.execute(this)) {
+                activity.deActivate(this);
+            }
         }//while
-        
     }//execute()
     
     
@@ -234,7 +250,7 @@ public class RunningContext {
      * @return
      */
     synchronized public boolean proceed(Activity activity) throws Exception {
-        Stack stack = new Stack();
+        Stack<Activity> stack = new Stack<Activity>();
         
         //check if the activity is current activity in the environment
         //if (!runningActivities.contains(activity)) return;

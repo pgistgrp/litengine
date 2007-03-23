@@ -5,6 +5,7 @@ import java.util.Stack;
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
+import org.pgist.wfengine.SingleIn;
 
 
 /**
@@ -15,8 +16,13 @@ import org.pgist.wfengine.RunningContext;
  *                            lazy="true" proxy="org.pgist.wfengine.activity.ReturnActivity"
  * @hibernate.joined-subclass-key column="id"
  */
-public class ReturnActivity extends Activity {
+public class ReturnActivity extends Activity implements SingleIn {
     
+    
+    private static final long serialVersionUID = -7064274249683190904L;
+    
+
+    private Activity prev;
     
     protected GroupActivity group;
     
@@ -28,7 +34,23 @@ public class ReturnActivity extends Activity {
     
     /**
      * @return
-     * @hibernate.many-to-one column="group_id" class="org.pgist.wfengine.activity.GroupActivity" lazy="true" cascade="all"
+     * 
+     * @hibernate.many-to-one column="prev_id" lazy="true" cascade="all"
+     */
+    public Activity getPrev() {
+        return prev;
+    }
+
+
+    public void setPrev(Activity prev) {
+        this.prev = prev;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="group_id" lazy="true" cascade="all"
      */
     public GroupActivity getGroup() {
         return group;
@@ -60,8 +82,9 @@ public class ReturnActivity extends Activity {
      */
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        getGroup().setExpression(1);
+    protected boolean doExecute(RunningContext context) throws Exception {
+        getGroup().finish(context);
+        
         return true;
     }//doExecute()
     

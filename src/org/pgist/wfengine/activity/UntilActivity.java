@@ -23,7 +23,8 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     
     
     private static final long serialVersionUID = -3847966226618977676L;
-
+    
+    
     protected int loopCount = 0;
     
     protected int expression;
@@ -147,18 +148,17 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
+    protected boolean doExecute(RunningContext context) throws Exception {
         if (getExpression()==0) {//task is not finished
-            return false;
         } else if (getExpression()>0) {
             next.activate(context);
-            stack.push(next);
+            context.getStack().push(next);
         } else {
             repeat.activate(context);
-            stack.push(repeat);
+            context.getStack().push(repeat);
         }
         
-        return true;
+        return false;
     }//doExecute()
     
     

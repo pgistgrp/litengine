@@ -6,7 +6,6 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.pgist.wfengine.activity.PGameActivity;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.BeanFactoryAware;
  * Workflow Engine is the helper class for clients to operate workflow.
  * 
  * @author kenny
- *
  */
 public class WorkflowEngine implements BeanFactoryAware {
     
@@ -104,7 +102,6 @@ public class WorkflowEngine implements BeanFactoryAware {
     
     
     public void executeWorkflow(Workflow workflow) throws Exception {
-        workflow.execute(beanFactory);
         engineDAO.saveWorkflow(workflow);
     }//executeWorkflow()
 

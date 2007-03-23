@@ -47,7 +47,7 @@ public class Environment {
     /**
      * @return
      * 
-     * @hibernate.one-to-one class="org.pgist.wfengine.RunningContext" constrained="true" cascade="none"
+     * @hibernate.one-to-one constrained="true" cascade="none"
      */
     public RunningContext getContext() {
         return context;

@@ -28,14 +28,14 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
 
     protected int expression = 0;
     
-    protected LoopActivity loop = new LoopActivity();
+    protected LoopActivity loop = new LoopActivity(this);
     
     protected Activity prev;
     
     protected Activity next;
-
+    
     protected transient LoopActivity embryoLoop;
-
+    
     
     public WhileActivity() {
         type = TYPE_WHILE;
@@ -152,16 +152,9 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
     }//doActivate()
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        if (getExpression()==0) {
-            return false;
-        } else if (getExpression()>0) {
-            next.activate(context);
-            stack.push(next);
-        } else {
-            loop.activate(context);
-            stack.push(loop);
-        }
+    protected boolean doExecute(RunningContext context) throws Exception {
+        context.getStack().push(next);
+        
         return true;
     }//doActivate()
     

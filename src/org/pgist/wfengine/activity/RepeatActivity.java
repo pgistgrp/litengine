@@ -20,6 +20,9 @@ import org.pgist.wfengine.SingleOut;
 public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     
     
+    private static final long serialVersionUID = -6112252588666664653L;
+    
+    
     protected int loopCount = 0;
     
     protected int expression;
@@ -144,9 +147,9 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        next.activate(context);
-        stack.push(next);
+    protected boolean doExecute(RunningContext context) throws Exception {
+        context.getStack().push(next);
+        
         return true;
     }//doExecute()
     

@@ -22,6 +22,9 @@ import org.pgist.wfengine.SingleOut;
 public class JoinActivity extends Activity implements SingleOut {
     
     
+    private static final long serialVersionUID = 6282303570463799069L;
+    
+
     protected Activity next;
     
     protected BranchActivity branchActivity;
@@ -142,18 +145,22 @@ public class JoinActivity extends Activity implements SingleOut {
     
     
     protected void doActivate(RunningContext context) {
-        joinCount++;
+        setJoinCount(getJoinCount()+1);
     }//doActivate()
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        if (joinCount>=joins.size()) {
-            next.activate(context);
-            stack.push(next);
+    protected boolean doExecute(RunningContext context) throws Exception {
+        if (getJoinCount()>=joins.size()) {
+            context.getStack().push(getNext());
             return true;
         }
         return false;
     }//doExecute()
+    
+    
+    protected void doDeActivate(RunningContext context) {
+        joinCount = 0;
+    }//doDeActivate()
     
     
     public void saveState(Session session) {

@@ -2,14 +2,8 @@ package org.pgist.wfengine;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
-import org.hibernate.Session;
-import org.pgist.wfengine.activity.GroupActivity;
-import org.pgist.wfengine.util.Utils;
-import org.springframework.beans.factory.BeanFactory;
+import org.pgist.wfengine.activity.SituationActivity;
 
 
 /**
@@ -24,25 +18,26 @@ public class Workflow implements Serializable {
     
     private static final long serialVersionUID = -8038860928226339011L;
     
+    public static final int STATUS_NEW       = 0;
     
-    protected Long id = null;
+    public static final int STATUS_RUNNING   = 100;
     
-    private GroupActivity situation = null;
+    public static final int STATUS_FINISHED  = 200;
     
-    //A workflow can't be definitioned more than once
-    private boolean born = false;
+    public static final int STATUS_CANCELLED = -1;
     
-    //
-    private boolean finished;
     
-    //
-    private boolean cancelled;
+    private Long id;
     
-    //
+    private SituationActivity situation;
+    
+    private int status = STATUS_NEW;
+    
     private Date beginTime;
     
-    //
     private Date endTime;
+    
+    private WorkflowTaskRegistry registry;
     
     
     public Workflow() {
@@ -67,14 +62,14 @@ public class Workflow implements Serializable {
     /**
      * @return
      * 
-     * @hibernate.many-to-one column="group_id" cascade="all"
+     * @hibernate.many-to-one column="situation_id" cascade="all"
      */
-    public GroupActivity getSituation() {
+    public SituationActivity getSituation() {
         return situation;
     }
 
 
-    public void setSituation(GroupActivity situation) {
+    public void setSituation(SituationActivity situation) {
         this.situation = situation;
     }
 
@@ -82,45 +77,15 @@ public class Workflow implements Serializable {
     /**
      * @return
      * 
-     * @hibernate.property unique="false" not-null="true"
+     * @hibernate.property not-null="true"
      */
-    public boolean isBorn() {
-        return born;
-    }
-    
-    
-    public void setBorn(boolean born) {
-        this.born = born;
-    }
-    
-    
-    /**
-     * @return
-     * 
-     * @hibernate.property unique="false" not-null="true"
-     */
-    public boolean isFinished() {
-        return finished;
-    }
-    
-    
-    public void setFinished(boolean finished) {
-        this.finished = finished;
+    public int getStatus() {
+        return status;
     }
 
 
-    /**
-     * @return
-     * 
-     * @hibernate.property unique="false" not-null="true"
-     */
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-
-    public void setCancelled(boolean canceled) {
-        this.cancelled = canceled;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
 
@@ -161,59 +126,69 @@ public class Workflow implements Serializable {
     
     /**
      * Package Accessible.
-     * Initailize this workflow.
-     * This method can only be execute exactly ONCE!
+     * Start this workflow.
+     * This method can only be executed exactly ONCE!
+     * 
+     * @throws Exception
      */
-    void initialize() throws Exception {
-        //Check if this workflow already finished, cancelled or born
-        if (finished || cancelled || born) return;
+    public void start() throws Exception {
+        /*
+         * First check if this workflow already finished, cancelled or running
+         */
+        switch (status) {
+            case STATUS_RUNNING:
+                throw new WorkflowException("flow is in running state");
+            case STATUS_FINISHED:
+                throw new WorkflowException("flow is in finished state");
+            case STATUS_CANCELLED:
+                throw new WorkflowException("flow is in cancelled state");
+        }//switch
         
-        //Set born
-        born = true;
         beginTime = new Date();
-    }//initialize()
+        
+        /*
+         * bootstrap
+         */
+        situation.getContext().getStack().push(situation);
+        
+        status = STATUS_RUNNING;
+        
+        situation.getContext().execute();
+    }//start()
     
     
     /**
      * Package Accessible.
-     * Execute this flow.
+     * Cancel this workflow.
+     * This method can only be executed exactly ONCE!
+     * 
+     * @throws Exception
      */
-    void execute(BeanFactory beanFactory) throws Exception {
-        //Check if this workflow already finished, cancelled
-        if (finished || cancelled) return;
+    void cancel() throws Exception {
+        /*
+         * First check if this workflow already finished or cancelled
+         */
+        switch (status) {
+            case STATUS_FINISHED:
+                throw new WorkflowException("flow is in finished state");
+            case STATUS_CANCELLED:
+                throw new WorkflowException("flow is in cancelled state");
+        }//switch
         
-        RunningContext context = situation.getContext();
+        endTime = new Date();
         
-        context.execute();
-    }//execute()
-    
-    
-    /**
-     * Execute a specific activity, this activity have to be the active activity in the environment
-     * @param activity
-     */
-    synchronized public void proceed(Activity activity) throws Exception {
-        if (finished || cancelled || !born) return;
-        
-        situation.getContext().proceed(activity);
-    }//proceed()
-    
-    
-    public void saveState(Session session) {
-        session.saveOrUpdate(this);
-        situation.saveState(session);
-    }//saveState()
-    
-    
-    public Set getRunningActivities(int type) {
-        Set set = new HashSet();
-        Set activities = situation.getContext().getRunningActivities();
-        for (Iterator iter=activities.iterator(); iter.hasNext(); ) {
-            Activity one = (Activity) Utils.narrow(iter.next());
-            if (type == one.getType()) set.add(one);
-        }//for iter
-        return set;
-    }//getRunningActivities()
+        status = STATUS_CANCELLED;
+    }//cancel()
+
+
+    public WorkflowTaskRegistry getRegistry() {
+        return registry;
+    }
+
+
+    public void setRegistry(WorkflowTaskRegistry registry) {
+        this.registry = registry;
+    }
     
     
 }//class Workflow

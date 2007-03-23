@@ -1,14 +1,13 @@
 package org.pgist.wfengine.activity;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Date;
 import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
-import org.pgist.wfengine.util.Utils;
+import org.pgist.wfengine.SingleOut;
+import org.pgist.wfengine.Workflow;
 
 
 /**
@@ -23,11 +22,49 @@ import org.pgist.wfengine.util.Utils;
 public class SituationActivity extends GroupActivity {
     
     
+    private static final long serialVersionUID = 3121004311692237796L;
+    
+    
+    private SituationActivity definition;
+    
+    private Workflow workflow;
+    
+    
     public SituationActivity() {
-        type = TYPE_PMETHOD;
+        type = TYPE_SITUATION;
     }
     
     
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="definition_id" lazy="true" cascade="all"
+     */
+    public SituationActivity getDefinition() {
+        return definition;
+    }
+
+
+    public void setDefinition(SituationActivity definition) {
+        this.definition = definition;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="workflow_id" lazy="true" cascade="all"
+     */
+    public Workflow getWorkflow() {
+        return workflow;
+    }
+
+
+    public void setWorkflow(Workflow workflow) {
+        this.workflow = workflow;
+    }
+
+
     /*
      * ------------------------------------------------------------------------------
      */
@@ -65,40 +102,27 @@ public class SituationActivity extends GroupActivity {
         returnActivity.setCounts(0);
         returnActivity.setExpression(0);
         returnActivity.setGroup(this);
-        returnActivity.setType(Activity.TYPE_RETURN);
         
         //duplicate from the definition
-        //FlowPiece piece = duplicate((SingleIn) getDefinition().getHeadActivity(), (SingleOut) getDefinition().getTailActivity());
-        //piece.getTail().setNext(returnActivity);
+        setHeadActivity(getDefinition().getHeadActivity().clone(null, new Stack<Activity>(), new Stack<Activity>()));
         
-        //set head and tail
-        //setHeadActivity((Activity) piece.getHead());
+        SingleOut sout = (SingleOut) getHeadActivity().getEnd();
+        sout.setNext(returnActivity);
+        returnActivity.setPrev((Activity) sout);
+        
         setTailActivity(returnActivity);
-        
-        //put head in the context
-        getContext().addActivity(getHeadActivity());
-        setExpression(0);
     }//doActivate()
     
     
-    synchronized protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        RunningContext myContext = getContext();
-        if (myContext!=null) {
-            myContext.execute();
-        }
-        if (getExpression()>0) {//task is finished
-            next.activate(context);
-            stack.push(next);
-            return true;
-        }
+    synchronized protected boolean doExecute(RunningContext context) throws Exception {
+        //put head in the context
+        getContext().getStack().push(getHeadActivity());
+        
         return false;
     }//doExecute()
     
     
     protected void doDeActivate(RunningContext context) {
-        setHeadActivity(null);
-        setTailActivity(null);
-        setContext(null);
     }//doDeActivate()
     
     
@@ -108,16 +132,10 @@ public class SituationActivity extends GroupActivity {
     }//saveState()
     
     
-    public Set getRunningActivities(int type) {
-        Set set = new HashSet();
-        if (context==null) return set;
-        Set activities = context.getRunningActivities();
-        for (Iterator iter=activities.iterator(); iter.hasNext(); ) {
-            Activity one = (Activity) Utils.narrow(iter.next());
-            if (type == one.getType()) set.add(one);
-        }//for iter
-        return set;
-    }//getRunningActivities()
+    public void finish(RunningContext context) {
+        getWorkflow().setStatus(Workflow.STATUS_FINISHED);
+        getWorkflow().setEndTime(new Date());
+    }//finish()
     
     
 }//class SituationActivity

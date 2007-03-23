@@ -23,6 +23,9 @@ import org.pgist.wfengine.SingleOut;
 public class JumpActivity extends Activity implements SingleIn, SingleOut {
     
     
+    private static final long serialVersionUID = -8328987946706349239L;
+    
+
     protected Activity prev = null;
 
     protected Activity next;
@@ -117,21 +120,20 @@ public class JumpActivity extends Activity implements SingleIn, SingleOut {
      */
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
+    protected boolean doExecute(RunningContext context) throws Exception {
         if (getExpression()>jumps.size()) setExpression(jumps.size());
         
         if (getExpression()==0) {
-            return false;
         } else if (getExpression()<0) {
             next.activate(context);
-            stack.push(next);
-            return true;
+            context.getStack().push(next);
         } else {
             Activity activity = (Activity) jumps.get(getExpression()-1);
             activity.activate(context);
-            stack.push(activity);
-            return true;
+            context.getStack().push(activity);
         }
+        
+        return true;
     }//doExecute()
     
     

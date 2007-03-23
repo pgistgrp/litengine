@@ -20,6 +20,9 @@ import org.pgist.wfengine.RunningContext;
 public class PManualGameActivity extends PGameActivity {
     
     
+    private static final long serialVersionUID = -3825305313202911455L;
+    
+    
     protected String actionName = null;
     
     
@@ -96,14 +99,9 @@ public class PManualGameActivity extends PGameActivity {
      */
     
     
-    protected boolean doExecute(RunningContext context, Stack stack) throws Exception {
-        if (getExpression()>0) {//task is finished
-            next.activate(context);
-            stack.push(next);
-            return true;
-        } else {
-            return false;
-        }
+    protected boolean doExecute(RunningContext context) throws Exception {
+        context.getPendingActivities().add(this);
+        return false;
     }//doExecute()
     
     
