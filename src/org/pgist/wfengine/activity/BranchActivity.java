@@ -100,8 +100,6 @@ public class BranchActivity extends Activity implements SingleIn {
         //basic info
         newBranch.setCounts(0);
         newBranch.setPrev(clonedPrev);
-        newBranch.setStatus(STATUS_INACTIVE);
-        newBranch.setType(TYPE_BRANCH);
         
         //branches
         clonedStop.push(newBranch.getJoinActivity());

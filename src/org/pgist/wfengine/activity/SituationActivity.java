@@ -76,8 +76,6 @@ public class SituationActivity extends GroupActivity {
         //basic info
         situation.setCounts(0);
         situation.setPrev(clonedPrev);
-        situation.setStatus(STATUS_INACTIVE);
-        situation.setType(getType());
         situation.setName(getName());
         situation.setDescription(getDescription());
         
@@ -100,7 +98,6 @@ public class SituationActivity extends GroupActivity {
         //create a return activity
         ReturnActivity returnActivity = new ReturnActivity();
         returnActivity.setCounts(0);
-        returnActivity.setExpression(0);
         returnActivity.setGroup(this);
         
         //duplicate from the definition

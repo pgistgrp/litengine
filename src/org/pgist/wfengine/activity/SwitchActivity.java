@@ -115,7 +115,6 @@ public class SwitchActivity extends Activity implements SingleIn {
         //basic info
         newSwitch.setCounts(0);
         newSwitch.setPrev(clonedPrev);
-        newSwitch.setStatus(STATUS_INACTIVE);
         
         //branches
         clonedStop.push(newSwitch.getEndSwitchActivity());
@@ -140,16 +139,6 @@ public class SwitchActivity extends Activity implements SingleIn {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        if (getExpression()<0) setExpression(0);
-        if (getExpression()>switches.size()) setExpression(switches.size());
-        
-        if (getExpression()==0) {
-        } else {
-            Activity activity = (Activity) switches.get(getExpression()-1);
-            activity.activate(context);
-            context.getStack().push(activity);
-        }
-        
         return true;
     }//doExecute()
     

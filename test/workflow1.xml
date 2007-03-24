@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--DOCTYPE workflow PUBLIC "-//W3C//DTD WORKFLOW 1.0//EN" "http://www.pgist.org/wfengine/situations.dtd"-->
-<workflow>
+<templates>
     
     <pgames>
         <pgame name="pgame1" description="pgame1" auto="true">
@@ -49,5 +49,4 @@
         </situation>
     </situations>
     
-</workflow>
-
+</templates>

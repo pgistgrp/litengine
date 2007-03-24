@@ -74,8 +74,6 @@ public class MeetingActivity extends GroupActivity {
         //basic info
         meeting.setCounts(0);
         meeting.setPrev(clonedPrev);
-        meeting.setStatus(STATUS_INACTIVE);
-        meeting.setType(getType());
         meeting.setName(getName());
         meeting.setDescription(getDescription());
         meeting.setDefinition(getDefinition());
@@ -99,7 +97,6 @@ public class MeetingActivity extends GroupActivity {
         //create a return activity
         ReturnActivity returnActivity = new ReturnActivity();
         returnActivity.setCounts(0);
-        returnActivity.setExpression(0);
         returnActivity.setGroup(this);
         
         //duplicate from the definition

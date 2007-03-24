@@ -71,7 +71,6 @@ public class PGameParser {
         }
         
         pgame.setCounts(0);
-        pgame.setExpression(0);
         
         return pgame;
     }//parse()

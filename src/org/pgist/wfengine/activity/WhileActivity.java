@@ -123,7 +123,6 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
         //basic info
         newWhile.setCounts(0);
         newWhile.setPrev(clonedPrev);
-        newWhile.setStatus(STATUS_INACTIVE);
         
         //loop body
         clonedStop.push(newWhile.getLoop());

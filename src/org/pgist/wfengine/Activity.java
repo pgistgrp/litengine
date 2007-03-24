@@ -52,20 +52,12 @@ public abstract class Activity implements Serializable {
     
     public static final int TYPE_TERMINATE = 15;
     
-    public static final int STATUS_INACTIVE = 0;
-    
-    public static final int STATUS_ACTIVE   = 1;
-    
     
     protected Long id = null;
     
     protected int type;
     
     protected int counts = 0;
-    
-    protected int expression = 0;
-    
-    protected int status = STATUS_INACTIVE;
     
     
     /**
@@ -110,34 +102,6 @@ public abstract class Activity implements Serializable {
     }
 
 
-    /**
-     * @return
-     * @hibernate.property not-null="true"
-     */
-    public int getExpression() {
-        return expression;
-    }
-
-
-    public void setExpression(int expression) {
-        this.expression = expression;
-    }
-
-
-    /**
-     * @return
-     * @hibernate.property not-null="true"
-     */
-    public int getStatus() {
-        return status;
-    }
-
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-
     /*
      * ------------------------------------------------------------------------------
      */
@@ -166,12 +130,6 @@ public abstract class Activity implements Serializable {
         //Increase Count. That means the total visiting times for this activity.
         setCounts(getCounts()+1);
         
-        //expression==0 means for manual task, the task is waiting for performing
-        setExpression(0);
-        
-        //set status
-        setStatus(STATUS_ACTIVE);
-        
         doActivate(context);
     }//activate
     
@@ -192,9 +150,6 @@ public abstract class Activity implements Serializable {
      */
     final void deActivate(RunningContext context) {
         doDeActivate(context);
-        
-        //set status
-        setStatus(STATUS_INACTIVE);
     }//deActivate
     
     
@@ -223,12 +178,10 @@ public abstract class Activity implements Serializable {
     
     
     protected void proceed() throws Exception {
-        setExpression(1);
     }//proceed()
     
     
     protected void proceed(int decision) throws Exception {
-        setExpression(decision);
     }//proceed()
     
     

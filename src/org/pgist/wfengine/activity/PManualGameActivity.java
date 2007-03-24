@@ -40,10 +40,8 @@ public class PManualGameActivity extends PGameActivity {
         act.setName(getName());
         act.setDescription(getDescription());
         act.setActionName(getActionName());
-        act.setExpression(getExpression());
         act.setPrev(null);
         act.setNext(null);
-        act.setStatus(Activity.STATUS_INACTIVE);
         
         return act;
     }//clone()
@@ -74,7 +72,6 @@ public class PManualGameActivity extends PGameActivity {
         //basic info
         newGame.setCounts(0);
         newGame.setPrev(clonedPrev);
-        newGame.setStatus(STATUS_INACTIVE);
         newGame.setName(getName());
         newGame.setDescription(getDescription());
         newGame.setActionName(getActionName());

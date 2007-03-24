@@ -122,7 +122,6 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
         //basic info
         newRepeat.setCounts(0);
         newRepeat.setPrev(clonedPrev);
-        newRepeat.setStatus(STATUS_INACTIVE);
         
         //repeat body
         clonedStop.push(newRepeat.getUntil());

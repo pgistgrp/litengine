@@ -38,7 +38,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * @author kenny
  *
  */
-public class WorkflowEngineTest extends TestCase {
+public class WorkflowEngineTest {
     
     
     private ApplicationContext appContext = null;
@@ -50,7 +50,6 @@ public class WorkflowEngineTest extends TestCase {
     
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         appContext = new FileSystemXmlApplicationContext(
             new String[] {
                 "test/dataAccessContext-local.xml",
@@ -68,7 +67,6 @@ public class WorkflowEngineTest extends TestCase {
     
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
         SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.unbindResource(sessionFactory);
         sessionHolder.getSession().close();
         SessionFactoryUtils.releaseSession(sessionHolder.getSession(), sessionFactory);

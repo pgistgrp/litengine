@@ -43,10 +43,8 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
         act.setName(getName());
         act.setDescription(getDescription());
         act.setTaskName(getTaskName());
-        act.setExpression(getExpression());
         act.setPrev(null);
         act.setNext(null);
-        act.setStatus(Activity.STATUS_INACTIVE);
         
         return act;
     }
@@ -77,7 +75,6 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
         //basic info
         newGame.setCounts(0);
         newGame.setPrev(clonedPrev);
-        newGame.setStatus(STATUS_INACTIVE);
         newGame.setName(getName());
         newGame.setDescription(getDescription());
         newGame.setTaskName(getTaskName());

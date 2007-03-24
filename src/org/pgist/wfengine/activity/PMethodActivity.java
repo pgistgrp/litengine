@@ -57,8 +57,6 @@ public class PMethodActivity extends GroupActivity {
         //basic info
         pmethod.setCounts(0);
         pmethod.setPrev(clonedPrev);
-        pmethod.setStatus(STATUS_INACTIVE);
-        pmethod.setType(getType());
         pmethod.setName(getName());
         pmethod.setDescription(getDescription());
         pmethod.setDefinition(getDefinition());
@@ -82,7 +80,6 @@ public class PMethodActivity extends GroupActivity {
         //create a return activity
         ReturnActivity returnActivity = new ReturnActivity();
         returnActivity.setCounts(0);
-        returnActivity.setExpression(0);
         returnActivity.setGroup(this);
         
         //duplicate from the definition
