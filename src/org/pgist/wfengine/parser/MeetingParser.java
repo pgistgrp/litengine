@@ -83,8 +83,8 @@ public class MeetingParser {
                 Element declElement = node.element("declaration");
                 if (declElement!=null) {
                     Declaration decl = declParser.parse(declElement);
-                    newPmethod.getDeclaration().getIns().putAll(decl.getIns());
-                    newPmethod.getDeclaration().getOuts().putAll(decl.getOuts());
+                    newPmethod.getContext().getDeclaration().getIns().putAll(decl.getIns());
+                    newPmethod.getContext().getDeclaration().getOuts().putAll(decl.getOuts());
                 }
                 
                 if (piece.getHead()==null) {
@@ -251,15 +251,15 @@ public class MeetingParser {
         //environment
         Element envElement = rootElement.element("environment");
         if (envElement!=null) {
-            meeting.getContext().getEnvironment().getIntValues().putAll(envParser.parse(envElement).getIntValues());
-            meeting.getContext().getEnvironment().getStrValues().putAll(envParser.parse(envElement).getStrValues());
+            meeting.getContext().getInitEnvironment().getIntValues().putAll(envParser.parse(envElement).getIntValues());
+            meeting.getContext().getInitEnvironment().getStrValues().putAll(envParser.parse(envElement).getStrValues());
         }
         
         //declaration
         Element declElement = rootElement.element("declaration");
         if (declElement!=null) {
-            meeting.getDeclaration().getIns().putAll(declParser.parse(declElement).getIns());
-            meeting.getDeclaration().getOuts().putAll(declParser.parse(declElement).getOuts());
+            meeting.getContext().getDeclaration().getIns().putAll(declParser.parse(declElement).getIns());
+            meeting.getContext().getDeclaration().getOuts().putAll(declParser.parse(declElement).getOuts());
         }
         
         //sequence

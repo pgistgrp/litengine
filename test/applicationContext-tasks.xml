@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+
+    <bean id="workflow.pgame1" class="org.pgist.tests.wfengine.tasks.TestAutoTask1"/>
+    <bean id="workflow.pgame2" class="org.pgist.tests.wfengine.tasks.TestAutoTask2"/>
+    <bean id="workflow.pgame3" class="org.pgist.tests.wfengine.tasks.TestAutoTask3"/>
+    
+    
+    <bean id="workflow.registry" class="org.pgist.wfengine.WorkflowTaskRegistry">
+      <constructor-arg>
+        <map>
+          <entry>
+            <key><value>pgame1</value></key><ref bean="workflow.pgame1" />
+          </entry>
+          <entry>
+            <key><value>pgame2</value></key><ref bean="workflow.pgame2" />
+          </entry>
+          <entry>
+            <key><value>pgame3</value></key><ref bean="workflow.pgame3" />
+          </entry>
+        </map>
+      </constructor-arg>
+    </bean>
+    
+    
+</beans>

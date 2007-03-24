@@ -31,4 +31,9 @@ public class WorkflowTaskRegistry {
     }//getTask()
     
     
+    public Map<String, WorkflowTask> getTasks() {
+        return tasks;
+    }//getTasks()
+
+
 }//class WorkflowTaskRegistry

@@ -78,6 +78,8 @@ public class SituationActivity extends GroupActivity {
         situation.setPrev(clonedPrev);
         situation.setName(getName());
         situation.setDescription(getDescription());
+        situation.getContext().getDeclaration().duplicate(getContext().getDeclaration());
+        situation.getContext().getEnvironment().duplicate(getContext().getEnvironment());
         
         Activity act = getNext();
         if (act!=null) {

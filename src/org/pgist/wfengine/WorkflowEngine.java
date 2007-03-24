@@ -1,5 +1,6 @@
 package org.pgist.wfengine;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,8 @@ public class WorkflowEngine implements BeanFactoryAware {
     
     private WorkflowEngineDAO engineDAO;
     
+    private WorkflowTaskRegistry registry;
+    
     
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
@@ -45,12 +48,18 @@ public class WorkflowEngine implements BeanFactoryAware {
     }
     
     
+    public void setRegistry(WorkflowTaskRegistry registry) {
+        this.registry = registry;
+    }
+    
+    
     /*
      * ------------------------------------------------------------------------------
      */
     
     
     public void importTemplates(Document document) throws Exception{
+        System.out.println("---> "+registry.getTasks());
         DeclarationParser declParser = new DeclarationParser();
         EnvironmentParser envParser = new EnvironmentParser();
         PGameParser pgameParser = new PGameParser();
@@ -116,17 +125,20 @@ public class WorkflowEngine implements BeanFactoryAware {
     
     
     public Workflow createWorkflow(Long situationId) throws Exception {
-        return engineDAO.createWorkflow(situationId);
+        Workflow workflow = engineDAO.createWorkflow(situationId);
+        workflow.setRegistry(registry);
+        return workflow;
     }//createWorkflow()
     
     
     public void startWorkflow(long workflowId) throws Exception {
         Workflow workflow = engineDAO.getWorkflowById(workflowId);
+        workflow.setRegistry(registry);
         workflow.start();
         engineDAO.saveWorkflow(workflow);
     }//startWorkflow()
-
-
+    
+    
     
     
     

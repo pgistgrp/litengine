@@ -39,7 +39,8 @@ public class TestWorkflowEngine {
         appContext = new FileSystemXmlApplicationContext(
             new String[] {
                 "test/dataAccessContext-local.xml",
-                "test/applicationContext.xml"
+                "test/applicationContext-tasks.xml",
+                "test/applicationContext.xml",
             }
         );
         
@@ -69,14 +70,21 @@ public class TestWorkflowEngine {
     
     @Test
     public void createWorkflow() throws Exception {
-        engine.createWorkflow(275L);
+        engine.createWorkflow(30L);
     }//createWorkflow()
     
     
     @Test
     public void startWorkflow() throws Exception {
-        engine.startWorkflow(386L);
+        engine.startWorkflow(117L);
     }//startWorkflow()
+    
+    
+    @Test
+    public void createAndStartWorkflow() throws Exception {
+        Workflow workflow = engine.createWorkflow(58L);
+        engine.startWorkflow(workflow.getId());
+    }//createWorkflow()
     
     
     @Test

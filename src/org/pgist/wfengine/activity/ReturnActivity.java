@@ -83,7 +83,7 @@ public class ReturnActivity extends Activity implements SingleIn {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        getGroup().finish(context);
+        context.getParent().getStack().add(getGroup());
         
         return true;
     }//doExecute()

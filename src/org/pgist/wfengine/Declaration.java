@@ -30,7 +30,7 @@ public class Declaration {
      * properties map
      */
     private Map<String, String> properties = new HashMap<String, String>();
-    
+
     
     /**
      * @return
@@ -99,6 +99,18 @@ public class Declaration {
     public void setProperties(Map<String, String> properties) {
         this.properties = properties;
     }
+    
+    
+    /*
+     * ------------------------------------------------------------------------
+     */
+    
+    
+    public void duplicate(Declaration model) {
+        getIns().putAll(model.getIns());
+        getOuts().putAll(model.getOuts());
+        getProperties().putAll(model.getProperties());
+    }//duplicate()
     
     
 }//class Declaration

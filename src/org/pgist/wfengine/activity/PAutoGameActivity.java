@@ -3,6 +3,7 @@ package org.pgist.wfengine.activity;
 import java.util.Stack;
 
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.EnvironmentInOuts;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
@@ -78,6 +79,7 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
         newGame.setName(getName());
         newGame.setDescription(getDescription());
         newGame.setTaskName(getTaskName());
+        newGame.getDeclaration().duplicate(getDeclaration());
         
         Activity act = getNext();
         if (act!=null) {
@@ -104,12 +106,22 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
         
         try {
             task = context.getRegistry().getTask(getTaskName());
-            if (task!=null) task.execute(this, context, getDeclaration().getProperties());
+            if (task!=null) {
+                EnvironmentInOuts inouts = new EnvironmentInOuts(context, getDeclaration());
+                task.execute(inouts);
+                context.merge(inouts);
+                System.out.println("--> "+context.getEnvironment().getIntValues());
+                System.out.println("--> "+context.getEnvironment().getStrValues());
+                System.out.println("--> "+context.getEnvironment().getDblValues());
+                System.out.println("--> "+context.getEnvironment().getDateValues());
+            }
             
             context.getStack().add(getNext());
             
             return true;
         } catch (Exception e) {
+            System.out.println("Error in PAutoGameActivity: ");
+            e.printStackTrace();
             context.getHaltingActivities().add(this);
             return false;
         }

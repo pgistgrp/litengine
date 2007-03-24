@@ -27,7 +27,7 @@ import org.pgist.wfengine.SingleOut;
  * 
  * @author kenny
  */
-public abstract class GroupActivity extends Activity implements SingleIn, SingleOut, Declarable {
+public abstract class GroupActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected String name;
@@ -37,8 +37,6 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     protected Activity headActivity;
     
     protected Activity tailActivity;
-    
-    protected Declaration declaration = new Declaration();
     
     protected Activity prev;
     
@@ -107,21 +105,6 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     
     public void setTailActivity(Activity tailActivity) {
         this.tailActivity = tailActivity;
-    }
-
-
-    /**
-     * @return
-     * 
-     * @hibernate.many-to-one column="declaration_id" cascade="all" lazy="false"
-     */
-    public Declaration getDeclaration() {
-        return declaration;
-    }
-
-
-    public void setDeclaration(Declaration declaration) {
-        this.declaration = declaration;
     }
 
 

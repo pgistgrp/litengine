@@ -83,8 +83,8 @@ public class SituationParser {
                 Element declElement = node.element("declaration");
                 if (declElement!=null) {
                     Declaration decl = declParser.parse(declElement);
-                    newMeeting.getDeclaration().getIns().putAll(decl.getIns());
-                    newMeeting.getDeclaration().getOuts().putAll(decl.getOuts());
+                    newMeeting.getContext().getDeclaration().getIns().putAll(decl.getIns());
+                    newMeeting.getContext().getDeclaration().getOuts().putAll(decl.getOuts());
                 }
                 
                 if (piece.getHead()==null) {
@@ -258,8 +258,8 @@ public class SituationParser {
         //declaration
         Element declElement = rootElement.element("declaration");
         if (declElement!=null) {
-            situation.getDeclaration().getIns().putAll(declParser.parse(declElement).getIns());
-            situation.getDeclaration().getOuts().putAll(declParser.parse(declElement).getOuts());
+            situation.getContext().getDeclaration().getIns().putAll(declParser.parse(declElement).getIns());
+            situation.getContext().getDeclaration().getOuts().putAll(declParser.parse(declElement).getOuts());
         }
         
         //sequence

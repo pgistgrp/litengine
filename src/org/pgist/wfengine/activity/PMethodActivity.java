@@ -4,6 +4,8 @@ import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.Declaration;
+import org.pgist.wfengine.Environment;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleOut;
 
@@ -60,6 +62,8 @@ public class PMethodActivity extends GroupActivity {
         pmethod.setName(getName());
         pmethod.setDescription(getDescription());
         pmethod.setDefinition(getDefinition());
+        pmethod.getContext().getDeclaration().duplicate(getContext().getDeclaration());
+        pmethod.getContext().getEnvironment().duplicate(getContext().getEnvironment());
         
         Activity act = getNext();
         if (act!=null) {
@@ -90,6 +94,15 @@ public class PMethodActivity extends GroupActivity {
         returnActivity.setPrev((Activity) sout);
         
         setTailActivity(returnActivity);
+        
+        //inherite environment from the parent context
+        Environment initEnv = getContext().getInitEnvironment();
+        Environment myEnv = getContext().getEnvironment();
+        
+        myEnv.getIntValues().putAll(initEnv.getIntValues());
+        myEnv.getDblValues().putAll(initEnv.getDblValues());
+        myEnv.getStrValues().putAll(initEnv.getStrValues());
+        myEnv.getDateValues().putAll(initEnv.getDateValues());
     }//doActivate()
     
     
@@ -108,6 +121,21 @@ public class PMethodActivity extends GroupActivity {
     
     
     protected void doDeActivate(RunningContext context) {
+        //oupout the declared environment
+        Declaration myDecl = getContext().getDeclaration();
+        Environment myEnv = getContext().getEnvironment();
+        Environment upEnv = context.getEnvironment();
+        upEnv.merge(myEnv, myDecl);
+        
+        //clear my environment
+        getContext().getEnvironment().clear();
+        
+        getContext().getParent().getPendingActivities().remove(this);
+        getContext().getParent().getStack().add(getNext());
+        try {
+            getContext().getParent().execute();
+        } catch (Exception e) {
+        }
     }//doDeActivate()
     
     
@@ -118,7 +146,7 @@ public class PMethodActivity extends GroupActivity {
     
     
     public void finish(RunningContext context) {
-        
+        context.getPendingActivities().remove(this);
     }//finish()
     
     

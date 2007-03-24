@@ -42,8 +42,11 @@ public class RunningContext {
     
     private List records = new ArrayList();
     
-    /* workflow environment */
-    private Environment environment = new Environment();
+    private Declaration declaration = new Declaration();
+    
+    private Environment environment = new Environment(this);
+    
+    private Environment initEnvironment = new Environment(this);
     
     Stack<Activity> stack = new Stack<Activity>();
     
@@ -54,7 +57,6 @@ public class RunningContext {
     
     
     public RunningContext() {
-        environment.setContext(this);
     }
     
     
@@ -189,7 +191,22 @@ public class RunningContext {
     /**
      * @return
      * 
-     * @hibernate.one-to-one cascade="all"
+     * @hibernate.many-to-one column="declaration_id" cascade="all"
+     */
+    public Declaration getDeclaration() {
+        return declaration;
+    }
+
+
+    public void setDeclaration(Declaration declaration) {
+        this.declaration = declaration;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="env_id" cascade="all"
      */
     public Environment getEnvironment() {
         return environment;
@@ -198,6 +215,21 @@ public class RunningContext {
 
     public void setEnvironment(Environment environment) {
         this.environment = environment;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="initenv_id" cascade="all"
+     */
+    public Environment getInitEnvironment() {
+        return initEnvironment;
+    }
+
+
+    public void setInitEnvironment(Environment initEnvironment) {
+        this.initEnvironment = initEnvironment;
     }
 
 
@@ -236,8 +268,12 @@ public class RunningContext {
         while (!stack.empty()) {
             //Pop out an activity
             Activity activity = stack.pop();
-            activity.activate(this);
-            if (activity.execute(this)) {
+            if (!pendingActivities.contains(activity)) {
+                activity.activate(this);
+                if (activity.execute(this)) {
+                    activity.deActivate(this);
+                }
+            } else {
                 activity.deActivate(this);
             }
         }//while
@@ -282,24 +318,9 @@ public class RunningContext {
      */
     
     
-    public Integer getIntValue(String name) {
-        return environment.getIntValues().get(name);
-    }//getIntValue()
-    
-    
-    public void setIntValue(String name, Integer value) {
-        environment.getIntValues().put(name, value);
-    }//getIntValue()
-    
-    
-    public String getStrValue(String name) {
-        return environment.getStrValues().get(name);
-    }//getIntValue()
-    
-    
-    public void setStrValue(String name, String value) {
-        environment.getStrValues().put(name, value);
-    }//setStrValue()
+    public void merge(EnvironmentInOuts inouts) {
+        inouts.merge();
+    }//merge()
     
     
 }//class RunningContext

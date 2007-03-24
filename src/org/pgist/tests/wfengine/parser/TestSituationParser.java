@@ -107,7 +107,7 @@ public class TestSituationParser {
         
         assertNotNull("situation is null", situation);
         assertNotNull("situation.context is null", situation.getContext());
-        assertNotNull("situation.declaration is null", situation.getDeclaration());
+        assertNotNull("situation.declaration is null", situation.getContext().getDeclaration());
         assertNotNull("situation.context.environment is null", situation.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "situation 1", situation.getName());
@@ -147,7 +147,7 @@ public class TestSituationParser {
         
         assertNotNull("situation is null", situation);
         assertNotNull("situation.context is null", situation.getContext());
-        assertNotNull("situation.declaration is null", situation.getDeclaration());
+        assertNotNull("situation.declaration is null", situation.getContext().getDeclaration());
         assertNotNull("situation.context.environment is null", situation.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "situation 1", situation.getName());
@@ -204,7 +204,7 @@ public class TestSituationParser {
         
         assertNotNull("situation is null", situation);
         assertNotNull("situation.context is null", situation.getContext());
-        assertNotNull("situation.declaration is null", situation.getDeclaration());
+        assertNotNull("situation.declaration is null", situation.getContext().getDeclaration());
         assertNotNull("situation.context.environment is null", situation.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "situation 1", situation.getName());
@@ -265,7 +265,7 @@ public class TestSituationParser {
         
         assertNotNull("situation is null", situation);
         assertNotNull("situation.context is null", situation.getContext());
-        assertNotNull("situation.declaration is null", situation.getDeclaration());
+        assertNotNull("situation.declaration is null", situation.getContext().getDeclaration());
         assertNotNull("situation.context.environment is null", situation.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "situation 1", situation.getName());
@@ -335,7 +335,7 @@ public class TestSituationParser {
         
         assertNotNull("situation is null", situation);
         assertNotNull("situation.context is null", situation.getContext());
-        assertNotNull("situation.declaration is null", situation.getDeclaration());
+        assertNotNull("situation.declaration is null", situation.getContext().getDeclaration());
         assertNotNull("situation.context.environment is null", situation.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "situation 1", situation.getName());
@@ -457,7 +457,7 @@ public class TestSituationParser {
         
         assertNotNull("situation is null", situation);
         assertNotNull("situation.context is null", situation.getContext());
-        assertNotNull("situation.declaration is null", situation.getDeclaration());
+        assertNotNull("situation.declaration is null", situation.getContext().getDeclaration());
         assertNotNull("situation.context.environment is null", situation.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "situation 1", situation.getName());

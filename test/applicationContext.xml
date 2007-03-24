@@ -44,8 +44,8 @@
     
     <bean id="engine" class="org.pgist.wfengine.WorkflowEngine">
       <property name="engineDAO" ref="engineDAO"/>
+      <property name="registry" ref="workflow.registry"/>
     </bean>
     
     
 </beans>
-

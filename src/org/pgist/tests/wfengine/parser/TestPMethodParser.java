@@ -107,7 +107,7 @@ public class TestPMethodParser {
         
         assertNotNull("activity is null", pmethod);
         assertNotNull("activity.context is null", pmethod.getContext());
-        assertNotNull("activity.declaration is null", pmethod.getDeclaration());
+        assertNotNull("activity.declaration is null", pmethod.getContext().getDeclaration());
         assertNotNull("activity.context.environment is null", pmethod.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "pmethod 1", pmethod.getName());
@@ -147,7 +147,7 @@ public class TestPMethodParser {
         
         assertNotNull("activity is null", activity);
         assertNotNull("activity.context is null", activity.getContext());
-        assertNotNull("activity.declaration is null", activity.getDeclaration());
+        assertNotNull("activity.declaration is null", activity.getContext().getDeclaration());
         assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "pmethod 1", activity.getName());
@@ -204,7 +204,7 @@ public class TestPMethodParser {
         
         assertNotNull("activity is null", activity);
         assertNotNull("activity.context is null", activity.getContext());
-        assertNotNull("activity.declaration is null", activity.getDeclaration());
+        assertNotNull("activity.declaration is null", activity.getContext().getDeclaration());
         assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "pmethod 1", activity.getName());
@@ -265,7 +265,7 @@ public class TestPMethodParser {
         
         assertNotNull("activity is null", activity);
         assertNotNull("activity.context is null", activity.getContext());
-        assertNotNull("activity.declaration is null", activity.getDeclaration());
+        assertNotNull("activity.declaration is null", activity.getContext().getDeclaration());
         assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "pmethod 1", activity.getName());
@@ -335,7 +335,7 @@ public class TestPMethodParser {
         
         assertNotNull("activity is null", activity);
         assertNotNull("activity.context is null", activity.getContext());
-        assertNotNull("activity.declaration is null", activity.getDeclaration());
+        assertNotNull("activity.declaration is null", activity.getContext().getDeclaration());
         assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "pmethod 1", activity.getName());
@@ -457,7 +457,7 @@ public class TestPMethodParser {
         
         assertNotNull("activity is null", activity);
         assertNotNull("activity.context is null", activity.getContext());
-        assertNotNull("activity.declaration is null", activity.getDeclaration());
+        assertNotNull("activity.declaration is null", activity.getContext().getDeclaration());
         assertNotNull("activity.context.environment is null", activity.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "pmethod 1", activity.getName());

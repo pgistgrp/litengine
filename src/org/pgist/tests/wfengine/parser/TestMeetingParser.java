@@ -107,7 +107,7 @@ public class TestMeetingParser {
         
         assertNotNull("meeting is null", meeting);
         assertNotNull("meeting.context is null", meeting.getContext());
-        assertNotNull("meeting.declaration is null", meeting.getDeclaration());
+        assertNotNull("meeting.declaration is null", meeting.getContext().getDeclaration());
         assertNotNull("meeting.context.environment is null", meeting.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "meeting 1", meeting.getName());
@@ -147,7 +147,7 @@ public class TestMeetingParser {
         
         assertNotNull("meeting is null", meeting);
         assertNotNull("meeting.context is null", meeting.getContext());
-        assertNotNull("meeting.declaration is null", meeting.getDeclaration());
+        assertNotNull("meeting.declaration is null", meeting.getContext().getDeclaration());
         assertNotNull("meeting.context.environment is null", meeting.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "meeting 1", meeting.getName());
@@ -204,7 +204,7 @@ public class TestMeetingParser {
         
         assertNotNull("meeting is null", meeting);
         assertNotNull("meeting.context is null", meeting.getContext());
-        assertNotNull("meeting.declaration is null", meeting.getDeclaration());
+        assertNotNull("meeting.declaration is null", meeting.getContext().getDeclaration());
         assertNotNull("meeting.context.environment is null", meeting.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "meeting 1", meeting.getName());
@@ -265,7 +265,7 @@ public class TestMeetingParser {
         
         assertNotNull("meeting is null", meeting);
         assertNotNull("meeting.context is null", meeting.getContext());
-        assertNotNull("meeting.declaration is null", meeting.getDeclaration());
+        assertNotNull("meeting.declaration is null", meeting.getContext().getDeclaration());
         assertNotNull("meeting.context.environment is null", meeting.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "meeting 1", meeting.getName());
@@ -335,7 +335,7 @@ public class TestMeetingParser {
         
         assertNotNull("meeting is null", meeting);
         assertNotNull("meeting.context is null", meeting.getContext());
-        assertNotNull("meeting.declaration is null", meeting.getDeclaration());
+        assertNotNull("meeting.declaration is null", meeting.getContext().getDeclaration());
         assertNotNull("meeting.context.environment is null", meeting.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "meeting 1", meeting.getName());
@@ -457,7 +457,7 @@ public class TestMeetingParser {
         
         assertNotNull("meeting is null", meeting);
         assertNotNull("meeting.context is null", meeting.getContext());
-        assertNotNull("meeting.declaration is null", meeting.getDeclaration());
+        assertNotNull("meeting.declaration is null", meeting.getContext().getDeclaration());
         assertNotNull("meeting.context.environment is null", meeting.getContext().getEnvironment());
         
         assertEquals("'name' incorrect", "meeting 1", meeting.getName());

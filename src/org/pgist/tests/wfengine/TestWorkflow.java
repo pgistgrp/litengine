@@ -10,6 +10,9 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.junit.Before;
 import org.junit.Test;
+import org.pgist.tests.wfengine.tasks.TestAutoTask1;
+import org.pgist.tests.wfengine.tasks.TestAutoTask2;
+import org.pgist.tests.wfengine.tasks.TestAutoTask3;
 import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowTask;
 import org.pgist.wfengine.WorkflowTaskRegistry;
@@ -48,7 +51,7 @@ public class TestWorkflow {
         
         Map<String, PGameActivity> pgames = new HashMap<String, PGameActivity>();
         
-        for (Element element : (List<Element>) (doc.selectNodes("//workflow/pgames/pgame"))) {
+        for (Element element : (List<Element>) (doc.selectNodes("//templates/pgames/pgame"))) {
             PGameActivity pgame = pgameParser.parse(element);
             pgames.put(pgame.getName(), pgame);
         }//for
@@ -60,7 +63,7 @@ public class TestWorkflow {
         
         Map<String, PMethodActivity> pmethods = new HashMap<String, PMethodActivity>();
         
-        for (Element element : (List<Element>) (doc.selectNodes("//workflow/pmethods/pmethod"))) {
+        for (Element element : (List<Element>) (doc.selectNodes("//templates/pmethods/pmethod"))) {
             PMethodActivity pmethod = pmethodParser.parse(element);
             pmethods.put(pmethod.getName(), pmethod);
         }//for
@@ -72,7 +75,7 @@ public class TestWorkflow {
         
         Map<String, MeetingActivity> meetings = new HashMap<String, MeetingActivity>();
         
-        for (Element element : (List<Element>) (doc.selectNodes("//workflow/meetings/meeting"))) {
+        for (Element element : (List<Element>) (doc.selectNodes("//templates/meetings/meeting"))) {
             MeetingActivity meeting = meetingParser.parse(element);
             meetings.put(meeting.getName(), meeting);
         }//for
@@ -82,7 +85,7 @@ public class TestWorkflow {
         situationParser.setDeclParser(declParser);
         situationParser.setEnvParser(envParser);
         
-        situationTemplate = situationParser.parse((Element) doc.selectSingleNode("//workflow/situations/situation"));
+        situationTemplate = situationParser.parse((Element) doc.selectSingleNode("//templates/situations/situation"));
     }//setUp()
     
     
@@ -93,9 +96,9 @@ public class TestWorkflow {
     @Test
     public void test1() throws Exception {
         Map<String, WorkflowTask> tasks = new HashMap<String, WorkflowTask>();
-        tasks.put("pgame1", new TestPGame1());
-        tasks.put("pgame2", new TestPGame2());
-        tasks.put("pgame3", new TestPGame3());
+        tasks.put("pgame1", new TestAutoTask1());
+        tasks.put("pgame2", new TestAutoTask2());
+        tasks.put("pgame3", new TestAutoTask3());
         
         WorkflowTaskRegistry registry = new WorkflowTaskRegistry(tasks);
         
