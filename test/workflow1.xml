@@ -34,7 +34,7 @@
                 </outs>
             </declaration>
         </pgame>
-        <pgame name="action1" description="action1" auto="false">
+        <pgame name="action1" description="action1" auto="false" access="all">
             <actionName>action1</actionName>
             <declaration>
                 <ins>
@@ -50,7 +50,7 @@
                 </ins>
             </declaration>
         </pgame>
-        <pgame name="action3" description="action3" auto="false">
+        <pgame name="action3" description="action3" auto="false" access="moderator">
             <actionName>action3</actionName>
             <declaration>
                 <ins>

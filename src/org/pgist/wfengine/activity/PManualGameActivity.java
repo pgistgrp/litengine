@@ -27,10 +27,47 @@ public class PManualGameActivity extends PGameActivity {
     
     protected String actionName = null;
     
+    protected String access = "all";
+    
     
     public PManualGameActivity() {
         type = TYPE_PMANUALGAME;
     }
+    
+    
+    /**
+     * @return
+     * 
+     * @hibernate.property column="action_name" not-null="true"
+     */
+    public String getActionName() {
+        return actionName;
+    }
+
+
+    public void setActionName(String actionName) {
+        this.actionName = actionName;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.property column="access" not-null="true"
+     */
+    public String getAccess() {
+        return access;
+    }
+
+
+    public void setAccess(String access) {
+        this.access = access;
+    }
+
+
+    /*
+     * ------------------------------------------------------------------------------
+     */
     
     
     public PManualGameActivity clone() {
@@ -47,25 +84,6 @@ public class PManualGameActivity extends PGameActivity {
         
         return act;
     }//clone()
-    
-    
-    /**
-     * @return
-     * @hibernate.property column="action_name"
-     */
-    public String getActionName() {
-        return actionName;
-    }
-
-
-    public void setActionName(String actionName) {
-        this.actionName = actionName;
-    }
-
-
-    /*
-     * ------------------------------------------------------------------------------
-     */
     
     
     public PManualGameActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {

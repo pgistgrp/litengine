@@ -91,7 +91,7 @@ public class TestPGameParser {
     @Test
     public void test2() throws Exception {
         String xml =
-            "<pgame name=\" pgame1 \" description=\" pgame1 \" auto=\" false \">"
+            "<pgame name=\" pgame1 \" description=\" pgame1 \" auto=\" false \" access=\" moderator \">"
           + "    <actionName> action1 </actionName>"
           + "    <declaration>"
           + "        <ins>"
@@ -105,7 +105,7 @@ public class TestPGameParser {
         
         Document doc = TestHelper.getDocument(xml);
         
-        PGameActivity pgame = parser.parse(doc.getRootElement());
+        PManualGameActivity pgame = (PManualGameActivity) parser.parse(doc.getRootElement());
         
         assertNotNull("pgame is null", pgame);
         assertNotNull("declaration is null", pgame.getDeclaration());
@@ -114,6 +114,7 @@ public class TestPGameParser {
         
         assertEquals("pgame 'name' incorrect", "pgame1", pgame.getName());
         assertEquals("pgame 'description' incorrect", "pgame1", pgame.getDescription());
+        assertEquals("pgame 'access' incorrect", "moderator", pgame.getAccess());
         
         assertTrue("member counts of pgame is not 0", pgame.getCounts()==0);
         assertTrue("member type of pgame is not "+Activity.TYPE_PMANUALGAME, pgame.getType()==Activity.TYPE_PMANUALGAME);

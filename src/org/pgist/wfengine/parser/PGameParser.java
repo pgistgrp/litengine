@@ -47,6 +47,13 @@ public class PGameParser {
             PManualGameActivity manualGame = new PManualGameActivity();
             pgame = manualGame;
             manualGame.setActionName(pgameElement.elementTextTrim("actionName"));
+            
+            //access
+            String access = pgameElement.attributeValue("access");
+            if (access==null) access = "all";
+            access = access.trim();
+            if (access.length()==0) throw new ParserException("attribute 'access' can't be empty");
+            manualGame.setAccess(access);
         }
         
         //name
