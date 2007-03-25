@@ -34,6 +34,9 @@ public interface WorkflowEngineDAO {
     
     Workflow getWorkflowById(Long workflowId) throws Exception;
     
+    RunningContext getContextById(Long contextId) throws Exception;
+    
+    Activity getActivityById(Long activityId) throws Exception;
     
     
     //-------------
@@ -46,6 +49,7 @@ public interface WorkflowEngineDAO {
     
     void saveActivity(Activity activity) throws Exception;
 
+    
 
 
 

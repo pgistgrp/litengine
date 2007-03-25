@@ -82,7 +82,8 @@ public class TestWorkflowEngine {
     
     @Test
     public void createAndStartWorkflow() throws Exception {
-        Workflow workflow = engine.createWorkflow(58L);
+        Workflow workflow = engine.createWorkflow(77L);
+        System.out.println("---- Workflow id: "+workflow.getId());
         engine.startWorkflow(workflow.getId());
     }//createWorkflow()
     
@@ -115,6 +116,12 @@ public class TestWorkflowEngine {
             System.out.println("finished workflow: "+workflow.getSituation().getName());
         }//for
     }//getFinishedWorkflows()
+    
+    
+    @Test
+    public void executeWorkflow() throws Exception {
+        engine.executeWorkflow(290L, 306L, 302L);
+    }//executeWorkflow()
     
     
 }//class TestWorkflowEngine

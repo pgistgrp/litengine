@@ -9,20 +9,34 @@
     
     
     <bean id="workflow.registry" class="org.pgist.wfengine.WorkflowTaskRegistry">
-      <constructor-arg>
-        <map>
-          <entry>
-            <key><value>pgame1</value></key><ref bean="workflow.pgame1" />
-          </entry>
-          <entry>
-            <key><value>pgame2</value></key><ref bean="workflow.pgame2" />
-          </entry>
-          <entry>
-            <key><value>pgame3</value></key><ref bean="workflow.pgame3" />
-          </entry>
-        </map>
-      </constructor-arg>
+        <property name="tasks">
+            <map>
+              <entry>
+                <key><value>pgame1</value></key><ref bean="workflow.pgame1" />
+              </entry>
+              <entry>
+                <key><value>pgame2</value></key><ref bean="workflow.pgame2" />
+              </entry>
+              <entry>
+                <key><value>pgame3</value></key><ref bean="workflow.pgame3" />
+              </entry>
+            </map>
+        </property>
+        <property name="actions">
+            <map>
+              <entry>
+                <key><value>action1</value></key><value>/action1.do</value>
+              </entry>
+              <entry>
+                <key><value>action2</value></key><value>/action2.do</value>
+              </entry>
+              <entry>
+                <key><value>action3</value></key><value>/action3.do</value>
+              </entry>
+            </map>
+        </property>
     </bean>
     
     
 </beans>
+

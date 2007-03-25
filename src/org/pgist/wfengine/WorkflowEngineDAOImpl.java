@@ -93,7 +93,15 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
     }//getWorkflowById()
 
 
-
+    public RunningContext getContextById(Long contextId) throws Exception {
+        return (RunningContext) getHibernateTemplate().load(RunningContext.class, contextId);
+    }//getContextById()
+    
+    
+    public Activity getActivityById(Long activityId) throws Exception {
+        return (Activity) getHibernateTemplate().load(Activity.class, activityId);
+    }//getActivityById()
+    
     
     
     

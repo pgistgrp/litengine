@@ -18,8 +18,22 @@ import org.pgist.wfengine.activity.SituationActivity;
  * The running context has its parent context and child contexts, so it's actually a
  * context tree.
  * 
- * RunningContext keeps track of current running activities and all records generated
- * by activities.
+ * RunningContext keeps track of
+ * <ul>
+ *   <li>current running activities -
+ *       Activity which needs manual operation, such as PManualGameActivity/SwitchActivity 
+ *   </li>
+ *   <li>current pending activities -
+ *       Activity which is temporarily in a pending state, such as a SituationActivity/MeetingActivity
+ *       /PMethodActivity, when the flow comes in to these activities they will be suspend and
+ *       the flow is directed to their own running stack
+ *   </li>
+ *   <li>current halting activities -
+ *       Activity which encounters problem and is halted, waiting for technichal maintenance, such as
+ *       when a PAutoGameActivity fails to execute its task, it will be put in the halting activity
+ *       list
+ *   </li>
+ * </ul>
  * 
  * @author kenny
  *
@@ -277,6 +291,46 @@ public class RunningContext {
                 activity.deActivate(this);
             }
         }//while
+        
+        //propogate to parent context
+        if (getParent()!=null) {
+            getParent().execute();
+        }
+    }//execute()
+    
+    
+    synchronized public void execute(Activity activity) throws Exception {
+        //Check if the given activity is in the given context
+        if (getRunningActivities().contains(activity)) {
+            getRunningActivities().remove(activity);
+            activity.deActivate(this);
+        } else if (getPendingActivities().contains(activity)) {
+            getPendingActivities().remove(activity);
+            activity.deActivate(this);
+        } else if (getHaltingActivities().contains(activity)) {
+            getPendingActivities().remove(activity);
+            activity.deActivate(this);
+        } else {
+            throw new WorkflowException("the given activity is not in the given context");
+        }
+        
+        while (!stack.empty()) {
+            //Pop out an activity
+            activity = stack.pop();
+            if (!getPendingActivities().contains(activity)) {
+                activity.activate(this);
+                if (activity.execute(this)) {
+                    activity.deActivate(this);
+                }
+            } else {
+                activity.deActivate(this);
+            }
+        }//while
+        
+        //propogate to parent context
+        if (getParent()!=null) {
+            getParent().execute();
+        }
     }//execute()
     
     

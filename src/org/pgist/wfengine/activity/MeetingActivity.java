@@ -149,10 +149,6 @@ public class MeetingActivity extends GroupActivity {
         
         getContext().getParent().getPendingActivities().remove(this);
         getContext().getParent().getStack().add(getNext());
-        try {
-            getContext().getParent().execute();
-        } catch (Exception e) {
-        }
     }//doDeActivate()
     
     

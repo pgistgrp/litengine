@@ -155,8 +155,6 @@ public class Environment {
             String name = entry.getKey();
             Integer value = entry.getValue();
             String realName = outs.get(name);
-            System.out.println(outs);
-            System.out.printf("    (name: %s, realName: %s, value: %d\n", name, realName, value);
             if (realName==null) realName = name;
             getIntValues().put(realName, value);
         }//for

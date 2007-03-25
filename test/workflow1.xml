@@ -5,162 +5,224 @@
     <pgames>
         <pgame name="pgame1" description="pgame1" auto="true">
             <taskName>pgame1</taskName>
-	        <declaration>
-	            <outs>
-	                <var name="suite_id"/>
-	            </outs>
-	        </declaration>
+            <declaration>
+                <outs>
+                    <var name="suite_id"/>
+                </outs>
+            </declaration>
         </pgame>
         <pgame name="pgame2" description="pgame2" auto="true">
             <taskName>pgame2</taskName>
-	        <declaration>
-	            <ins>
-	                <var name="suite_id"/>
-	            </ins>
-	            <outs>
-	                <var name="isid"/>
-	            </outs>
-	        </declaration>
+            <declaration>
+                <ins>
+                    <var name="suite_id"/>
+                </ins>
+                <outs>
+                    <var name="isid"/>
+                </outs>
+            </declaration>
         </pgame>
         <pgame name="pgame3" description="pgame3" auto="true">
             <taskName>pgame3</taskName>
-	        <declaration>
-	            <ins>
-	                <var name="suite_id"/>
-	                <var name="isid"/>
-	            </ins>
-	            <outs>
-	                <var name="goodbye_str"/>
-	            </outs>
-	        </declaration>
+            <declaration>
+                <ins>
+                    <var name="suite_id"/>
+                    <var name="isid"/>
+                </ins>
+                <outs>
+                    <var name="goodbye_str"/>
+                </outs>
+            </declaration>
+        </pgame>
+        <pgame name="action1" description="action1" auto="false">
+            <actionName>action1</actionName>
+            <declaration>
+                <ins>
+                    <var name="suite_id"/>
+                </ins>
+            </declaration>
+        </pgame>
+        <pgame name="action2" description="action2" auto="false">
+            <actionName>action2</actionName>
+            <declaration>
+                <ins>
+                    <var name="isid"/>
+                </ins>
+            </declaration>
+        </pgame>
+        <pgame name="action3" description="action3" auto="false">
+            <actionName>action3</actionName>
+            <declaration>
+                <ins>
+                    <var name="goodbye_str"/>
+                </ins>
+            </declaration>
         </pgame>
     </pgames>
     
     <pmethods>
         <pmethod name="pmethod1" description="pmethod1">
-	        <declaration>
-	            <outs>
-	                <var name="pmethod.suite_id"/>
-	            </outs>
-	        </declaration>
+            <declaration>
+                <outs>
+                    <var name="pmethod.suite_id"/>
+                </outs>
+            </declaration>
             <sequence>
                 <pgame name="pgame1">
-	                <declaration>
-	                    <outs>
-	                        <var name="suite_id" ref="pmethod.suite_id"/>
-	                    </outs>
-	                </declaration>
-	            </pgame>
+                    <declaration>
+                        <outs>
+                            <var name="suite_id" ref="pmethod.suite_id"/>
+                        </outs>
+                    </declaration>
+	              </pgame>
+                <pgame name="pgame2">
+                    <declaration>
+                        <ins>
+                            <var name="suite_id" ref="pmethod.suite_id"/>
+                        </ins>
+                        <outs>
+                            <var name="isid" ref="pmethod.isid"/>
+                        </outs>
+                    </declaration>
+                </pgame>
+                <pgame name="action1">
+                    <declaration>
+                        <ins>
+                            <var name="suite_id" ref="pmethod.suite_id"/>
+                        </ins>
+                    </declaration>
+                </pgame>
             </sequence>
         </pmethod>
         <pmethod name="pmethod2" description="pmethod2">
-	        <declaration>
-	            <ins>
-	                <var name="pmethod.suite_id"/>
-	            </ins>
-	            <outs>
-	                <var name="pmethod.isid"/>
-	            </outs>
-	        </declaration>
+            <declaration>
+                <ins>
+                    <var name="pmethod.suite_id"/>
+                </ins>
+                <outs>
+                    <var name="pmethod.isid"/>
+                </outs>
+            </declaration>
             <sequence>
                 <pgame name="pgame2">
-	                <declaration>
-	                    <ins>
-	                        <var name="suite_id" ref="pmethod.suite_id"/>
-	                    </ins>
-	                    <outs>
-	                        <var name="isid" ref="pmethod.isid"/>
-	                    </outs>
-	                </declaration>
-	            </pgame>
+                    <declaration>
+                        <ins>
+                            <var name="suite_id" ref="pmethod.suite_id"/>
+                        </ins>
+                        <outs>
+                            <var name="isid" ref="pmethod.isid"/>
+                        </outs>
+                    </declaration>
+                </pgame>
+                <pgame name="action2">
+                    <declaration>
+                        <ins>
+                            <var name="isid" ref="pmethod.suite_id"/>
+                        </ins>
+                    </declaration>
+                </pgame>
             </sequence>
         </pmethod>
         <pmethod name="pmethod3" description="pmethod3">
-	        <declaration>
-	            <ins>
-	                <var name="pmethod.suite_id"/>
-	                <var name="pmethod.isid"/>
-	            </ins>
-	            <outs>
-	                <var name="pmethod.goodbye_str"/>
-	            </outs>
-	        </declaration>
+            <declaration>
+                <ins>
+                    <var name="pmethod.suite_id"/>
+                    <var name="pmethod.isid"/>
+                </ins>
+                <outs>
+                    <var name="pmethod.goodbye_str"/>
+                </outs>
+            </declaration>
             <sequence>
                 <pgame name="pgame3">
-	                <declaration>
-	                    <ins>
-	                        <var name="suite_id" ref="pmethod.suite_id"/>
-	                        <var name="isid" ref="pmethod.isid"/>
-	                    </ins>
-	                    <outs>
-	                        <var name="goodbye_str" ref="pmethod.goodbye_str"/>
-	                    </outs>
-	                </declaration>
-	            </pgame>
+                    <declaration>
+                        <ins>
+                            <var name="suite_id" ref="pmethod.suite_id"/>
+                            <var name="isid" ref="pmethod.isid"/>
+                        </ins>
+                        <outs>
+                            <var name="goodbye_str" ref="pmethod.goodbye_str"/>
+                        </outs>
+                    </declaration>
+	              </pgame>
+                <pgame name="action3">
+                    <declaration>
+                        <ins>
+                            <var name="goodbye_str" ref="pmethod.goodbye_str"/>
+                        </ins>
+                    </declaration>
+                </pgame>
             </sequence>
         </pmethod>
     </pmethods>
     
     <meetings>
         <meeting name="meeting1" description="meeting1">
-	        <declaration>
-	            <outs>
-	                <var name="meeting.suite_id"/>
-	            </outs>
-	        </declaration>
+            <declaration>
+                <outs>
+                    <var name="meeting.suite_id"/>
+                </outs>
+            </declaration>
             <sequence>
                 <pmethod name="pmethod1">
-			        <declaration>
-			            <outs>
-			                <var name="pmethod.suite_id" ref="meeting.suite_id"/>
-			            </outs>
-			        </declaration>
+                    <declaration>
+                        <outs>
+                            <var name="pmethod.suite_id" ref="meeting.suite_id"/>
+                        </outs>
+                    </declaration>
                 </pmethod>
             </sequence>
         </meeting>
         <meeting name="meeting2" description="meeting2">
-	        <declaration>
-	            <ins>
-	                <var name="meeting.suite_id"/>
-	            </ins>
-	            <outs>
-	                <var name="meeting.isid"/>
-	            </outs>
-	        </declaration>
+            <declaration>
+                <ins>
+                    <var name="meeting.suite_id"/>
+                </ins>
+                <outs>
+                    <var name="meeting.isid"/>
+                </outs>
+            </declaration>
             <sequence>
+                <pmethod name="pmethod1">
+                    <declaration>
+                        <outs>
+                            <var name="pmethod.suite_id" ref="meeting.suite_id"/>
+                        </outs>
+                    </declaration>
+                </pmethod>
                 <pmethod name="pmethod2">
-			        <declaration>
-			            <ins>
-			                <var name="pmethod.suite_id" ref="meeting.suite_id"/>
-			            </ins>
-			            <outs>
-			                <var name="pmethod.isid" ref="meeting.isid"/>
-			            </outs>
-			        </declaration>
+                    <declaration>
+                        <ins>
+                            <var name="pmethod.suite_id" ref="meeting.suite_id"/>
+                        </ins>
+                        <outs>
+                            <var name="pmethod.isid" ref="meeting.isid"/>
+                        </outs>
+                    </declaration>
                 </pmethod>
             </sequence>
         </meeting>
         <meeting name="meeting3" description="meeting3">
-	        <declaration>
-	            <ins>
-	                <var name="meeting.suite_id"/>
-	                <var name="meeting.isid"/>
-	            </ins>
-	            <outs>
-	                <var name="meeting.goodbye_str"/>
-	            </outs>
-	        </declaration>
+            <declaration>
+                <ins>
+                    <var name="meeting.suite_id"/>
+                    <var name="meeting.isid"/>
+                </ins>
+                <outs>
+                    <var name="meeting.goodbye_str"/>
+                </outs>
+            </declaration>
             <sequence>
                 <pmethod name="pmethod3">
-			        <declaration>
-			            <ins>
-			                <var name="pmethod.suite_id" ref="meeting.suite_id"/>
-			                <var name="pmethod.isid" ref="meeting.isid"/>
-			            </ins>
-			            <outs>
-			                <var name="pmethod.goodbye_str" ref="meeting.goodbye_str"/>
-			            </outs>
-			        </declaration>
+                    <declaration>
+                        <ins>
+                            <var name="pmethod.suite_id" ref="meeting.suite_id"/>
+                            <var name="pmethod.isid" ref="meeting.isid"/>
+                        </ins>
+                        <outs>
+                            <var name="pmethod.goodbye_str" ref="meeting.goodbye_str"/>
+                        </outs>
+                    </declaration>
                 </pmethod>
             </sequence>
         </meeting>
@@ -170,32 +232,32 @@
         <situation name="situation1" description="situation1">
             <sequence>
                 <meeting name="meeting1">
-			        <declaration>
-			            <outs>
-			                <var name="meeting.suite_id" ref="situation.suite_id"/>
-			            </outs>
-			        </declaration>
+                    <declaration>
+                        <outs>
+                            <var name="meeting.suite_id" ref="situation.suite_id"/>
+                        </outs>
+                    </declaration>
                 </meeting>
                 <meeting name="meeting2">
-			        <declaration>
-			            <ins>
-			                <var name="meeting.suite_id" ref="situation.suite_id"/>
-			            </ins>
-			            <outs>
-			                <var name="meeting.isid" ref="situation.isid"/>
-			            </outs>
-			        </declaration>
+                    <declaration>
+                        <ins>
+                            <var name="meeting.suite_id" ref="situation.suite_id"/>
+                        </ins>
+                        <outs>
+                            <var name="meeting.isid" ref="situation.isid"/>
+                        </outs>
+                    </declaration>
                 </meeting>
                 <meeting name="meeting3">
-			        <declaration>
-			            <ins>
-			                <var name="meeting.suite_id" ref="situation.suite_id"/>
-			                <var name="meeting.isid" ref="situation.isid"/>
-			            </ins>
-			            <outs>
-			                <var name="meeting.goodbye_str" ref="situation.goodbye_str"/>
-			            </outs>
-			        </declaration>
+                    <declaration>
+                        <ins>
+                            <var name="meeting.suite_id" ref="situation.suite_id"/>
+                            <var name="meeting.isid" ref="situation.isid"/>
+                        </ins>
+                        <outs>
+                            <var name="meeting.goodbye_str" ref="situation.goodbye_str"/>
+                        </outs>
+                    </declaration>
                 </meeting>
             </sequence>
         </situation>

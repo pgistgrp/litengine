@@ -122,6 +122,7 @@ public class SituationActivity extends GroupActivity {
     
     
     protected void doDeActivate(RunningContext context) {
+        getWorkflow().setStatus(Workflow.STATUS_FINISHED);
     }//doDeActivate()
     
     

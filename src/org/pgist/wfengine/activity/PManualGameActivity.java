@@ -3,6 +3,8 @@ package org.pgist.wfengine.activity;
 import java.util.Stack;
 
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.Declaration;
+import org.pgist.wfengine.Environment;
 import org.pgist.wfengine.RunningContext;
 
 
@@ -97,9 +99,14 @@ public class PManualGameActivity extends PGameActivity {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        context.getPendingActivities().add(this);
+        context.getRunningActivities().add(this);
         return false;
     }//doExecute()
+    
+    
+    protected void doDeActivate(RunningContext context) {
+        context.getStack().push(getNext());
+    }//doDeActivate()
     
     
 }//class PManualGameActivity

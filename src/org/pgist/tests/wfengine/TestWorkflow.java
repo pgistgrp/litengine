@@ -100,7 +100,8 @@ public class TestWorkflow {
         tasks.put("pgame2", new TestAutoTask2());
         tasks.put("pgame3", new TestAutoTask3());
         
-        WorkflowTaskRegistry registry = new WorkflowTaskRegistry(tasks);
+        WorkflowTaskRegistry registry = new WorkflowTaskRegistry();
+        registry.setTasks(tasks);
         
         SituationActivity situation = new SituationActivity();
         situation.setDefinition(situationTemplate);

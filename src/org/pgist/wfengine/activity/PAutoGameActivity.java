@@ -110,10 +110,6 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
                 EnvironmentInOuts inouts = new EnvironmentInOuts(context, getDeclaration());
                 task.execute(inouts);
                 context.merge(inouts);
-                System.out.println("--> "+context.getEnvironment().getIntValues());
-                System.out.println("--> "+context.getEnvironment().getStrValues());
-                System.out.println("--> "+context.getEnvironment().getDblValues());
-                System.out.println("--> "+context.getEnvironment().getDateValues());
             }
             
             context.getStack().add(getNext());

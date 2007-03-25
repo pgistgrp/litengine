@@ -124,6 +124,16 @@ public class Workflow implements Serializable {
      */
     
     
+    public WorkflowTaskRegistry getRegistry() {
+        return registry;
+    }
+
+
+    public void setRegistry(WorkflowTaskRegistry registry) {
+        this.registry = registry;
+    }
+
+
     /**
      * Package Accessible.
      * Start this workflow.
@@ -181,14 +191,15 @@ public class Workflow implements Serializable {
     }//cancel()
 
 
-    public WorkflowTaskRegistry getRegistry() {
-        return registry;
-    }
-
-
-    public void setRegistry(WorkflowTaskRegistry registry) {
-        this.registry = registry;
-    }
+    public void execute(RunningContext context, Activity activity) throws Exception {
+        //Check if the given context is in the this workflow
+        RunningContext parent = context;
+        while (parent.getParent()!=null) parent = parent.getParent();
+        if (parent!=getSituation().getContext()) throw new WorkflowException("the given context is not in the given workflow");
+        
+        //run the given activity in the given context
+        context.execute(activity);
+    }//execute()
     
     
 }//class Workflow

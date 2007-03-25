@@ -15,12 +15,28 @@ public class WorkflowTaskRegistry {
     
     private Map<String, WorkflowTask> tasks = new HashMap<String, WorkflowTask>();
     
+    private Map<String, String> actions = new HashMap<String, String>();
     
-    public WorkflowTaskRegistry(Map<String, WorkflowTask> tasks) {
-        this.tasks = tasks;
+    
+    public WorkflowTaskRegistry() {
     }//WorkflowTaskRegistry()
     
     
+    /*
+     * ------------------------------------------------------------------------
+     */
+    
+    
+    public void setTasks(Map<String, WorkflowTask> tasks) {
+        this.tasks = tasks;
+    }
+
+
+    public void setActions(Map<String, String> actions) {
+        this.actions = actions;
+    }
+
+
     /*
      * ------------------------------------------------------------------------
      */
@@ -31,9 +47,9 @@ public class WorkflowTaskRegistry {
     }//getTask()
     
     
-    public Map<String, WorkflowTask> getTasks() {
-        return tasks;
-    }//getTasks()
-
-
+    public String getAction(String name) {
+        return actions.get(name);
+    }//getAction()
+    
+    
 }//class WorkflowTaskRegistry

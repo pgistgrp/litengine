@@ -1,8 +1,6 @@
 package org.pgist.wfengine;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -16,9 +14,6 @@ import org.pgist.wfengine.parser.MeetingParser;
 import org.pgist.wfengine.parser.PGameParser;
 import org.pgist.wfengine.parser.PMethodParser;
 import org.pgist.wfengine.parser.SituationParser;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 
 
 /**
@@ -28,19 +23,12 @@ import org.springframework.beans.factory.BeanFactoryAware;
  * 
  * @author kenny
  */
-public class WorkflowEngine implements BeanFactoryAware {
+public class WorkflowEngine {
     
-    
-    private BeanFactory beanFactory;
     
     private WorkflowEngineDAO engineDAO;
     
     private WorkflowTaskRegistry registry;
-    
-    
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
     
     
     public void setEngineDAO(WorkflowEngineDAO engineDAO) {
@@ -59,7 +47,6 @@ public class WorkflowEngine implements BeanFactoryAware {
     
     
     public void importTemplates(Document document) throws Exception{
-        System.out.println("---> "+registry.getTasks());
         DeclarationParser declParser = new DeclarationParser();
         EnvironmentParser envParser = new EnvironmentParser();
         PGameParser pgameParser = new PGameParser();
@@ -127,16 +114,47 @@ public class WorkflowEngine implements BeanFactoryAware {
     public Workflow createWorkflow(Long situationId) throws Exception {
         Workflow workflow = engineDAO.createWorkflow(situationId);
         workflow.setRegistry(registry);
+        
         return workflow;
     }//createWorkflow()
     
     
-    public void startWorkflow(long workflowId) throws Exception {
+    public void startWorkflow(Long workflowId) throws Exception {
         Workflow workflow = engineDAO.getWorkflowById(workflowId);
         workflow.setRegistry(registry);
+        
         workflow.start();
+        
         engineDAO.saveWorkflow(workflow);
     }//startWorkflow()
+    
+    
+    public void executeWorkflow(Long workflowId, Long contextId, Long activityId) throws Exception {
+        Workflow workflow = engineDAO.getWorkflowById(workflowId);
+        workflow.setRegistry(registry);
+        
+        if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
+        switch (workflow.getStatus()) {
+            case Workflow.STATUS_NEW:
+                throw new WorkflowException("workflow with id "+workflowId+" is not started yet.");
+            case Workflow.STATUS_FINISHED:
+                throw new WorkflowException("workflow with id "+workflowId+" is already finished.");
+            case Workflow.STATUS_CANCELLED:
+                throw new WorkflowException("workflow with id "+workflowId+" is already cancelled.");
+        }//switch
+        
+        RunningContext context = engineDAO.getContextById(contextId);
+        
+        if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
+        
+        Activity activity = engineDAO.getActivityById(activityId);
+        
+        if (activity==null) throw new WorkflowException("cannot find activity with id "+activityId);
+        
+        workflow.execute(context, activity);
+        
+        engineDAO.saveWorkflow(workflow);
+    }//executeWorkflow()
     
     
     
