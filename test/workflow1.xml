@@ -41,6 +41,8 @@
                     <var name="suite_id"/>
                 </ins>
             </declaration>
+            <!--timer extension="86400000"/-->
+            <timer extension="5000"/>
         </pgame>
         <pgame name="action2" description="action2" auto="false">
             <actionName>action2</actionName>
@@ -49,6 +51,7 @@
                     <var name="isid"/>
                 </ins>
             </declaration>
+            <timer extension="86400000"/>
         </pgame>
         <pgame name="action3" description="action3" auto="false" access="moderator">
             <actionName>action3</actionName>
@@ -57,6 +60,7 @@
                     <var name="goodbye_str"/>
                 </ins>
             </declaration>
+            <timer extension="86400000"/>
         </pgame>
     </pgames>
     

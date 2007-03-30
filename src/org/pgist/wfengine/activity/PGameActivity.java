@@ -34,9 +34,6 @@ public abstract class PGameActivity extends Activity implements SingleIn, Single
     }
     
     
-    public abstract PGameActivity clone();
-    
-    
     /**
      * @return
      * @hibernate.property not-null="true"

@@ -126,7 +126,7 @@ public abstract class Activity implements Serializable {
      * Package Access Only
      * @param context
      */
-    public final void activate(RunningContext context) {
+    public final void activate(RunningContext context) throws Exception {
         //Increase Count. That means the total visiting times for this activity.
         setCounts(getCounts()+1);
         
@@ -157,7 +157,7 @@ public abstract class Activity implements Serializable {
      * default implementation
      * @param context
      */
-    protected void doActivate(RunningContext context) {
+    protected void doActivate(RunningContext context) throws Exception {
     }//doActivate()
     
     

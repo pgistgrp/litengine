@@ -35,22 +35,6 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
     }
     
     
-    public PAutoGameActivity clone() {
-        PAutoGameActivity act = new PAutoGameActivity();
-        
-        act.getDeclaration().getIns().putAll(getDeclaration().getIns());
-        act.getDeclaration().getOuts().putAll(getDeclaration().getOuts());
-        act.setCounts(0);
-        act.setName(getName());
-        act.setDescription(getDescription());
-        act.setTaskName(getTaskName());
-        act.setPrev(null);
-        act.setNext(null);
-        
-        return act;
-    }
-    
-    
     /**
      * @return
      * @hibernate.property column="task_name"

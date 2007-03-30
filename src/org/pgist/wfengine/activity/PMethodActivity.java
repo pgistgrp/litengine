@@ -80,7 +80,7 @@ public class PMethodActivity extends GroupActivity {
      */
     
     
-    protected void doActivate(RunningContext context) {
+    protected void doActivate(RunningContext context) throws Exception {
         //create a return activity
         ReturnActivity returnActivity = new ReturnActivity();
         returnActivity.setCounts(0);
@@ -103,6 +103,8 @@ public class PMethodActivity extends GroupActivity {
         myEnv.getDblValues().putAll(initEnv.getDblValues());
         myEnv.getStrValues().putAll(initEnv.getStrValues());
         myEnv.getDateValues().putAll(initEnv.getDateValues());
+        
+        context.save(this);
     }//doActivate()
     
     

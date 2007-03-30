@@ -54,6 +54,12 @@ public class PGameParser {
             access = access.trim();
             if (access.length()==0) throw new ParserException("attribute 'access' can't be empty");
             manualGame.setAccess(access);
+            
+            //extension
+            Element timerElement = pgameElement.element("timer");
+            if (timerElement!=null) {
+                manualGame.setExtension(Long.parseLong(timerElement.attributeValue("extension")));
+            }
         }
         
         //name

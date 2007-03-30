@@ -3,8 +3,6 @@ package org.pgist.wfengine.activity;
 import java.util.Stack;
 
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.Declaration;
-import org.pgist.wfengine.Environment;
 import org.pgist.wfengine.RunningContext;
 
 
@@ -28,6 +26,8 @@ public class PManualGameActivity extends PGameActivity {
     protected String actionName = null;
     
     protected String access = "all";
+    
+    protected long extension;
     
     
     public PManualGameActivity() {
@@ -65,25 +65,24 @@ public class PManualGameActivity extends PGameActivity {
     }
 
 
+    /**
+     * @return
+     * 
+     * @hibernate.property column="extension" not-null="true"
+     */
+    public long getExtension() {
+        return extension;
+    }
+
+
+    public void setExtension(long extension) {
+        this.extension = extension;
+    }
+
+
     /*
      * ------------------------------------------------------------------------------
      */
-    
-    
-    public PManualGameActivity clone() {
-        PManualGameActivity act = new PManualGameActivity();
-        
-        act.getDeclaration().getIns().putAll(getDeclaration().getIns());
-        act.getDeclaration().getOuts().putAll(getDeclaration().getOuts());
-        act.setCounts(0);
-        act.setName(getName());
-        act.setDescription(getDescription());
-        act.setActionName(getActionName());
-        act.setPrev(null);
-        act.setNext(null);
-        
-        return act;
-    }//clone()
     
     
     public PManualGameActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
@@ -95,6 +94,8 @@ public class PManualGameActivity extends PGameActivity {
         newGame.setName(getName());
         newGame.setDescription(getDescription());
         newGame.setActionName(getActionName());
+        newGame.setAccess(getAccess());
+        newGame.setExtension(getExtension());
         
         Activity act = getNext();
         if (act!=null) {
@@ -118,6 +119,11 @@ public class PManualGameActivity extends PGameActivity {
     
     protected boolean doExecute(RunningContext context) throws Exception {
         context.getRunningActivities().add(this);
+        
+        if (getExtension()>0) {
+            context.addJob(this, getExtension());
+        }
+        
         return false;
     }//doExecute()
     

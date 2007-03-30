@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.pgist.wfengine.activity.SituationActivity;
+import org.quartz.Scheduler;
 
 
 /**
@@ -37,7 +38,7 @@ public class Workflow implements Serializable {
     
     private Date endTime;
     
-    private WorkflowTaskRegistry registry;
+    private WorkflowEngine engine;
     
     
     public Workflow() {
@@ -124,16 +125,21 @@ public class Workflow implements Serializable {
      */
     
     
-    public WorkflowTaskRegistry getRegistry() {
-        return registry;
+    public WorkflowEngine getEngine() {
+        return engine;
     }
 
 
-    public void setRegistry(WorkflowTaskRegistry registry) {
-        this.registry = registry;
+    public void setEngine(WorkflowEngine engine) {
+        this.engine = engine;
     }
 
 
+    /*
+     * -------------------------------------------------------------------
+     */
+    
+    
     /**
      * Package Accessible.
      * Start this workflow.
@@ -200,6 +206,6 @@ public class Workflow implements Serializable {
         //run the given activity in the given context
         context.execute(activity);
     }//execute()
-    
-    
+
+
 }//class Workflow

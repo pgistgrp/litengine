@@ -88,6 +88,8 @@ public class PMethodParser {
                         manual.setName(oldManual.getName());
                         manual.setDescription(oldManual.getDescription());
                         manual.setActionName(oldManual.getActionName());
+                        manual.setAccess(oldManual.getAccess());
+                        manual.setExtension(oldManual.getExtension());
                         newPgame = manual;
                         break;
                     default:

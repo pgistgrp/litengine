@@ -101,6 +101,7 @@ public class TestPGameParser {
           + "            <var name=\" out_var_1 \"/>"
           + "        </outs>"
           + "    </declaration>"
+          + "    <timer extension=\"86400000\"/>"
           + "</pgame>";
         
         Document doc = TestHelper.getDocument(xml);
@@ -115,6 +116,7 @@ public class TestPGameParser {
         assertEquals("pgame 'name' incorrect", "pgame1", pgame.getName());
         assertEquals("pgame 'description' incorrect", "pgame1", pgame.getDescription());
         assertEquals("pgame 'access' incorrect", "moderator", pgame.getAccess());
+        assertEquals("pgame extension incorrect", 86400000L, pgame.getExtension());
         
         assertTrue("member counts of pgame is not 0", pgame.getCounts()==0);
         assertTrue("member type of pgame is not "+Activity.TYPE_PMANUALGAME, pgame.getType()==Activity.TYPE_PMANUALGAME);

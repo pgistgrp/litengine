@@ -85,6 +85,8 @@ public class TestWorkflowEngine {
         Workflow workflow = engine.createWorkflow(77L);
         System.out.println("---- Workflow id: "+workflow.getId());
         engine.startWorkflow(workflow.getId());
+        
+        Thread.sleep(10000L);
     }//createWorkflow()
     
     

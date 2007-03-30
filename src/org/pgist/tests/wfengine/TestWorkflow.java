@@ -109,7 +109,7 @@ public class TestWorkflow {
         Workflow flow = new Workflow();
         flow.setSituation(situation);
         situation.setWorkflow(flow);
-        flow.setRegistry(registry);
+        //flow.setEngine(engine);
         
         flow.start();
     }//test1()

@@ -1,6 +1,7 @@
 package org.pgist.wfengine;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -8,7 +9,13 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.pgist.wfengine.activity.GroupActivity;
+import org.pgist.wfengine.activity.PMethodActivity;
 import org.pgist.wfengine.activity.SituationActivity;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
 
 
 /**
@@ -257,16 +264,62 @@ public class RunningContext {
     }
 
 
-    public WorkflowTaskRegistry getRegistry() {
+    public Workflow getWorkflow() {
         if (getParent()!=null) {
-            return getParent().getRegistry();
+            return getParent().getWorkflow();
         } else {
             SituationActivity situation = (SituationActivity) group;
-            return situation.getWorkflow().getRegistry();
+            return situation.getWorkflow();
         }
     }//getRegistry()
-
-
+    
+    
+    public WorkflowTaskRegistry getRegistry() {
+        return getWorkflow().getEngine().getRegistry();
+    }//getRegistry()
+    
+    
+    private Scheduler getScheduler() {
+        return getWorkflow().getEngine().getScheduler();
+    }//getScheduler()
+    
+    
+    public void merge(EnvironmentInOuts inouts) {
+        inouts.merge();
+    }//merge()
+    
+    
+    public void addJob(Activity activity, long extension) throws SchedulerException {
+        String key = activity.getId().toString();
+        JobDetail jobDetail = new JobDetail(key, null, WorkflowTimer.class);
+        
+        JobDataMap params = jobDetail.getJobDataMap();
+        params.put("wf_id", getWorkflow().getId());
+        params.put("ctx_id", getId());
+        params.put("act_id", activity.getId());
+        
+        SimpleTrigger trigger = new SimpleTrigger(key, null,
+                new Date(System.currentTimeMillis() + extension), null, 0, 0L);
+        
+        getScheduler().scheduleJob(jobDetail, trigger);
+    }//addJob()
+    
+    
+    public void save(Activity activity) throws Exception {
+        if (getParent()!=null) {
+            getParent().save(activity);
+        } else {
+            SituationActivity situation = (SituationActivity) group;
+            situation.getWorkflow().getEngine().saveActivity(activity);
+        }
+    }//save()
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     protected void perform(Stack<Activity> stack, Set activities, Activity activity) throws Exception {
         //Execute this activity
         try {
@@ -365,16 +418,6 @@ public class RunningContext {
         
         return runningActivities.size()==0;
     }//proceed()
-    
-    
-    /*
-     * ------------------------------------------------------------------------
-     */
-    
-    
-    public void merge(EnvironmentInOuts inouts) {
-        inouts.merge();
-    }//merge()
-    
-    
+
+
 }//class RunningContext

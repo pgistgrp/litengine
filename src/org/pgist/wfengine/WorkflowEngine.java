@@ -14,6 +14,8 @@ import org.pgist.wfengine.parser.MeetingParser;
 import org.pgist.wfengine.parser.PGameParser;
 import org.pgist.wfengine.parser.PMethodParser;
 import org.pgist.wfengine.parser.SituationParser;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 
 
 /**
@@ -30,14 +32,32 @@ public class WorkflowEngine {
     
     private WorkflowTaskRegistry registry;
     
+    private Scheduler scheduler;
+    
     
     public void setEngineDAO(WorkflowEngineDAO engineDAO) {
         this.engineDAO = engineDAO;
     }
     
     
+    public WorkflowTaskRegistry getRegistry() {
+        return registry;
+    }
+
+
     public void setRegistry(WorkflowTaskRegistry registry) {
         this.registry = registry;
+    }
+    
+    
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
+
+
+    public void setScheduler(Scheduler scheduler) throws SchedulerException {
+        this.scheduler = scheduler;
+        scheduler.getContext().put("engine", this);
     }
     
     
@@ -113,7 +133,7 @@ public class WorkflowEngine {
     
     public Workflow createWorkflow(Long situationId) throws Exception {
         Workflow workflow = engineDAO.createWorkflow(situationId);
-        workflow.setRegistry(registry);
+        workflow.setEngine(this);
         
         return workflow;
     }//createWorkflow()
@@ -121,7 +141,7 @@ public class WorkflowEngine {
     
     public void startWorkflow(Long workflowId) throws Exception {
         Workflow workflow = engineDAO.getWorkflowById(workflowId);
-        workflow.setRegistry(registry);
+        workflow.setEngine(this);
         
         workflow.start();
         
@@ -131,7 +151,7 @@ public class WorkflowEngine {
     
     public void executeWorkflow(Long workflowId, Long contextId, Long activityId) throws Exception {
         Workflow workflow = engineDAO.getWorkflowById(workflowId);
-        workflow.setRegistry(registry);
+        workflow.setEngine(this);
         
         if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
         switch (workflow.getStatus()) {
@@ -155,6 +175,8 @@ public class WorkflowEngine {
         
         engineDAO.saveWorkflow(workflow);
     }//executeWorkflow()
+    
+    
     
     
     
