@@ -25,7 +25,7 @@ public class EnvironmentInOuts {
     
     private Map<String, Date> dateValues = new HashMap<String, Date>();
     
-
+    
     public EnvironmentInOuts(RunningContext context, Declaration declaration) {
         this.context = context;
         this.declaration = declaration;
@@ -45,17 +45,30 @@ public class EnvironmentInOuts {
     
     
     public Double getDblValue(String name) {
-        return context.getEnvironment().getDblValues().get(declaration.getIns().get(name));
+        String realName = declaration.getIns().get(name);
+        if (realName==null || realName.length()==0) realName = name;
+        return context.getEnvironment().findDblValue(realName);
     }
     
     
     public String getStrValue(String name) {
-        return context.getEnvironment().getStrValues().get(declaration.getIns().get(name));
+        String realName = declaration.getIns().get(name);
+        if (realName==null || realName.length()==0) realName = name;
+        return context.getEnvironment().findStrValue(realName);
     }
     
     
     public Date getDateValue(String name) {
-        return context.getEnvironment().getDateValues().get(declaration.getIns().get(name));
+        String realName = declaration.getIns().get(name);
+        if (realName==null || realName.length()==0) realName = name;
+        return context.getEnvironment().findDateValue(realName);
+    }
+    
+    
+    public Object getValue(String name) {
+        String realName = declaration.getIns().get(name);
+        if (realName==null || realName.length()==0) realName = name;
+        return context.getEnvironment().findValue(realName);
     }
     
     

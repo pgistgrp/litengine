@@ -57,7 +57,6 @@ public class WorkflowEngine {
 
     public void setScheduler(Scheduler scheduler) throws SchedulerException {
         this.scheduler = scheduler;
-        scheduler.getContext().put("engine", this);
     }
     
     
@@ -67,6 +66,11 @@ public class WorkflowEngine {
     
     
     public void importTemplates(Document document) throws Exception{
+        importTemplates(document.getRootElement());
+    }//importTemplates()
+    
+    
+    public void importTemplates(Element root) throws Exception{
         DeclarationParser declParser = new DeclarationParser();
         EnvironmentParser envParser = new EnvironmentParser();
         PGameParser pgameParser = new PGameParser();
@@ -82,32 +86,31 @@ public class WorkflowEngine {
         situationParser.setDeclParser(declParser);
         situationParser.setEnvParser(envParser);
         
-        for (Element element : (List<Element>) (document.selectNodes("//templates/pgames/pgame"))) {
+        for (Element element : (List<Element>) (root.selectNodes("pgames/pgame"))) {
             PGameActivity pgame = pgameParser.parse(element);
             engineDAO.saveActivity(pgame);
         }//for
         
         pmethodParser.setPgames(engineDAO.getTemplatePGames());
         
-        for (Element element : (List<Element>) (document.selectNodes("//templates/pmethods/pmethod"))) {
+        for (Element element : (List<Element>) (root.selectNodes("pmethods/pmethod"))) {
             PMethodActivity pmethod = pmethodParser.parse(element);
             engineDAO.saveActivity(pmethod);
         }//for
         
         meetingParser.setPmethods(engineDAO.getTemplatePMethods());
         
-        for (Element element : (List<Element>) (document.selectNodes("//templates/meetings/meeting"))) {
+        for (Element element : (List<Element>) (root.selectNodes("meetings/meeting"))) {
             MeetingActivity meeting = meetingParser.parse(element);
             engineDAO.saveActivity(meeting);
         }//for
         
         situationParser.setMeetings(engineDAO.getTemplateMeetings());
         
-        for (Element element : (List<Element>) (document.selectNodes("//templates/situations/situation"))) {
+        for (Element element : (List<Element>) (root.selectNodes("situations/situation"))) {
             SituationActivity situation = situationParser.parse(element);
             engineDAO.saveActivity(situation);
         }//for
-        
     }//importTemplates()
     
     
@@ -149,6 +152,18 @@ public class WorkflowEngine {
     }//startWorkflow()
     
     
+    public Workflow createStartWorkflow(Long situationId) throws Exception {
+        Workflow workflow = engineDAO.createWorkflow(situationId);
+        workflow.setEngine(this);
+        
+        workflow.start();
+        
+        engineDAO.saveWorkflow(workflow);
+        
+        return workflow;
+    }//createStartWorkflow()
+    
+    
     public void executeWorkflow(Long workflowId, Long contextId, Long activityId) throws Exception {
         Workflow workflow = engineDAO.getWorkflowById(workflowId);
         workflow.setEngine(this);
@@ -177,6 +192,13 @@ public class WorkflowEngine {
     }//executeWorkflow()
     
     
+    public Workflow getWorkflowById(Long workflowId) throws Exception {
+        Workflow workflow = engineDAO.getWorkflowById(workflowId);
+        workflow.setEngine(this);
+        return workflow;
+    }//getWorkflowById()
+
+
     
     
     

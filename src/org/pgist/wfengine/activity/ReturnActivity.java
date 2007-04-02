@@ -83,7 +83,12 @@ public class ReturnActivity extends Activity implements SingleIn {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        context.getParent().getStack().add(getGroup());
+        if (context.getParent()==null) {
+            //The top level finished
+            context.cleanup();
+        } else {
+            context.getParent().getStack().add(getGroup());
+        }
         
         return true;
     }//doExecute()

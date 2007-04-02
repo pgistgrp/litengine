@@ -205,4 +205,59 @@ public class Environment {
     }//findIntValue()
 
 
+    public Double findDblValue(String name) {
+        String realName = getContext().getDeclaration().getIns().get(name);
+        if (realName==null || realName.length()==0) realName = name;
+        Double value = getContext().getEnvironment().getDblValues().get(realName);
+        if (value==null) {
+            value = getContext().getParent().getEnvironment().findDblValue(realName);
+        }
+        
+        return value;
+    }//findDblValue()
+
+
+    public String findStrValue(String name) {
+        String realName = getContext().getDeclaration().getIns().get(name);
+        if (realName==null || realName.length()==0) realName = name;
+        String value = getContext().getEnvironment().getStrValues().get(realName);
+        if (value==null) {
+            value = getContext().getParent().getEnvironment().findStrValue(realName);
+        }
+        
+        return value;
+    }//findStrValue()
+
+
+    public Date findDateValue(String name) {
+        String realName = getContext().getDeclaration().getIns().get(name);
+        if (realName==null || realName.length()==0) realName = name;
+        Date value = getContext().getEnvironment().getDateValues().get(realName);
+        if (value==null) {
+            value = getContext().getParent().getEnvironment().findDateValue(realName);
+        }
+        
+        return value;
+    }//findDateValue()
+
+
+    public Object findValue(String name) {
+        String realName = getContext().getDeclaration().getIns().get(name);
+        if (realName==null || realName.length()==0) realName = name;
+        
+        Object value = null;
+        
+        value = getContext().getEnvironment().getIntValues().get(realName);
+        if (value==null) value = getContext().getEnvironment().getDblValues().get(realName);
+        if (value==null) value = getContext().getEnvironment().getStrValues().get(realName);
+        if (value==null) value = getContext().getEnvironment().getDateValues().get(realName);
+        
+        if (value==null) {
+            value = getContext().getParent().getEnvironment().findValue(realName);
+        }
+        
+        return value;
+    }//findValue()
+
+
 }//class Environment

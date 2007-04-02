@@ -1,10 +1,10 @@
 package org.pgist.wfengine;
 
+import org.pgist.wfengine.web.WorkflowListener;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.quartz.SchedulerContext;
 
 
 /**
@@ -24,9 +24,10 @@ public class WorkflowTimer implements Job {
         Long contextId = (Long) params.get("ctx_id");
         Long activityId = (Long) params.get("act_id");
         
+        System.out.printf("(wfid, ctxid, actid) = (%d, %d, %d)\n", workflowId, contextId, activityId);
+        
         try {
-            SchedulerContext skedCtx = context.getScheduler().getContext();
-            WorkflowEngine engine = (WorkflowEngine) skedCtx.get("engine");
+            WorkflowEngine engine = WorkflowListener.getEngine();
             engine.executeWorkflow(workflowId, contextId, activityId);
         } catch (Exception e) {
             throw new JobExecutionException(e);

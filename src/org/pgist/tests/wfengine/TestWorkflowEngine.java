@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEngine;
+import org.pgist.wfengine.web.WorkflowListener;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
@@ -33,6 +34,8 @@ public class TestWorkflowEngine {
     
     static private WorkflowEngine engine = null;
     
+    static private WorkflowListener listener = null;
+    
     
     @BeforeClass
     public static void setUp() throws Exception {
@@ -48,7 +51,13 @@ public class TestWorkflowEngine {
         Session session = SessionFactoryUtils.getSession(sessionFactory, true);
         TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
         
-        engine = (WorkflowEngine) appContext.getBean("litengine");
+        engine = (WorkflowEngine) appContext.getBean("engine");
+        
+        System.out.println("---> here");
+        
+        WorkflowListener.setEngine(engine);
+        listener = new WorkflowListener();
+        
     }//setUp()
     
     
@@ -58,11 +67,15 @@ public class TestWorkflowEngine {
         sessionHolder.getSession().flush();
         sessionHolder.getSession().close();
         SessionFactoryUtils.releaseSession(sessionHolder.getSession(), sessionFactory);
+        
+        Thread.sleep(10000L);
     }//tearDown()
     
     
     @Test
     public void importTemplates() throws Exception {
+        System.out.println("@ WorkflowEngine.importTemplates()");
+        
         Document doc = new SAXReader().read(new File("test/workflow1.xml"));
         engine.importTemplates(doc);
     }//importTemplates()
@@ -85,8 +98,6 @@ public class TestWorkflowEngine {
         Workflow workflow = engine.createWorkflow(77L);
         System.out.println("---- Workflow id: "+workflow.getId());
         engine.startWorkflow(workflow.getId());
-        
-        Thread.sleep(10000L);
     }//createWorkflow()
     
     
@@ -124,6 +135,6 @@ public class TestWorkflowEngine {
     public void executeWorkflow() throws Exception {
         engine.executeWorkflow(290L, 306L, 302L);
     }//executeWorkflow()
-    
-    
+
+
 }//class TestWorkflowEngine

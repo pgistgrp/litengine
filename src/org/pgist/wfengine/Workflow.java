@@ -197,6 +197,30 @@ public class Workflow implements Serializable {
     }//cancel()
 
 
+    /**
+     * Package Accessible.
+     * Finish this workflow.
+     * This method can only be executed exactly ONCE!
+     * 
+     * @throws Exception
+     */
+    void finish() throws Exception {
+        /*
+         * First check if this workflow already finished or cancelled
+         */
+        switch (status) {
+            case STATUS_NEW:
+                throw new WorkflowException("flow is in new state");
+            case STATUS_CANCELLED:
+                throw new WorkflowException("flow is in cancelled state");
+        }//switch
+        
+        endTime = new Date();
+        
+        status = STATUS_FINISHED;
+    }//finish()
+
+
     public void execute(RunningContext context, Activity activity) throws Exception {
         //Check if the given context is in the this workflow
         RunningContext parent = context;
@@ -206,6 +230,6 @@ public class Workflow implements Serializable {
         //run the given activity in the given context
         context.execute(activity);
     }//execute()
-
-
+    
+    
 }//class Workflow

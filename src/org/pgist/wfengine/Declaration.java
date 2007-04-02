@@ -30,7 +30,7 @@ public class Declaration {
      * properties map
      */
     private Map<String, String> properties = new HashMap<String, String>();
-
+    
     
     /**
      * @return

@@ -59,6 +59,8 @@ public abstract class Activity implements Serializable {
     
     protected int counts = 0;
     
+    protected RunningContext runningContext;
+    
     
     /**
      * @return
@@ -99,6 +101,21 @@ public abstract class Activity implements Serializable {
 
     public void setCounts(int count) {
         this.counts = count;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="running_id" cascade="all"
+     */
+    public RunningContext getRunningContext() {
+        return runningContext;
+    }
+
+
+    public void setRunningContext(RunningContext runningContext) {
+        this.runningContext = runningContext;
     }
 
 

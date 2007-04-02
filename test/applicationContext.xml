@@ -21,44 +21,7 @@
     </bean>
     
     
-    <bean id="litengine" parent="baseTransactionProxy">
-      <property name="target">
-        <ref local="engine"/>
-      </property>
-      <property name="proxyTargetClass"><value>true</value></property>
-      <property name="transactionAttributes">
-        <props>
-          <prop key="execute*">PROPAGATION_REQUIRED</prop>
-          <prop key="add*">PROPAGATION_REQUIRED</prop>
-          <prop key="save*">PROPAGATION_REQUIRED</prop>
-          <prop key="update*">PROPAGATION_REQUIRED</prop>
-          <prop key="edit*">PROPAGATION_REQUIRED</prop>
-          <prop key="create*">PROPAGATION_REQUIRED</prop>
-          <prop key="delete*">PROPAGATION_REQUIRED</prop>
-          <prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
-        </props>
-      </property>
-    </bean>
-    
-    
-    <bean id="engine" class="org.pgist.wfengine.WorkflowEngine">
-      <property name="engineDAO" ref="engineDAO"/>
-      <property name="registry" ref="workflow.registry"/>
-      <property name="scheduler" ref="scheduler"/>
-    </bean>
-    
-    
-    <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="applicationContextSchedulerContextKey">
-           <value>applicationContext</value>
-        </property>
-        <property name="schedulerContextAsMap">
-            <map>
-                <entry key="litengine">
-                   <ref bean="engine"/>
-                </entry>
-            </map>
-        </property>
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="dataSource">
             <ref bean="dataSource" />
         </property>
@@ -78,27 +41,19 @@
                 <prop key="org.quartz.plugin.triggHistory.class">org.quartz.plugins.history.LoggingJobHistoryPlugin</prop>
             </props>
         </property>
-        <!--property name="transactionManager" ref="transactionManager"/-->
     </bean>
     
     
-    <bean id="scheduler" parent="baseTransactionProxy">
-      <property name="target">
-        <ref local="schedulerFactoryBean"/>
-      </property>
-      <property name="proxyTargetClass"><value>false</value></property>
-      <property name="transactionAttributes">
-        <props>
-          <prop key="set*">PROPAGATION_REQUIRED</prop>
-          <prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
-        </props>
-      </property>
-    </bean>
-    
-    
-    <bean id="service" class="org.pgist.tests.other.MockService">
+    <bean id="engine" class="org.pgist.wfengine.WorkflowEngine">
+      <property name="engineDAO" ref="engineDAO"/>
+      <property name="registry" ref="workflow.registry"/>
       <property name="scheduler" ref="scheduler"/>
     </bean>
+    
+    
+    <!--bean id="service" class="org.pgist.tests.other.MockService">
+      <property name="scheduler" ref="scheduler"/>
+    </bean-->
     
     
 </beans>

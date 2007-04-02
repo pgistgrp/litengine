@@ -59,7 +59,7 @@
             <fileset dir="${base}/test">
             </fileset>
         </copy>
-        <jar destfile="${output}" basedir="${build}" includes="org/**/*">
+        <jar destfile="${output}">
             <fileset dir="${build}" includes="org/**/*"/>
             <fileset dir="${build}" includes="config/**/*"/>
         </jar>

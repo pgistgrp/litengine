@@ -1,8 +1,11 @@
 package org.pgist.wfengine.activity;
 
+import java.util.Map;
 import java.util.Stack;
 
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.EnvironmentInOuts;
+import org.pgist.wfengine.Linkable;
 import org.pgist.wfengine.RunningContext;
 
 
@@ -17,7 +20,7 @@ import org.pgist.wfengine.RunningContext;
  *                            lazy="true" proxy="org.pgist.wfengine.activity.PManualGameActivity"
  * @hibernate.joined-subclass-key column="id"
  */
-public class PManualGameActivity extends PGameActivity {
+public class PManualGameActivity extends PGameActivity implements Linkable {
     
     
     private static final long serialVersionUID = -3825305313202911455L;
@@ -26,6 +29,8 @@ public class PManualGameActivity extends PGameActivity {
     protected String actionName = null;
     
     protected String access = "all";
+    
+    protected long time;
     
     protected long extension;
     
@@ -68,6 +73,21 @@ public class PManualGameActivity extends PGameActivity {
     /**
      * @return
      * 
+     * @hibernate.property column="time" not-null="true"
+     */
+    public long getTime() {
+        return time;
+    }
+
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+
+    /**
+     * @return
+     * 
      * @hibernate.property column="extension" not-null="true"
      */
     public long getExtension() {
@@ -95,7 +115,9 @@ public class PManualGameActivity extends PGameActivity {
         newGame.setDescription(getDescription());
         newGame.setActionName(getActionName());
         newGame.setAccess(getAccess());
+        newGame.setTime(getTime());
         newGame.setExtension(getExtension());
+        newGame.getDeclaration().duplicate(getDeclaration());
         
         Activity act = getNext();
         if (act!=null) {
@@ -120,9 +142,21 @@ public class PManualGameActivity extends PGameActivity {
     protected boolean doExecute(RunningContext context) throws Exception {
         context.getRunningActivities().add(this);
         
-        if (getExtension()>0) {
-            context.addJob(this, getExtension());
+        if (getTime()>0) {
+            /*
+             * an absolute timestamp is setup
+             */
+            context.addJob(this, getTime());
+        } else if (getExtension()>0) {
+            /*
+             * an relative time extension is setup
+             */
+            context.addJob(this, System.currentTimeMillis() + getExtension());
         }
+        
+        /*
+         * if neither time nor extension is greater than 0, it's not a time dependent activity
+         */
         
         return false;
     }//doExecute()
@@ -131,6 +165,29 @@ public class PManualGameActivity extends PGameActivity {
     protected void doDeActivate(RunningContext context) {
         context.getStack().push(getNext());
     }//doDeActivate()
+
+
+    public String getLink() {
+        System.out.println("1====> "+getRunningContext());
+        EnvironmentInOuts inouts = new EnvironmentInOuts(getRunningContext(), getDeclaration());
+        
+        System.out.println("2====> "+getRunningContext().getRegistry());
+        System.out.println("3====> "+getRunningContext().getRegistry().getAction(getActionName()));
+        String uri = getRunningContext().getRegistry().getAction(getActionName()) + "?";
+        System.out.println("4====> "+uri);
+        
+        StringBuilder params = new StringBuilder();
+        for (Map.Entry<String, String> entry : getDeclaration().getIns().entrySet()) {
+            params.append(entry.getKey());
+            params.append('=');
+            params.append(inouts.getValue(entry.getValue()).toString());
+            params.append('&');
+        }//for
+        
+        System.out.println("5====> "+uri + params.toString());
+        
+        return uri + params.toString();
+    }//getLink()
     
     
 }//class PManualGameActivity

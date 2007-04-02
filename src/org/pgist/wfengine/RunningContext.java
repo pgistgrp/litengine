@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.pgist.wfengine.activity.GroupActivity;
-import org.pgist.wfengine.activity.PMethodActivity;
 import org.pgist.wfengine.activity.SituationActivity;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -289,7 +288,7 @@ public class RunningContext {
     }//merge()
     
     
-    public void addJob(Activity activity, long extension) throws SchedulerException {
+    public void addJob(Activity activity, long time) throws SchedulerException {
         String key = activity.getId().toString();
         JobDetail jobDetail = new JobDetail(key, null, WorkflowTimer.class);
         
@@ -299,7 +298,7 @@ public class RunningContext {
         params.put("act_id", activity.getId());
         
         SimpleTrigger trigger = new SimpleTrigger(key, null,
-                new Date(System.currentTimeMillis() + extension), null, 0, 0L);
+                new Date(time), null, 0, 0L);
         
         getScheduler().scheduleJob(jobDetail, trigger);
     }//addJob()
@@ -418,6 +417,12 @@ public class RunningContext {
         
         return runningActivities.size()==0;
     }//proceed()
+
+
+    public void cleanup() throws Exception {
+        SituationActivity situation = (SituationActivity) group;
+        situation.getWorkflow().finish();
+    }//cleanup()
 
 
 }//class RunningContext
