@@ -37,6 +37,11 @@ public class EnvironmentInOuts {
      */
     
     
+    public String getProperty(String name) {
+        return declaration.getProperties().get(name);
+    }//getProperty()
+    
+    
     public Integer getIntValue(String name) {
         String realName = declaration.getIns().get(name);
         if (realName==null || realName.length()==0) realName = name;

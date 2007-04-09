@@ -67,6 +67,29 @@ public class DeclarationParser {
             parseVars(declaration.getOuts(), outs.elements("var"));
         }
         
+        //properties
+        Element props = rootElement.element("props");
+        if (props!=null) {
+            for (Element prop : (List<Element>) outs.elements("property")) {
+                //name
+                String name = prop.attributeValue("name");
+                if (name==null) throw new ParserException("attribute 'name' is required for element 'property'");
+                
+                name = name.trim();
+                if (name.length()==0) throw new ParserException("attribute 'name' is required for element 'property'");
+                
+                //value
+                String value = prop.attributeValue("value");
+                if (value==null) value = "";
+                else {
+                    value = value.trim();
+                }
+                
+                //now both name and value are available
+                declaration.getProperties().put(name, value);
+            }//for
+        }
+        
         return declaration;
     }//parse()
     
