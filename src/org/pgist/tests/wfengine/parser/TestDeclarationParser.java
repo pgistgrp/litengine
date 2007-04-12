@@ -245,4 +245,78 @@ public class TestDeclarationParser {
     }//test5()
     
     
+    /**
+     * Test Case: Declaration contains properties elements besides of "ins" and "outs".
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void test6() throws Exception {
+        String xml =
+            "<declaration>"
+            + "    <ins>"
+            + "        <var name=\" in_1 \"/>"
+            + "        <var name=\" in_2 \" ref=\" parent.in_2 \"/>"
+            + "        <var name=\" in_3 \" ref=\" parent.in_3 \"/>"
+            + "    </ins>"
+            + "    <outs>"
+            + "        <var name=\" out_1 \"/>"
+            + "        <var name=\" out_2 \" ref=\" parent.out_2 \"/>"
+            + "        <var name=\" out_3 \" ref=\" parent.out_3 \"/>"
+            + "    </outs>"
+            + "    <props>"
+            + "        <property name=\"prop_1\" value=\"value_1\" />"
+            + "        <property name=\"prop_2\" value=\"value_2\" />"
+            + "        <property name=\"prop_3\" value=\"value_3\" />"
+            + "    </props>"
+            + "</declaration>";
+        
+        Document doc = TestHelper.getDocument(xml);
+        
+        Declaration declaration = parser.parse(doc.getRootElement());
+        
+        assertNotNull("'declaration' is null", declaration);
+        assertNotNull("'ins' is null", declaration.getIns());
+        assertNotNull("'outs' is null", declaration.getOuts());
+        assertNotNull("'props' is null", declaration.getProperties());
+        
+        //ins
+        assertTrue("'ins' size incorrect", declaration.getIns().size()==3);
+        
+        assertTrue("'ins' doesn't contain 'in_1'", declaration.getIns().containsKey("in_1"));
+        assertEquals("ref for 'in_1' incorrect", "in_1", declaration.getIns().get("in_1"));
+        
+        assertTrue("'ins' doesn't contain 'in_2'", declaration.getIns().containsKey("in_2"));
+        assertEquals("ref for 'in_2' incorrect", "parent.in_2", declaration.getIns().get("in_2"));
+        
+        assertTrue("'ins' doesn't contain 'in_3'", declaration.getIns().containsKey("in_3"));
+        assertEquals("ref for 'in_3' incorrect", "parent.in_3", declaration.getIns().get("in_3"));
+        
+        //outs
+        assertTrue("'outs' size incorrect", declaration.getOuts().size()==3);
+        
+        assertTrue("'outs' doesn't contain 'out_1'", declaration.getOuts().containsKey("out_1"));
+        assertEquals("ref for 'out_1' incorrect", "out_1", declaration.getOuts().get("out_1"));
+        
+        assertTrue("'outs' doesn't contain 'out_2'", declaration.getOuts().containsKey("out_2"));
+        assertEquals("ref for 'out_2' incorrect", "parent.out_2", declaration.getOuts().get("out_2"));
+        
+        assertTrue("'outs' doesn't contain 'out_3'", declaration.getOuts().containsKey("out_3"));
+        assertEquals("ref for 'out_3' incorrect", "parent.out_3", declaration.getOuts().get("out_3"));
+        
+        //props
+        assertTrue("'props' size incorrect", declaration.getProperties().size()==3);
+        
+        assertTrue("'props' doesn't contain 'prop_1'", declaration.getProperties().containsKey("prop_1"));
+        assertEquals("ref for 'prop_1' incorrect", "value_1", declaration.getProperties().get("prop_1"));
+        
+        assertTrue("'props' doesn't contain 'prop_2'", declaration.getProperties().containsKey("prop_2"));
+        assertEquals("ref for 'prop_2' incorrect", "value_2", declaration.getProperties().get("prop_2"));
+        
+        assertTrue("'props' doesn't contain 'prop_3'", declaration.getProperties().containsKey("prop_3"));
+        assertEquals("ref for 'prop_3' incorrect", "value_3", declaration.getProperties().get("prop_3"));
+        
+    }//test6()
+    
+    
 }//class TestDeclarationParser

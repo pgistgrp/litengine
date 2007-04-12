@@ -70,7 +70,7 @@ public class DeclarationParser {
         //properties
         Element props = rootElement.element("props");
         if (props!=null) {
-            for (Element prop : (List<Element>) outs.elements("property")) {
+            for (Element prop : (List<Element>) props.elements("property")) {
                 //name
                 String name = prop.attributeValue("name");
                 if (name==null) throw new ParserException("attribute 'name' is required for element 'property'");

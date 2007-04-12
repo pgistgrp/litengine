@@ -89,7 +89,7 @@ public class Declaration {
      * @hibernate.map table="litwf_declare_prop_map"
      * @hibernate.collection-key column="declaration_id"
      * @hibernate.collection-index column="name" type="string" length="255"
-     * @hibernate.collection-element column="property" type="string"
+     * @hibernate.collection-element column="property" type="text"
      */
     public Map<String, String> getProperties() {
         return properties;
