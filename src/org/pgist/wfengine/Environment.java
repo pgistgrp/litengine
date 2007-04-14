@@ -252,7 +252,7 @@ public class Environment {
         if (value==null) value = getContext().getEnvironment().getStrValues().get(realName);
         if (value==null) value = getContext().getEnvironment().getDateValues().get(realName);
         
-        if (value==null) {
+        if (value==null && getContext().getParent()!=null) {
             value = getContext().getParent().getEnvironment().findValue(realName);
         }
         

@@ -100,7 +100,6 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
             
             return true;
         } catch (Exception e) {
-            System.out.println("Error in PAutoGameActivity: ");
             e.printStackTrace();
             context.getHaltingActivities().add(this);
             return false;

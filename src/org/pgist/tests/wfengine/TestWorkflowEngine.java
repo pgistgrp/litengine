@@ -95,7 +95,7 @@ public class TestWorkflowEngine {
     
     @Test
     public void createAndStartWorkflow() throws Exception {
-        Workflow workflow = engine.createWorkflow(77L);
+        Workflow workflow = engine.createWorkflow(365L);
         System.out.println("---- Workflow id: "+workflow.getId());
         engine.startWorkflow(workflow.getId());
     }//createWorkflow()

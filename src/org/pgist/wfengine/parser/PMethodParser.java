@@ -99,12 +99,18 @@ public class PMethodParser {
                 SingleIn singleIn = (SingleIn) newPgame;
                 SingleOut singleOut = (SingleOut) newPgame;
                 
+                //declaration inheritance
+                newPgame.getDeclaration().getIns().putAll(pgame.getDeclaration().getIns());
+                newPgame.getDeclaration().getOuts().putAll(pgame.getDeclaration().getOuts());
+                newPgame.getDeclaration().getProperties().putAll(pgame.getDeclaration().getProperties());
+                
                 //declaration override
                 Element declElement = node.element("declaration");
                 if (declElement!=null) {
                     Declaration decl = declParser.parse(declElement);
                     newPgame.getDeclaration().getIns().putAll(decl.getIns());
                     newPgame.getDeclaration().getOuts().putAll(decl.getOuts());
+                    newPgame.getDeclaration().getProperties().putAll(decl.getProperties());
                 }
                 
                 if (piece.getHead()==null) {

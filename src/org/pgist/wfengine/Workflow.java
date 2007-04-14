@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.pgist.wfengine.activity.SituationActivity;
-import org.quartz.Scheduler;
 
 
 /**

@@ -168,23 +168,18 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
 
 
     public String getLink() {
-        System.out.println("1====> "+getRunningContext());
         EnvironmentInOuts inouts = new EnvironmentInOuts(getRunningContext(), getDeclaration());
         
-        System.out.println("2====> "+getRunningContext().getRegistry());
-        System.out.println("3====> "+getRunningContext().getRegistry().getAction(getActionName()));
         String uri = getRunningContext().getRegistry().getAction(getActionName()) + "?";
-        System.out.println("4====> "+uri);
         
         StringBuilder params = new StringBuilder();
         for (Map.Entry<String, String> entry : getDeclaration().getIns().entrySet()) {
             params.append(entry.getKey());
             params.append('=');
-            params.append(inouts.getValue(entry.getValue()).toString());
+            Object value = inouts.getValue(entry.getValue());
+            if (value!=null) params.append(value.toString());
             params.append('&');
         }//for
-        
-        System.out.println("5====> "+uri + params.toString());
         
         return uri + params.toString();
     }//getLink()

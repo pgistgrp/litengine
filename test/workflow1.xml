@@ -9,6 +9,10 @@
                 <outs>
                     <var name="suite_id"/>
                 </outs>
+                <props>
+                    <property name="prop_1" value="values_1"/>
+                    <property name="prop_2" value="values_2"/>
+                </props>
             </declaration>
         </pgame>
         <pgame name="pgame2" description="pgame2" auto="true">
