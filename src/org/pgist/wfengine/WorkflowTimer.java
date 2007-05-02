@@ -30,6 +30,7 @@ public class WorkflowTimer implements Job {
             WorkflowEngine engine = WorkflowListener.getEngine();
             engine.executeWorkflow(workflowId, contextId, activityId);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new JobExecutionException(e);
         }
     }//execute()

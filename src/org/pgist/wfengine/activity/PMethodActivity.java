@@ -71,6 +71,20 @@ public class PMethodActivity extends GroupActivity {
             pmethod.setNext(newAct);
         }
         
+        //create a return activity
+        ReturnActivity returnActivity = new ReturnActivity();
+        returnActivity.setCounts(0);
+        returnActivity.setGroup(pmethod);
+        
+        //duplicate from the definition
+        pmethod.setHeadActivity(getDefinition().getHeadActivity().clone(null, new Stack<Activity>(), new Stack<Activity>()));
+        
+        SingleOut sout = (SingleOut) pmethod.getHeadActivity().getEnd();
+        sout.setNext(returnActivity);
+        returnActivity.setPrev((Activity) sout);
+        
+        pmethod.setTailActivity(returnActivity);
+        
         return pmethod;
     }//clone()
     
@@ -81,20 +95,6 @@ public class PMethodActivity extends GroupActivity {
     
     
     protected void doActivate(RunningContext context) throws Exception {
-        //create a return activity
-        ReturnActivity returnActivity = new ReturnActivity();
-        returnActivity.setCounts(0);
-        returnActivity.setGroup(this);
-        
-        //duplicate from the definition
-        setHeadActivity(getDefinition().getHeadActivity().clone(null, new Stack<Activity>(), new Stack<Activity>()));
-        
-        SingleOut sout = (SingleOut) getHeadActivity().getEnd();
-        sout.setNext(returnActivity);
-        returnActivity.setPrev((Activity) sout);
-        
-        setTailActivity(returnActivity);
-        
         //inherite environment from the parent context
         Environment initEnv = getContext().getInitEnvironment();
         Environment myEnv = getContext().getEnvironment();

@@ -81,11 +81,19 @@ public class SituationActivity extends GroupActivity {
         situation.getContext().getDeclaration().duplicate(getContext().getDeclaration());
         situation.getContext().getEnvironment().duplicate(getContext().getEnvironment());
         
-        Activity act = getNext();
-        if (act!=null) {
-            Activity newAct = act.clone(situation, clonedStop, stop);
-            situation.setNext(newAct);
-        }
+        //create a return activity
+        ReturnActivity returnActivity = new ReturnActivity();
+        returnActivity.setCounts(0);
+        returnActivity.setGroup(situation);
+        
+        //duplicate myself
+        situation.setHeadActivity(getHeadActivity().clone(null, new Stack<Activity>(), new Stack<Activity>()));
+        
+        SingleOut sout = (SingleOut) situation.getHeadActivity().getEnd();
+        sout.setNext(returnActivity);
+        returnActivity.setPrev((Activity) sout);
+        
+        situation.setTailActivity(returnActivity);
         
         return situation;
     }//clone()
@@ -94,23 +102,6 @@ public class SituationActivity extends GroupActivity {
     /*
      * ------------------------------------------------------------------------------
      */
-    
-    
-    protected void doActivate(RunningContext context) {
-        //create a return activity
-        ReturnActivity returnActivity = new ReturnActivity();
-        returnActivity.setCounts(0);
-        returnActivity.setGroup(this);
-        
-        //duplicate from the definition
-        setHeadActivity(getDefinition().getHeadActivity().clone(null, new Stack<Activity>(), new Stack<Activity>()));
-        
-        SingleOut sout = (SingleOut) getHeadActivity().getEnd();
-        sout.setNext(returnActivity);
-        returnActivity.setPrev((Activity) sout);
-        
-        setTailActivity(returnActivity);
-    }//doActivate()
     
     
     synchronized protected boolean doExecute(RunningContext context) throws Exception {

@@ -73,10 +73,7 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
     public Workflow createWorkflow(Long situationId) throws Exception {
         SituationActivity template = (SituationActivity) getHibernateTemplate().load(SituationActivity.class, situationId);
         
-        SituationActivity situation = new SituationActivity();
-        situation.setDefinition(template);
-        situation.setName(template.getName());
-        situation.setDescription(template.getDescription());
+        SituationActivity situation = template.clone(null, null, null);
         
         Workflow workflow = new Workflow();
         workflow.setSituation(situation);

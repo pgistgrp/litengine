@@ -88,6 +88,20 @@ public class MeetingActivity extends GroupActivity {
             meeting.setNext(newAct);
         }
         
+        //create a return activity
+        ReturnActivity returnActivity = new ReturnActivity();
+        returnActivity.setCounts(0);
+        returnActivity.setGroup(meeting);
+        
+        //duplicate from the definition
+        meeting.setHeadActivity(getDefinition().getHeadActivity().clone(null, new Stack<Activity>(), new Stack<Activity>()));
+        
+        SingleOut sout = (SingleOut) meeting.getHeadActivity().getEnd();
+        sout.setNext(returnActivity);
+        returnActivity.setPrev((Activity) sout);
+        
+        meeting.setTailActivity(returnActivity);
+        
         return meeting;
     }//clone()
     
@@ -98,20 +112,6 @@ public class MeetingActivity extends GroupActivity {
     
     
     protected void doActivate(RunningContext context) {
-        //create a return activity
-        ReturnActivity returnActivity = new ReturnActivity();
-        returnActivity.setCounts(0);
-        returnActivity.setGroup(this);
-        
-        //duplicate from the definition
-        setHeadActivity(getDefinition().getHeadActivity().clone(null, new Stack<Activity>(), new Stack<Activity>()));
-        
-        SingleOut sout = (SingleOut) getHeadActivity().getEnd();
-        sout.setNext(returnActivity);
-        returnActivity.setPrev((Activity) sout);
-        
-        setTailActivity(returnActivity);
-        
         //inherite environment from the parent context
         Environment initEnv = getContext().getInitEnvironment();
         Environment myEnv = getContext().getEnvironment();
@@ -145,7 +145,7 @@ public class MeetingActivity extends GroupActivity {
         upEnv.merge(myEnv, myDecl);
         
         //clear my environment
-        getContext().getEnvironment().clear();
+        //getContext().getEnvironment().clear();
         
         getContext().getParent().getPendingActivities().remove(this);
         getContext().getParent().getStack().add(getNext());
