@@ -128,7 +128,7 @@ public class BranchActivity extends Activity implements SingleIn {
          * Push all branches into the stack
          */
         for (Activity activity : getBranches()) {
-            context.getStack().push(activity);
+            context.addRunningActivity(activity);
         }//for
         
         return true;

@@ -164,7 +164,7 @@ public class Workflow implements Serializable {
         /*
          * bootstrap
          */
-        situation.getContext().getStack().push(situation);
+        situation.getContext().addRunningActivity(situation);
         
         status = STATUS_RUNNING;
         

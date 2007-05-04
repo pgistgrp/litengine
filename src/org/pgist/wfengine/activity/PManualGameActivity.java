@@ -163,7 +163,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     
     
     protected void doDeActivate(RunningContext context) {
-        context.getStack().push(getNext());
+        context.addRunningActivity(getNext());
     }//doDeActivate()
 
 

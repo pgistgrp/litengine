@@ -152,10 +152,10 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
         if (getExpression()==0) {//task is not finished
         } else if (getExpression()>0) {
             next.activate(context);
-            context.getStack().push(next);
+            context.addRunningActivity(next);
         } else {
             repeat.activate(context);
-            context.getStack().push(repeat);
+            context.addRunningActivity(repeat);
         }
         
         return false;

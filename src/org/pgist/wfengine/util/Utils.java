@@ -20,7 +20,7 @@ public class Utils {
      *  @return
      */
     public static Object narrow(Object object){
-        if(object instanceof HibernateProxy){
+        if (object instanceof HibernateProxy) {
             return ((HibernateProxy)object).getHibernateLazyInitializer().getImplementation();
         } else {
             return object;

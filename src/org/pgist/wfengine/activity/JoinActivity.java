@@ -151,7 +151,7 @@ public class JoinActivity extends Activity implements SingleOut {
     
     protected boolean doExecute(RunningContext context) throws Exception {
         if (getJoinCount()>=joins.size()) {
-            context.getStack().push(getNext());
+            context.addRunningActivity(getNext());
             return true;
         }
         return false;

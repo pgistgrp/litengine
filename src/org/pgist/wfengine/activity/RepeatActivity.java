@@ -147,7 +147,7 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        context.getStack().push(next);
+        context.addRunningActivity(next);
         
         return true;
     }//doExecute()

@@ -142,7 +142,7 @@ public class LoopActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        context.getStack().push(getWhilst());
+        context.addRunningActivity(getWhilst());
         
         return true;
     }//doExecute()

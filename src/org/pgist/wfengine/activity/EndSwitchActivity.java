@@ -129,7 +129,7 @@ public class EndSwitchActivity extends Activity implements SingleOut {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        context.getStack().push(next);
+        context.addRunningActivity(next);
         
         return true;
     }//doExecute()

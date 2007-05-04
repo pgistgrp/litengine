@@ -143,7 +143,11 @@ public class WorkflowEngine {
     
     
     public void startWorkflow(Long workflowId) throws Exception {
-        Workflow workflow = engineDAO.getWorkflowById(workflowId);
+        /*
+         * Load and lock the specified workflow object
+         */
+        Workflow workflow = engineDAO.lockWorkflowById(workflowId);
+        
         workflow.setEngine(this);
         
         workflow.start();
@@ -153,7 +157,11 @@ public class WorkflowEngine {
     
     
     public Workflow createStartWorkflow(Long situationId) throws Exception {
-        Workflow workflow = engineDAO.createWorkflow(situationId);
+        /*
+         * Load and lock the specified workflow object
+         */
+        Workflow workflow = engineDAO.lockWorkflowById(situationId);
+        
         workflow.setEngine(this);
         
         workflow.start();
@@ -165,7 +173,11 @@ public class WorkflowEngine {
     
     
     public void executeWorkflow(Long workflowId, Long contextId, Long activityId) throws Exception {
-        Workflow workflow = engineDAO.getWorkflowById(workflowId);
+        /*
+         * Load and lock the specified workflow object
+         */
+        Workflow workflow = engineDAO.lockWorkflowById(workflowId);
+        
         workflow.setEngine(this);
         
         if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
@@ -182,7 +194,7 @@ public class WorkflowEngine {
         
         if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
         
-        Activity activity = engineDAO.getActivityById(activityId);
+        Activity activity = engineDAO.lockActivityById(activityId);
         
         if (activity==null) throw new WorkflowException("cannot find activity with id "+activityId);
         

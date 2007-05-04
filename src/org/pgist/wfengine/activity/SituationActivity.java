@@ -106,7 +106,7 @@ public class SituationActivity extends GroupActivity {
     
     synchronized protected boolean doExecute(RunningContext context) throws Exception {
         //put head in the context
-        getContext().getStack().push(getHeadActivity());
+        getContext().addRunningActivity(getHeadActivity());
         
         return false;
     }//doExecute()

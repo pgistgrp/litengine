@@ -126,11 +126,11 @@ public class JumpActivity extends Activity implements SingleIn, SingleOut {
         if (getExpression()==0) {
         } else if (getExpression()<0) {
             next.activate(context);
-            context.getStack().push(next);
+            context.addRunningActivity(next);
         } else {
             Activity activity = (Activity) jumps.get(getExpression()-1);
             activity.activate(context);
-            context.getStack().push(activity);
+            context.addRunningActivity(activity);
         }
         
         return true;

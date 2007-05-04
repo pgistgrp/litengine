@@ -87,7 +87,7 @@ public class ReturnActivity extends Activity implements SingleIn {
             //The top level finished
             context.cleanup();
         } else {
-            context.getParent().getStack().add(getGroup());
+            context.getParent().addRunningActivity(getGroup());
         }
         
         return true;

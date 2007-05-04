@@ -258,11 +258,6 @@ public class RunningContext {
      */
     
     
-    public Stack<Activity> getStack() {
-        return stack;
-    }
-
-
     public Workflow getWorkflow() {
         if (getParent()!=null) {
             return getParent().getWorkflow();
@@ -312,6 +307,11 @@ public class RunningContext {
             situation.getWorkflow().getEngine().saveActivity(activity);
         }
     }//save()
+    
+    
+    public void addRunningActivity(Activity activity) {
+        stack.push(activity);
+    }//addRunningActivity()
     
     
     /*

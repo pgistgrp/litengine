@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.pgist.wfengine.activity.MeetingActivity;
 import org.pgist.wfengine.activity.PGameActivity;
@@ -88,6 +89,11 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
     public Workflow getWorkflowById(Long workflowId) throws Exception {
         return (Workflow) getHibernateTemplate().load(Workflow.class, workflowId);
     }//getWorkflowById()
+    
+    
+    public Workflow lockWorkflowById(Long workflowId) throws Exception {
+        return (Workflow) getHibernateTemplate().load(Workflow.class, workflowId, LockMode.UPGRADE);
+    }//lockWorkflowById()
 
 
     public RunningContext getContextById(Long contextId) throws Exception {
@@ -97,6 +103,11 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
     
     public Activity getActivityById(Long activityId) throws Exception {
         return (Activity) getHibernateTemplate().load(Activity.class, activityId);
+    }//getActivityById()
+    
+    
+    public Activity lockActivityById(Long activityId) throws Exception {
+        return (Activity) getHibernateTemplate().load(Activity.class, activityId, LockMode.UPGRADE);
     }//getActivityById()
     
     

@@ -110,7 +110,7 @@ public class PMethodActivity extends GroupActivity {
     
     synchronized protected boolean doExecute(RunningContext context) throws Exception {
         //put head in the context
-        getContext().getStack().push(getHeadActivity());
+        getContext().addRunningActivity(getHeadActivity());
         
         getContext().setParent(context);
         
@@ -133,7 +133,7 @@ public class PMethodActivity extends GroupActivity {
         getContext().getEnvironment().clear();
         
         getContext().getParent().getPendingActivities().remove(this);
-        getContext().getParent().getStack().add(getNext());
+        getContext().getParent().addRunningActivity(getNext());
     }//doDeActivate()
     
     

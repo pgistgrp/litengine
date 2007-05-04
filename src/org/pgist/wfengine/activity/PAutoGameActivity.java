@@ -96,7 +96,7 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
                 context.merge(inouts);
             }
             
-            context.getStack().add(getNext());
+            context.addRunningActivity(getNext());
             
             return true;
         } catch (Exception e) {
