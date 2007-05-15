@@ -196,9 +196,14 @@ public class Environment {
     public Integer findIntValue(String name) {
         String realName = getContext().getDeclaration().getIns().get(name);
         if (realName==null || realName.length()==0) realName = name;
+        
         Integer value = getContext().getEnvironment().getIntValues().get(realName);
         if (value==null) {
-            value = getContext().getParent().getEnvironment().findIntValue(realName);
+            if (getContext().getParent()!=null) {
+                value = getContext().getParent().getEnvironment().findIntValue(realName);
+            } else {
+                return null;
+            }
         }
         
         return value;
