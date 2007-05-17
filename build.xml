@@ -7,6 +7,7 @@
     <property name="build" value="${base}/build" />
     <property name="conf" value="${base}/conf"/>
     <property name="output" value="litwf-engine.jar"/>
+    <property name="javadoc" value="${base}/javadoc"/>
 
 
     <path id="classpath">
@@ -75,5 +76,18 @@
     </target>
 
 
+    <target name="javadoc">
+        <delete dir="${javadoc}"/>
+        <mkdir dir="${javadoc}"/>
+        <javadoc classpathref="classpath" destdir="${javadoc}" author="true" version="true"
+                 use="true" windowtitle="PGIST API" doctitle="PGIST" Locale="en_US"
+                 bottom="Copyright &#169; ${doctime} University of Washington. All Rights Reserved.">
+            <packageset dir="${src}" defaultexcludes="yes">
+              <include name="**"/>
+            </packageset>
+        </javadoc>
+    </target>
+    
+    
 </project>
 

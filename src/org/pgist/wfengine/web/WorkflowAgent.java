@@ -125,6 +125,8 @@ public class WorkflowAgent {
      *               <li>runningWorkflows - a list of running Workflow objects</li>
      *               <li>finishedWorkflows - a list of finished Workflow objects</li>
      *               <li>newWorkflows - a list of new Workflow objects</li>
+     *               <li>instanceTotal - total number of instances (runningWorkflows + finishedWorkflows)</li>
+     *               <li>instanceId - if instanceTotal=1, this is the id of that instance</li>
      *             </ul>
      *         </li>
      *     </ul>
@@ -146,6 +148,19 @@ public class WorkflowAgent {
                  */
                 Collection newWorkflows = engine.getNewWorkflows();
                 request.setAttribute("newWorkflows", newWorkflows);
+            }
+            
+            int instanceTotal = runningWorkflows.size() + finishedWorkflows.size();
+            results.put("instanceTotal", instanceTotal);
+            
+            if (instanceTotal==1) {
+                Workflow workflow = null;
+                if (runningWorkflows.size()>0) {
+                    workflow = (Workflow) runningWorkflows.iterator().next();
+                } else {
+                    workflow = (Workflow) finishedWorkflows.iterator().next();
+                }
+                results.put("instanceId", workflow.getId());
             }
             
             results.put("html", WebContextFactory.get().forwardToString("/WEB-INF/jsp/workflow/wf_workflows.jsp"));
