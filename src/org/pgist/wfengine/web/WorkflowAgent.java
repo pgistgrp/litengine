@@ -140,7 +140,7 @@ public class WorkflowAgent {
         try {
             Collection runningWorkflows = engine.getRunningWorkflows();
             request.setAttribute("runningWorkflows", runningWorkflows);
-            results.put("instanceTotal", runningWorkflows.size());
+            results.put("runningTotal", runningWorkflows.size());
             
             Collection finishedWorkflows = engine.getFinishedWorkflows();
             request.setAttribute("finishedWorkflows", finishedWorkflows);
