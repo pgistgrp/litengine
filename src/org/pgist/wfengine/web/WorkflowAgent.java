@@ -157,11 +157,9 @@ public class WorkflowAgent {
             int instanceTotal = runningWorkflows.size() + finishedWorkflows.size();
             results.put("instanceTotal", instanceTotal);
             
-            if (instanceTotal==1) {
-                if (runningWorkflows.size()>0) {
-                    Workflow workflow = (Workflow) runningWorkflows.iterator().next();
-                    results.put("instanceId", workflow.getId());
-                }
+            if (runningWorkflows.size()==1) {
+                Workflow workflow = (Workflow) runningWorkflows.iterator().next();
+                results.put("instanceId", workflow.getId());
             }
             
             results.put("html", WebContextFactory.get().forwardToString("/WEB-INF/jsp/workflow/wf_workflows.jsp"));
