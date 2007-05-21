@@ -236,9 +236,6 @@ public class WorkflowAgent {
             
             Workflow workflow = engine.getWorkflowById(workflowId);
             
-            System.out.println("workflowId ---> "+workflowId);
-            System.out.println("workflow ---> "+workflow);
-            
             request.setAttribute("workflow", workflow);
             
             results.put("html", WebContextFactory.get().forwardToString("/WEB-INF/jsp/workflow/wf_workflow.jsp"));

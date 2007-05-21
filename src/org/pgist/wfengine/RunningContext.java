@@ -54,7 +54,7 @@ public class RunningContext {
     
     private GroupActivity group;
     
-    private Set<RunningHistory> histories = new HashSet<RunningHistory>();
+    private List<RunningHistory> histories = new ArrayList<RunningHistory>();
     
     private Set<Activity> runningActivities = new HashSet<Activity>();
     
@@ -140,14 +140,18 @@ public class RunningContext {
     /**
      * @return
      * 
-     * @hibernate.many-to-one column="history_id" cascade="all"
+     * @hibernate.list lazy="true" cascade="all"
+     * @hibernate.collection-key column="context_id"
+     * @hibernate.collection-index column="history_order"
+     * @hibernate.collection-one-to-many class="org.pgist.wfengine.RunningHistory"
+     * 
      */
-    public Set<RunningHistory> getHistories() {
+    public List<RunningHistory> getHistories() {
         return histories;
     }
 
 
-    public void setHistories(Set<RunningHistory> histories) {
+    public void setHistories(List<RunningHistory> histories) {
         this.histories = histories;
     }
 

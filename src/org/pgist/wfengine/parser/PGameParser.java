@@ -62,8 +62,8 @@ public class PGameParser {
             }
             
             //revisitable
-            String revisitable = pgameElement.attribute("revisitable").getStringValue();
-            if (revisitable!=null && "true".equals(revisitable.trim())) {
+            String revisitable = pgameElement.attributeValue("revisitable");
+            if (revisitable!=null && "true".equalsIgnoreCase(revisitable.trim())) {
                 manualGame.setRevisitable(true);
             }
         }

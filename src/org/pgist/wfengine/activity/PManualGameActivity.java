@@ -140,6 +140,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
         newGame.setTime(getTime());
         newGame.setExtension(getExtension());
         newGame.getDeclaration().duplicate(getDeclaration());
+        newGame.setRevisitable(isAutomatic());
         
         Activity act = getNext();
         if (act!=null) {
