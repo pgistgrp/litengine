@@ -64,6 +64,7 @@ public abstract class Activity implements Serializable {
     
     /**
      * @return
+     * 
      * @hibernate.id generator-class="native"
      */
     public Long getId() {
@@ -78,6 +79,7 @@ public abstract class Activity implements Serializable {
 
     /**
      * @return
+     * 
      * @hibernate.property not-null="true"
      */
     public int getType() {
@@ -92,6 +94,7 @@ public abstract class Activity implements Serializable {
 
     /**
      * @return
+     * 
      * @hibernate.property not-null="true"
      */
     public int getCounts() {
@@ -141,6 +144,7 @@ public abstract class Activity implements Serializable {
     
     /**
      * Package Access Only
+     * 
      * @param context
      */
     public final void activate(RunningContext context) throws Exception {
@@ -153,6 +157,7 @@ public abstract class Activity implements Serializable {
     
     /**
      * Package Access Only
+     * 
      * @param context
      * @param stack
      */
@@ -163,6 +168,7 @@ public abstract class Activity implements Serializable {
     
     /**
      * Package Access Only
+     * 
      * @param context
      */
     final void deActivate(RunningContext context) {
@@ -172,6 +178,7 @@ public abstract class Activity implements Serializable {
     
     /**
      * default implementation
+     * 
      * @param context
      */
     protected void doActivate(RunningContext context) throws Exception {
@@ -180,6 +187,7 @@ public abstract class Activity implements Serializable {
     
     /**
      * default implementation
+     * 
      * @param context
      */
     protected void doDeActivate(RunningContext context) {

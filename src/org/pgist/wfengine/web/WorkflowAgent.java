@@ -268,8 +268,6 @@ public class WorkflowAgent {
      *     <ul>
      *         <li>successful - boolean, whether the operation succeed</li>
      *         <li>reason - string, the reason why it fails</li>
-     *         <li>contextId - int, id of a RunningContext object</li>
-     *         <li>activityId - int, id of a Activity object</li>
      *     </ul>
      */
     public Map nextStep(Map params) {
@@ -277,18 +275,21 @@ public class WorkflowAgent {
         results.put("successful", false);
         
         try {
-            Long workflowId = new Long((String) results.get("workflowId"));
-            Long contextId = new Long((String) results.get("contextId"));
-            Long activityId = new Long((String) results.get("activityId"));
+            Long workflowId = new Long((String) params.get("workflowId"));
+            Long contextId = new Long((String) params.get("contextId"));
+            Long activityId = new Long((String) params.get("activityId"));
             
-            String nextIdStr = (String) results.get("nextId");
+            String nextIdStr = (String) params.get("nextId");
             if (nextIdStr==null || nextIdStr.length()==0) {
                 engine.executeWorkflow(workflowId, contextId, activityId);
             } else {
-                Long nextId = new Long((String) results.get("nextIdStr"));
+                Long nextId = new Long((String) params.get("nextIdStr"));
                 //engine.executeWorkflow(workflowId, contextId, activityId, nextId);
             }
+            
+            results.put("successful", true);
         } catch (Exception e) {
+            e.printStackTrace();
             results.put("reason", e.getMessage());
         }
         

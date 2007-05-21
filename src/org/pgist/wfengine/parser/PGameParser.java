@@ -60,6 +60,12 @@ public class PGameParser {
             if (timerElement!=null) {
                 manualGame.setExtension(Long.parseLong(timerElement.attributeValue("extension")));
             }
+            
+            //revisitable
+            String revisitable = pgameElement.attribute("revisitable").getStringValue();
+            if (revisitable!=null && "true".equals(revisitable.trim())) {
+                manualGame.setRevisitable(true);
+            }
         }
         
         //name

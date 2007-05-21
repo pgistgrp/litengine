@@ -92,7 +92,7 @@ public class TestPGameParser {
     @Test
     public void test2() throws Exception {
         String xml =
-            "<pgame name=\" pgame1 \" description=\" pgame1 \" auto=\" false \" access=\" moderator \">"
+            "<pgame name=\" pgame1 \" description=\" pgame1 \" auto=\" false \" access=\" moderator \" revisitable=\" true \">"
           + "    <actionName> action1 </actionName>"
           + "    <declaration>"
           + "        <ins>"
@@ -121,6 +121,7 @@ public class TestPGameParser {
         
         assertTrue("member counts of pgame is not 0", pgame.getCounts()==0);
         assertTrue("member type of pgame is not "+Activity.TYPE_PMANUALGAME, pgame.getType()==Activity.TYPE_PMANUALGAME);
+        assertTrue("pgame is not an revisitable ", pgame.isRevisitable());
         
         assertEquals("ins value 'in_var_1' incorrect", "in_var_1", pgame.getDeclaration().getIns().get("in_var_1"));
         assertEquals("outs value 'out_var_1' incorrect", "out_var_1", pgame.getDeclaration().getOuts().get("out_var_1"));

@@ -54,6 +54,8 @@ public class RunningContext {
     
     private GroupActivity group;
     
+    private Set<RunningHistory> histories = new HashSet<RunningHistory>();
+    
     private Set<Activity> runningActivities = new HashSet<Activity>();
     
     private Set<Activity> pendingActivities = new HashSet<Activity>();
@@ -132,6 +134,21 @@ public class RunningContext {
 
     public void setGroup(GroupActivity group) {
         this.group = group;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="history_id" cascade="all"
+     */
+    public Set<RunningHistory> getHistories() {
+        return histories;
+    }
+
+
+    public void setHistories(Set<RunningHistory> histories) {
+        this.histories = histories;
     }
 
 

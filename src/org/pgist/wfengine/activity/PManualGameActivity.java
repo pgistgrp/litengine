@@ -7,6 +7,7 @@ import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.EnvironmentInOuts;
 import org.pgist.wfengine.Linkable;
 import org.pgist.wfengine.RunningContext;
+import org.pgist.wfengine.RunningHistory;
 
 
 /**
@@ -33,6 +34,12 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     protected long time;
     
     protected long extension;
+    
+    /**
+     * Whether this activity revisitable.
+     * When a revisitable activity finishes running, it will add itself into the running history.
+     */
+    protected boolean revisitable;
     
     
     public PManualGameActivity() {
@@ -100,6 +107,21 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     }
 
 
+    /**
+     * @return
+     * 
+     * @hibernate.property column="revisitable" not-null="true"
+     */
+    public boolean isRevisitable() {
+        return revisitable;
+    }
+
+
+    public void setRevisitable(boolean revisitable) {
+        this.revisitable = revisitable;
+    }
+
+
     /*
      * ------------------------------------------------------------------------------
      */
@@ -163,6 +185,18 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     
     
     protected void doDeActivate(RunningContext context) {
+        if (isRevisitable()) {
+            /*
+             * Record the history
+             */
+            RunningHistory history = new RunningHistory();
+            history.setActivityId(getId());
+            history.setParamStr(getLink());
+            history.setDescription(getDescription());
+            
+            context.getHistories().add(history);
+        }
+        
         context.addRunningActivity(getNext());
     }//doDeActivate()
 
