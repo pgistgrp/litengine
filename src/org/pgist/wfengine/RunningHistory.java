@@ -19,6 +19,8 @@ public class RunningHistory {
     
     private String description;
     
+    private String access;
+    
     
     /**
      * @return
@@ -77,6 +79,21 @@ public class RunningHistory {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.property not-null="true"
+     */
+    public String getAccess() {
+        return access;
+    }
+
+
+    public void setAccess(String access) {
+        this.access = access;
     }
 
 
