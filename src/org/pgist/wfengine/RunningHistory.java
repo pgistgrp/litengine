@@ -15,7 +15,7 @@ public class RunningHistory {
     
     private Long activityId;
     
-    private String paramStr;
+    private String link;
     
     private String description;
     
@@ -57,13 +57,13 @@ public class RunningHistory {
      * 
      * @hibernate.property length="512" not-null="true"
      */
-    public String getParamStr() {
-        return paramStr;
+    public String getLink() {
+        return link;
     }
 
 
-    public void setParamStr(String paramStr) {
-        this.paramStr = paramStr;
+    public void setLink(String link) {
+        this.link = link;
     }
 
 

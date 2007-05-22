@@ -40,8 +40,8 @@ public interface WorkflowEngineDAO {
     
     Activity getActivityById(Long activityId) throws Exception;
     
-    Activity lockActivityById(Long activityId) throws Exception;
-    
+    RunningHistory getRunningHistoryById(Long historyId) throws Exception;
+
     
     //-------------
     

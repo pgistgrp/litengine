@@ -1,6 +1,7 @@
 package org.pgist.wfengine;
 
 import java.io.Serializable;
+import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -216,6 +217,9 @@ public abstract class Activity implements Serializable {
     abstract public Activity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop);
     
     abstract public Activity getEnd();
+
+
+    public void setFuture(Set futures) {}
     
     
 }//abstract class Activity

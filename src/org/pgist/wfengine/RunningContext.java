@@ -340,6 +340,22 @@ public class RunningContext {
      */
     
     
+    public Set getFutureActivities() {
+        Set futures = new HashSet();
+        
+        for (Activity one : getRunningActivities()) {
+            one.setFuture(futures);
+        }//for
+        
+        return futures;
+    }//getFutureActivities()
+    
+    
+    /*
+     * ------------------------------------------------------------------------------
+     */
+    
+    
     protected void perform(Stack<Activity> stack, Set activities, Activity activity) throws Exception {
         //Execute this activity
         try {

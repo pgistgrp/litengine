@@ -6,6 +6,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.pgist.wfengine.activity.MeetingActivity;
 import org.pgist.wfengine.activity.PGameActivity;
+import org.pgist.wfengine.activity.PManualGameActivity;
 import org.pgist.wfengine.activity.PMethodActivity;
 import org.pgist.wfengine.activity.SituationActivity;
 import org.pgist.wfengine.parser.DeclarationParser;
@@ -14,6 +15,7 @@ import org.pgist.wfengine.parser.MeetingParser;
 import org.pgist.wfengine.parser.PGameParser;
 import org.pgist.wfengine.parser.PMethodParser;
 import org.pgist.wfengine.parser.SituationParser;
+import org.pgist.wfengine.util.Utils;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 
@@ -194,7 +196,7 @@ public class WorkflowEngine {
         
         if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
         
-        Activity activity = engineDAO.lockActivityById(activityId);
+        Activity activity = engineDAO.getActivityById(activityId);
         
         if (activity==null) throw new WorkflowException("cannot find activity with id "+activityId);
         
@@ -209,6 +211,53 @@ public class WorkflowEngine {
         workflow.setEngine(this);
         return workflow;
     }//getWorkflowById()
+
+
+    public String getURL(Long workflowId, Long contextId, Long activityId) throws Exception {
+        Workflow workflow = getWorkflowById(workflowId);
+        
+        if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
+        
+        RunningContext context = engineDAO.getContextById(contextId);
+        
+        if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
+        
+        Activity activity = engineDAO.getActivityById(activityId);
+        
+        if (activity==null) throw new WorkflowException("cannot find activity with id "+activityId);
+        
+        /*
+         * TODO: check validity
+         */
+        
+        if (activity.getType()==Activity.TYPE_PMANUALGAME) {
+            PManualGameActivity manual = (PManualGameActivity) Utils.narrow(activity);
+            return manual.getLink();
+        }
+        
+        return null;
+    }//getURL()
+
+
+    public RunningHistory getHistoryURL(Long workflowId, Long contextId, Long historyId) throws Exception {
+        Workflow workflow = getWorkflowById(workflowId);
+        
+        if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
+        
+        RunningContext context = engineDAO.getContextById(contextId);
+        
+        if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
+        
+        RunningHistory history = engineDAO.getRunningHistoryById(historyId);
+        
+        if (history==null) throw new WorkflowException("cannot find running history with id "+historyId);
+        
+        /*
+         * TODO: check validity
+         */
+        
+        return history;
+    }//getHistoryURL()
 
 
     

@@ -106,11 +106,11 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
     }//getActivityById()
     
     
-    public Activity lockActivityById(Long activityId) throws Exception {
-        return (Activity) getHibernateTemplate().load(Activity.class, activityId, LockMode.UPGRADE);
-    }//getActivityById()
-    
-    
+    public RunningHistory getRunningHistoryById(Long historyId) throws Exception {
+        return (RunningHistory) getHibernateSession().load(RunningHistory.class, historyId);
+    }//getRunningHistoryById()
+
+
     
     
     

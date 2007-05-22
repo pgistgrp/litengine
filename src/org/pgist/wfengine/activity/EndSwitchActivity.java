@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -129,7 +130,7 @@ public class EndSwitchActivity extends Activity implements SingleOut {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        context.addRunningActivity(next);
+        context.addRunningActivity(getNext());
         
         return true;
     }//doExecute()
@@ -139,6 +140,11 @@ public class EndSwitchActivity extends Activity implements SingleOut {
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
+    
+    
+    public void setFuture(Set futures) {
+        getNext().setFuture(futures);
+    }//setFuture()
 
 
 }//class EndSwitchActivity
