@@ -192,10 +192,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
              * Record the history
              */
             RunningHistory history = new RunningHistory();
-            history.setActivityId(getId());
-            history.setLink(getLink());
-            history.setDescription(getDescription());
-            history.setAccess(getAccess());
+            history.setActivity(this);
             
             context.getHistories().add(history);
         }

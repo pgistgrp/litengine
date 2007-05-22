@@ -8,8 +8,11 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningHistory;
 import org.pgist.wfengine.WorkflowEngine;
+import org.pgist.wfengine.activity.PManualGameActivity;
+import org.pgist.wfengine.util.Utils;
 
 
 /**
@@ -97,7 +100,10 @@ public class WorkflowAction extends Action {
                  * Running History
                  */
                 RunningHistory history = engine.getHistoryURL(workflowId, contextId, historyId);
-                forward.setPath(history.getLink());
+                Activity activity = history.getActivity();
+                PManualGameActivity manual = (PManualGameActivity) Utils.narrow(activity);
+                
+                forward.setPath(manual.getLink());
             }
             
             return forward;

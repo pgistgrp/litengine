@@ -7,6 +7,7 @@ import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.Declaration;
 import org.pgist.wfengine.Environment;
 import org.pgist.wfengine.RunningContext;
+import org.pgist.wfengine.RunningHistory;
 import org.pgist.wfengine.SingleOut;
 
 
@@ -138,6 +139,14 @@ public class MeetingActivity extends GroupActivity {
     
     
     protected void doDeActivate(RunningContext context) {
+        /*
+         * Record the history
+         */
+        RunningHistory history = new RunningHistory();
+        history.setActivity(this);
+        
+        context.getHistories().add(history);
+        
         //oupout the declared environment
         Declaration myDecl = getContext().getDeclaration();
         Environment myEnv = getContext().getEnvironment();

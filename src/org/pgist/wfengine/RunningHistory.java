@@ -13,13 +13,7 @@ public class RunningHistory {
     
     private Long id;
     
-    private Long activityId;
-    
-    private String link;
-    
-    private String description;
-    
-    private String access;
+    private Activity activity;
     
     
     /**
@@ -40,60 +34,15 @@ public class RunningHistory {
     /**
      * @return
      * 
-     * @hibernate.property not-null="true"
+     * @hibernate.many-to-one column="activity_id" cascade="all" lazy="true"
      */
-    public Long getActivityId() {
-        return activityId;
+    public Activity getActivity() {
+        return activity;
     }
 
 
-    public void setActivityId(Long activityId) {
-        this.activityId = activityId;
-    }
-
-
-    /**
-     * @return
-     * 
-     * @hibernate.property length="512" not-null="true"
-     */
-    public String getLink() {
-        return link;
-    }
-
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-
-    /**
-     * @return
-     * 
-     * @hibernate.property not-null="true"
-     */
-    public String getDescription() {
-        return description;
-    }
-
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-
-    /**
-     * @return
-     * 
-     * @hibernate.property not-null="true"
-     */
-    public String getAccess() {
-        return access;
-    }
-
-
-    public void setAccess(String access) {
-        this.access = access;
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 
 

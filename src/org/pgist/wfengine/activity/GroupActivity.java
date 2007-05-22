@@ -1,5 +1,7 @@
 package org.pgist.wfengine.activity;
 
+import java.util.Set;
+
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.RunningContext;
@@ -163,6 +165,12 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
+    
+    
+    public void setFuture(Set futures) {
+        futures.add(this);
+        getNext().setFuture(futures);
+    }//setFuture()
     
     
     abstract public void finish(RunningContext context);

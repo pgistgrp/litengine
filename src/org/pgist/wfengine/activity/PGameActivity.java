@@ -79,6 +79,7 @@ public abstract class PGameActivity extends Activity implements SingleIn, Single
 
     /**
      * @return
+     * 
      * @hibernate.many-to-one column="prev_id" class="org.pgist.wfengine.Activity" cascade="all" lazy="true"
      */
     public Activity getPrev() {

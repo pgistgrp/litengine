@@ -107,7 +107,7 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
     
     
     public RunningHistory getRunningHistoryById(Long historyId) throws Exception {
-        return (RunningHistory) getHibernateSession().load(RunningHistory.class, historyId);
+        return (RunningHistory) getHibernateTemplate().load(RunningHistory.class, historyId);
     }//getRunningHistoryById()
 
 
