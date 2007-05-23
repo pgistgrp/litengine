@@ -347,6 +347,10 @@ public class RunningContext {
             one.setFuture(futures);
         }//for
         
+        for (Activity one : getPendingActivities()) {
+            one.setFuture(futures);
+        }//for
+        
         return futures;
     }//getFutureActivities()
     
