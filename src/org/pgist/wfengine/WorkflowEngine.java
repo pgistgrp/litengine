@@ -1,6 +1,8 @@
 package org.pgist.wfengine;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -213,15 +215,30 @@ public class WorkflowEngine {
     }//getWorkflowById()
 
 
-    public String getURL(Long workflowId, Long contextId, Long activityId) throws Exception {
+    public Map getURL(Long workflowId, Long contextId, Long activityId) throws Exception {
+        Map results = new HashMap();
+        
+        /*
+         * get workflow object
+         */
         Workflow workflow = getWorkflowById(workflowId);
         
         if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
         
+        results.put("workflow", workflow);
+        
+        /*
+         * get context object
+         */
         RunningContext context = engineDAO.getContextById(contextId);
         
         if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
         
+        results.put("context", context);
+        
+        /*
+         * get activity object
+         */
         Activity activity = engineDAO.getActivityById(activityId);
         
         if (activity==null) throw new WorkflowException("cannot find activity with id "+activityId);
@@ -232,31 +249,54 @@ public class WorkflowEngine {
         
         if (activity.getType()==Activity.TYPE_PMANUALGAME) {
             PManualGameActivity manual = (PManualGameActivity) Utils.narrow(activity);
-            return manual.getLink();
+            results.put("link", manual.getLink());
         }
         
-        return null;
+        return results;
     }//getURL()
 
 
-    public RunningHistory getHistoryURL(Long workflowId, Long contextId, Long historyId) throws Exception {
+    public Map getHistoryURL(Long workflowId, Long contextId, Long historyId) throws Exception {
+        Map results = new HashMap();
+        
+        /*
+         * get workflow object
+         */
         Workflow workflow = getWorkflowById(workflowId);
         
         if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
         
+        results.put("workflow", workflow);
+        
+        /*
+         * get context object
+         */
         RunningContext context = engineDAO.getContextById(contextId);
         
         if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
         
+        results.put("context", context);
+        
+        /*
+         * get activity object
+         */
         RunningHistory history = engineDAO.getRunningHistoryById(historyId);
         
         if (history==null) throw new WorkflowException("cannot find running history with id "+historyId);
+        
+        Activity activity = history.getActivity();
+        
+        results.put("activityId", activity.getId());
+        
+        PManualGameActivity manual = (PManualGameActivity) Utils.narrow(activity);
+        
+        results.put("link", manual.getLink());
         
         /*
          * TODO: check validity
          */
         
-        return history;
+        return results;
     }//getHistoryURL()
 
 

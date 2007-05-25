@@ -340,15 +340,24 @@ public class RunningContext {
      */
     
     
+    /**
+     * Get future activities of the current context.
+     * 
+     * A future activity is one which could be (but not necessarily) performed later in the flow instance.
+     * 
+     * @return A set of future activities.
+     */
     public Set getFutureActivities() {
         Set futures = new HashSet();
         
         for (Activity one : getRunningActivities()) {
             one.setFuture(futures);
+            futures.remove(one);
         }//for
         
         for (Activity one : getPendingActivities()) {
             one.setFuture(futures);
+            futures.remove(one);
         }//for
         
         return futures;

@@ -1,5 +1,7 @@
 package org.pgist.wfengine.web;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -7,16 +9,14 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.RunningHistory;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.WorkflowEngine;
-import org.pgist.wfengine.activity.PManualGameActivity;
-import org.pgist.wfengine.util.Utils;
 
 
 /**
- * Struts Action for Workflow Running.
+ * Struts Action for Workflow Running. The url of this action is shown to users, when user clicks
+ * the url, this action will forward to the real action. In this way it gives workflow engine
+ * an oppotunity to control the access and inject some workflow information to the real actions.
  * 
  * Parameters:
  * <ul>
@@ -39,6 +39,16 @@ import org.pgist.wfengine.util.Utils;
  *      Execute one completed (history) activity:
  *      workflow.do?workflowId=1234&contextId=4321&historyId=5678
  *   </li>
+ * </ul>
+ * 
+ * Before turning to the real action, it puts the following data as the request attributes:
+ * <ul>
+ *   <li>org.pgist.wfengine.WORKFLOW_ID - worfklowId</li>
+ *   <li>org.pgist.wfengine.CONTEXT_ID - conextId</li>
+ *   <li>org.pgist.wfengine.ACTIVITY_ID - activityId</li>
+ *   <li>org.pgist.wfengine.HISTORIES - a set of RunningHistory objects</li>
+ *   <li>org.pgist.wfengine.FUTURES - a set of PManualGameActivity objects</li>
+ *   <li>org.pgist.wfengine.ACTIVITY_RUNNING - whether or not the current activity is in running state</li>
  * </ul>
  * 
  * @author kenny
@@ -90,21 +100,38 @@ public class WorkflowAction extends Action {
             
             ActionForward forward = new ActionForward();
             
+            Map result = null;
+            
             if (activityId!=null) {
                 /*
                  * Running Activity
                  */
-                forward.setPath(engine.getURL(workflowId, contextId, activityId));
+                result = engine.getURL(workflowId, contextId, activityId);
+                forward.setPath((String) result.get("link"));
+                request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", true);
             } else {
                 /*
                  * Running History
                  */
-                RunningHistory history = engine.getHistoryURL(workflowId, contextId, historyId);
-                Activity activity = history.getActivity();
-                PManualGameActivity manual = (PManualGameActivity) Utils.narrow(activity);
-                
-                forward.setPath(manual.getLink());
+                result = engine.getHistoryURL(workflowId, contextId, historyId);
+                activityId = (Long) result.get("activityId");
+                forward.setPath((String) result.get("link"));
+                request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", false);
             }
+            
+            /*
+             * Future and History
+             */
+            RunningContext context = (RunningContext) result.get("context");
+            request.setAttribute("org.pgist.wfengine.HISTORIES", context.getHistories());
+            request.setAttribute("org.pgist.wfengine.FUTURES", context.getFutureActivities());
+            
+            /*
+             * Inject workflow information to request
+             */
+            request.setAttribute("org.pgist.wfengine.WORKFLOW_ID", workflowId);
+            request.setAttribute("org.pgist.wfengine.CONTEXT_ID", contextId);
+            request.setAttribute("org.pgist.wfengine.ACTIVITY_ID", activityId);
             
             return forward;
         } catch (Exception e) {
