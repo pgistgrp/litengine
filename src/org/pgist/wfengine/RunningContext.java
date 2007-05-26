@@ -347,18 +347,40 @@ public class RunningContext {
      * 
      * @return A set of future activities.
      */
-    public Set getFutureActivities() {
-        Set futures = new HashSet();
+    public List getFutureActivities() {
+        boolean running = false;
         
-        for (Activity one : getRunningActivities()) {
-            one.setFuture(futures);
-            futures.remove(one);
+        RunningContext ctx = getParent();
+        
+        if (ctx!=null && ctx.getRunningActivities().contains(getGroup())) {
+            running = true;
+        } else if (ctx!=null && ctx.getPendingActivities().contains(getGroup())) {
+            running = true;
+        }
+        
+        List futures = new ArrayList();
+        
+        if (running) {
+            for (Activity one : getRunningActivities()) {
+                one.setFuture(futures);
+                futures.remove(one);
+            }//for
+            
+            for (Activity one : getPendingActivities()) {
+                one.setFuture(futures);
+                futures.remove(one);
+            }//for
+        } else {
+            getGroup().getHeadActivity().setFuture(futures);
+        }
+        
+        Set hist = new HashSet();
+        
+        for (RunningHistory one : getHistories()) {
+            hist.add(one.getActivity());
         }//for
         
-        for (Activity one : getPendingActivities()) {
-            one.setFuture(futures);
-            futures.remove(one);
-        }//for
+        futures.removeAll(hist);
         
         return futures;
     }//getFutureActivities()

@@ -1,6 +1,6 @@
 package org.pgist.wfengine.activity;
 
-import java.util.Set;
+import java.util.List;
 import java.util.Stack;
 
 import org.pgist.wfengine.Activity;
@@ -108,7 +108,7 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
     }//doExecute()
     
     
-    public void setFuture(Set futures) {
+    public void setFuture(List futures) {
         getNext().setFuture(futures);
     }//setFuture()
     

@@ -1,7 +1,7 @@
 package org.pgist.wfengine;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -219,7 +219,7 @@ public abstract class Activity implements Serializable {
     abstract public Activity getEnd();
 
 
-    public void setFuture(Set futures) {}
+    public void setFuture(List futures) {}
     
     
 }//abstract class Activity

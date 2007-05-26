@@ -225,6 +225,8 @@ public class WorkflowEngine {
         
         if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
         
+        workflow.setEngine(this);
+        
         results.put("workflow", workflow);
         
         /*
@@ -266,6 +268,8 @@ public class WorkflowEngine {
         
         if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
         
+        workflow.setEngine(this);
+        
         results.put("workflow", workflow);
         
         /*
@@ -288,9 +292,7 @@ public class WorkflowEngine {
         
         results.put("activityId", activity.getId());
         
-        PManualGameActivity manual = (PManualGameActivity) Utils.narrow(activity);
-        
-        results.put("link", manual.getLink());
+        results.put("link", history.getUrl());
         
         /*
          * TODO: check validity

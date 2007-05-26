@@ -1,7 +1,7 @@
 package org.pgist.wfengine.activity;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.List;
 import java.util.Stack;
 
 import org.pgist.wfengine.Activity;
@@ -193,7 +193,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
              */
             RunningHistory history = new RunningHistory();
             history.setActivity(this);
-            
+            history.setUrl(getLink());
             context.getHistories().add(history);
         }
         
@@ -219,7 +219,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     }//getLink()
     
     
-    public void setFuture(Set futures) {
+    public void setFuture(List futures) {
         futures.add(this);
         getNext().setFuture(futures);
     }//setFuture()

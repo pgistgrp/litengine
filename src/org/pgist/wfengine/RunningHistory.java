@@ -15,6 +15,8 @@ public class RunningHistory {
     
     private Activity activity;
     
+    private String url;
+    
     
     /**
      * @return
@@ -43,6 +45,21 @@ public class RunningHistory {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.property length="512"
+     */
+    public String getUrl() {
+        return url;
+    }
+
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 
