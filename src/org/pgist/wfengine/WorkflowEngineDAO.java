@@ -30,7 +30,7 @@ public interface WorkflowEngineDAO {
     
     List<Workflow> getRunningWorkflows(int status) throws Exception;
     
-    Workflow createWorkflow(Long situationId) throws Exception;
+    Workflow createWorkflow(Long situationId, String name, String description) throws Exception;
     
     Workflow getWorkflowById(Long workflowId) throws Exception;
     

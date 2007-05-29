@@ -29,6 +29,10 @@ public class Workflow implements Serializable {
     
     private Long id;
     
+    private String name;
+    
+    private String description;
+    
     private SituationActivity situation;
     
     private int status = STATUS_NEW;
@@ -59,6 +63,36 @@ public class Workflow implements Serializable {
     }
     
     
+    /**
+     * @return
+     * 
+     * @hibernate.property not-null="true"
+     */
+    public String getDescription() {
+        return description;
+    }
+
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.property not-null="true"
+     */
+    public String getName() {
+        return name;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
     /**
      * @return
      * 

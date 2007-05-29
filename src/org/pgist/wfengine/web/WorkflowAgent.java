@@ -78,6 +78,8 @@ public class WorkflowAgent {
      * @param params A map contains:
      *     <ul>
      *         <li>situationId - int, id of a SituationActivity object</li>
+     *         <li>name, string, name of this situation</li>
+     *         <li>description, string, description of this situation</li>
      *     </ul>
      * 
      * @return A map contains:
@@ -94,7 +96,13 @@ public class WorkflowAgent {
         try {
             Long situationId = new Long((String) params.get("situationId"));
             
-            Workflow workflow = engine.createWorkflow(situationId);
+            String name = (String) params.get("situationId");
+            String description = (String) params.get("description");
+            if (name==null || description==null) {
+                results.put("reason", "name or description is missing.");
+            }
+            
+            Workflow workflow = engine.createWorkflow(situationId, name, description);
             
             results.put("workflowId", workflow.getId());
             results.put("successful", true);

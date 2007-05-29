@@ -138,8 +138,8 @@ public class WorkflowEngine {
     }//getWorkflows()
     
     
-    public Workflow createWorkflow(Long situationId) throws Exception {
-        Workflow workflow = engineDAO.createWorkflow(situationId);
+    public Workflow createWorkflow(Long situationId, String name, String description) throws Exception {
+        Workflow workflow = engineDAO.createWorkflow(situationId, name, description);
         workflow.setEngine(this);
         
         return workflow;
