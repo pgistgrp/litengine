@@ -83,7 +83,7 @@ public class TestWorkflowEngine {
     
     @Test
     public void createWorkflow() throws Exception {
-        engine.createWorkflow(30L);
+        engine.createWorkflow(30L, "", "");
     }//createWorkflow()
     
     
@@ -95,7 +95,7 @@ public class TestWorkflowEngine {
     
     @Test
     public void createAndStartWorkflow() throws Exception {
-        Workflow workflow = engine.createWorkflow(365L);
+        Workflow workflow = engine.createWorkflow(365L, "", "");
         System.out.println("---- Workflow id: "+workflow.getId());
         engine.startWorkflow(workflow.getId());
     }//createWorkflow()

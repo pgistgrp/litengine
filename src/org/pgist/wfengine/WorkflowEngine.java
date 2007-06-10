@@ -3,6 +3,7 @@ package org.pgist.wfengine;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -302,6 +303,51 @@ public class WorkflowEngine {
     }//getHistoryURL()
 
 
+    public void setEnvVars(Long workflowId, Long contextId, Long activityId, EnvironmentHandler handler) throws Exception {
+        if (handler==null) throw new Exception("environment handler is null");
+        
+        /*
+         * get workflow object
+         */
+        Workflow workflow = getWorkflowById(workflowId);
+        
+        if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
+        
+        workflow.setEngine(this);
+        
+        /*
+         * get context object
+         */
+        RunningContext context = engineDAO.getContextById(contextId);
+        
+        if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
+        
+        /*
+         * get activity object
+         */
+        Activity activity = engineDAO.getActivityById(activityId);
+        
+        if (activity==null) throw new WorkflowException("cannot find running activity with id "+activityId);
+        
+        /*
+         * TODO: check validity
+         */
+        
+        /*
+         * handle environment variables
+         */
+        if (activity.getType()==Activity.TYPE_PMANUALGAME) {
+            PManualGameActivity manual = (PManualGameActivity) Utils.narrow(activity);
+            EnvironmentInOuts inouts = new EnvironmentInOuts(context, manual.getDeclaration());
+            handler.handleEnvVars(inouts);
+            context.merge(inouts);
+            engineDAO.saveWorkflow(workflow);
+        } else {
+            throw new Exception("environment variable is not supported in this activity.");
+        }
+    }//setEnvVars()
+    
+    
     
     
     

@@ -193,16 +193,37 @@ public class Environment {
     }//duplicate()
     
     
+    /**
+     * Find int value with the given name in environment.
+     * 
+     * Proxy mechanism is used.
+     * 
+     * @param name
+     * @return
+     */
     public Integer findIntValue(String name) {
-        String realName = getContext().getDeclaration().getIns().get(name);
-        if (realName==null || realName.length()==0) realName = name;
+        Integer value = null;
         
-        Integer value = getContext().getEnvironment().getIntValues().get(realName);
+        /*
+         * search the name in current env.
+         */
+        value = getContext().getEnvironment().getIntValues().get(name);
+        
         if (value==null) {
-            if (getContext().getParent()!=null) {
-                value = getContext().getParent().getEnvironment().findIntValue(realName);
-            } else {
-                return null;
+            /*
+             * Translate original name to declared name.
+             */
+            String realName = getContext().getDeclaration().getIns().get(name);
+            if (realName==null || realName.length()==0) realName = name;
+            
+            RunningContext pctx = getContext().getParent();
+            
+            if (pctx!=null) {
+                /*
+                 * Proxy. Let the parent environment to find the value.
+                 */
+                
+                value = pctx.getEnvironment().findIntValue(realName);
             }
         }
         
