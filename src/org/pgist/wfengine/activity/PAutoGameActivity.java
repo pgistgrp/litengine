@@ -8,6 +8,7 @@ import org.pgist.wfengine.EnvironmentInOuts;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
+import org.pgist.wfengine.WorkflowInfo;
 import org.pgist.wfengine.WorkflowTask;
 
 
@@ -92,8 +93,9 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
         try {
             task = context.getRegistry().getTask(getTaskName());
             if (task!=null) {
+                WorkflowInfo info = new WorkflowInfo(context.getWorkflow(), context, this);
                 EnvironmentInOuts inouts = new EnvironmentInOuts(context, getDeclaration());
-                task.execute(inouts);
+                task.execute(info, inouts);
                 context.merge(inouts);
             }
             

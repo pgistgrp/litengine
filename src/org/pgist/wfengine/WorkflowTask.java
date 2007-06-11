@@ -15,7 +15,7 @@ public interface WorkflowTask {
      * @param context the running context for the task
      * @param properties a string to string map
      */
-    void execute(EnvironmentInOuts inouts) throws Exception;
+    void execute(WorkflowInfo info, EnvironmentInOuts inouts) throws Exception;
     
     
 }//@interface WorkflowTask
