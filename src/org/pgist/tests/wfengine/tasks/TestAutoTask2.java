@@ -1,6 +1,7 @@
 package org.pgist.tests.wfengine.tasks;
 
 import org.pgist.wfengine.EnvironmentInOuts;
+import org.pgist.wfengine.WorkflowInfo;
 import org.pgist.wfengine.WorkflowTask;
 
 
@@ -17,7 +18,7 @@ public class TestAutoTask2 implements WorkflowTask {
     public static final String OUT_ISID = "isid";
     
     
-    public void execute(EnvironmentInOuts inouts) throws Exception {
+    public void execute(WorkflowInfo info, EnvironmentInOuts inouts) throws Exception {
         System.out.println("@ TestAutoTask2.execute()");
         System.out.println("    in (suite_id) "+inouts.getIntValue(IN_SUITE_ID));
         System.out.println("    out (isid) : 2000");
