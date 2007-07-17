@@ -96,7 +96,7 @@ public class WorkflowAgent {
         try {
             Long situationId = new Long((String) params.get("situationId"));
             
-            String name = (String) params.get("situationId");
+            String name = (String) params.get("name");
             String description = (String) params.get("description");
             if (name==null || description==null) {
                 results.put("reason", "name or description is missing.");
