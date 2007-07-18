@@ -96,28 +96,17 @@ public class WorkflowAction extends Action {
             Long workflowId = getParameter(request, "workflowId");
             Long contextId = getParameter(request, "contextId");
             Long activityId = getParameter(request, "activityId");
-            Long historyId = getParameter(request, "historyId");
             
             ActionForward forward = new ActionForward();
             
             Map result = null;
             
-            if (activityId!=null) {
-                /*
-                 * Running Activity
-                 */
-                result = engine.getURL(workflowId, contextId, activityId);
-                forward.setPath((String) result.get("link"));
-                request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", true);
-            } else {
-                /*
-                 * Running History
-                 */
-                result = engine.getHistoryURL(workflowId, contextId, historyId);
-                activityId = (Long) result.get("activityId");
-                forward.setPath((String) result.get("link"));
-                request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", false);
-            }
+            /*
+             * Running Activity
+             */
+            result = engine.getURL(workflowId, contextId, activityId);
+            forward.setPath((String) result.get("link"));
+            request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", true);
             
             /*
              * Future and History

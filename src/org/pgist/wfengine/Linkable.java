@@ -9,7 +9,7 @@ package org.pgist.wfengine;
 public interface Linkable {
     
     
-    String getLink();
+    String getLink(RunningContext context);
     
     
 }//interface Linkable

@@ -1,14 +1,13 @@
 package org.pgist.wfengine.activity;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.EnvironmentInOuts;
 import org.pgist.wfengine.Linkable;
 import org.pgist.wfengine.RunningContext;
-import org.pgist.wfengine.RunningHistory;
 
 
 /**
@@ -191,20 +190,17 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
             /*
              * Record the history
              */
-            RunningHistory history = new RunningHistory();
-            history.setActivity(this);
-            history.setUrl(getLink());
-            context.getHistories().add(history);
+            context.getHistories().add(this);
         }
         
         context.addRunningActivity(getNext());
     }//doDeActivate()
 
 
-    public String getLink() {
+    public String getLink(RunningContext context) {
         EnvironmentInOuts inouts = new EnvironmentInOuts(getRunningContext(), getDeclaration());
         
-        String uri = getRunningContext().getRegistry().getAction(getActionName()) + "?";
+        String uri = context.getRegistry().getAction(getActionName()) + "?";
         
         StringBuilder params = new StringBuilder();
         for (Map.Entry<String, String> entry : getDeclaration().getIns().entrySet()) {

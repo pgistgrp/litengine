@@ -1,6 +1,7 @@
 package org.pgist.tests.wfengine.activity;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Stack;
 
@@ -8,7 +9,6 @@ import org.junit.Test;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.activity.BranchActivity;
 import org.pgist.wfengine.activity.PAutoGameActivity;
-import org.pgist.wfengine.activity.PGameActivity;
 import org.pgist.wfengine.activity.PManualGameActivity;
 import org.pgist.wfengine.activity.RepeatActivity;
 import org.pgist.wfengine.activity.SwitchActivity;

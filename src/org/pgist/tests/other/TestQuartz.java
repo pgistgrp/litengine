@@ -1,17 +1,11 @@
 package org.pgist.tests.other;
 
-import java.util.Date;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pgist.wfengine.WorkflowEngine;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerFactory;
-import org.quartz.SimpleTrigger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;

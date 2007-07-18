@@ -3,7 +3,6 @@ package org.pgist.wfengine;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -252,8 +251,10 @@ public class WorkflowEngine {
         
         if (activity.getType()==Activity.TYPE_PMANUALGAME) {
             PManualGameActivity manual = (PManualGameActivity) Utils.narrow(activity);
-            results.put("link", manual.getLink());
+            results.put("link", manual.getLink(context)+"workflowId="+workflowId+"&contextId="+contextId+"&activityId="+activityId);
         }
+        
+        results.put("status", !context.getHistories().contains(activity));
         
         return results;
     }//getURL()

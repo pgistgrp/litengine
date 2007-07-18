@@ -1,6 +1,8 @@
 package org.pgist.tests.wfengine.parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.dom4j.Document;
 import org.junit.Test;

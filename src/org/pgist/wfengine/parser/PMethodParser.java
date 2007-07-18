@@ -9,7 +9,18 @@ import org.pgist.wfengine.Declaration;
 import org.pgist.wfengine.FlowPiece;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
-import org.pgist.wfengine.activity.*;
+import org.pgist.wfengine.activity.BranchActivity;
+import org.pgist.wfengine.activity.EndSwitchActivity;
+import org.pgist.wfengine.activity.JoinActivity;
+import org.pgist.wfengine.activity.LoopActivity;
+import org.pgist.wfengine.activity.PAutoGameActivity;
+import org.pgist.wfengine.activity.PGameActivity;
+import org.pgist.wfengine.activity.PManualGameActivity;
+import org.pgist.wfengine.activity.PMethodActivity;
+import org.pgist.wfengine.activity.RepeatActivity;
+import org.pgist.wfengine.activity.SwitchActivity;
+import org.pgist.wfengine.activity.UntilActivity;
+import org.pgist.wfengine.activity.WhileActivity;
 
 
 /**

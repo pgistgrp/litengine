@@ -14,8 +14,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pgist.tests.wfengine.TestHelper;
 import org.pgist.wfengine.Activity;
-import org.pgist.wfengine.activity.*;
-import org.pgist.wfengine.parser.*;
+import org.pgist.wfengine.activity.BranchActivity;
+import org.pgist.wfengine.activity.EndSwitchActivity;
+import org.pgist.wfengine.activity.JoinActivity;
+import org.pgist.wfengine.activity.LoopActivity;
+import org.pgist.wfengine.activity.MeetingActivity;
+import org.pgist.wfengine.activity.PMethodActivity;
+import org.pgist.wfengine.activity.RepeatActivity;
+import org.pgist.wfengine.activity.SwitchActivity;
+import org.pgist.wfengine.activity.UntilActivity;
+import org.pgist.wfengine.activity.WhileActivity;
+import org.pgist.wfengine.parser.DeclarationParser;
+import org.pgist.wfengine.parser.EnvironmentParser;
+import org.pgist.wfengine.parser.MeetingParser;
 
 
 /**
