@@ -251,57 +251,18 @@ public class WorkflowEngine {
         
         if (activity.getType()==Activity.TYPE_PMANUALGAME) {
             PManualGameActivity manual = (PManualGameActivity) Utils.narrow(activity);
-            results.put("link", manual.getLink(context)+"workflowId="+workflowId+"&contextId="+contextId+"&activityId="+activityId);
+            if (context.getHistories().contains(activity)) {
+                //history activity
+                results.put("link", manual.getHistoryLink()+"workflowId="+workflowId+"&contextId="+contextId+"&activityId="+activityId);
+            } else {
+                results.put("link", manual.getLink(context)+"workflowId="+workflowId+"&contextId="+contextId+"&activityId="+activityId);
+            }
         }
         
         results.put("status", !context.getHistories().contains(activity));
         
         return results;
     }//getURL()
-
-
-    public Map getHistoryURL(Long workflowId, Long contextId, Long historyId) throws Exception {
-        Map results = new HashMap();
-        
-        /*
-         * get workflow object
-         */
-        Workflow workflow = getWorkflowById(workflowId);
-        
-        if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
-        
-        workflow.setEngine(this);
-        
-        results.put("workflow", workflow);
-        
-        /*
-         * get context object
-         */
-        RunningContext context = engineDAO.getContextById(contextId);
-        
-        if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
-        
-        results.put("context", context);
-        
-        /*
-         * get activity object
-         */
-        RunningHistory history = engineDAO.getRunningHistoryById(historyId);
-        
-        if (history==null) throw new WorkflowException("cannot find running history with id "+historyId);
-        
-        Activity activity = history.getActivity();
-        
-        results.put("activityId", activity.getId());
-        
-        results.put("link", history.getUrl());
-        
-        /*
-         * TODO: check validity
-         */
-        
-        return results;
-    }//getHistoryURL()
 
 
     public void setEnvVars(Long workflowId, Long contextId, Long activityId, EnvironmentHandler handler) throws Exception {

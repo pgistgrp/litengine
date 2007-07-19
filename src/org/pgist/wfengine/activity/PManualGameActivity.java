@@ -31,6 +31,8 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     
     protected String access = "all";
     
+    protected String historyLink;
+    
     protected long time;
     
     protected long extension;
@@ -74,6 +76,21 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
 
     public void setAccess(String access) {
         this.access = access;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.property column="history_link" length="1024"
+     */
+    public String getHistoryLink() {
+        return historyLink;
+    }
+
+
+    public void setHistoryLink(String historyLink) {
+        this.historyLink = historyLink;
     }
 
 
@@ -192,6 +209,8 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
              */
             context.getHistories().add(this);
         }
+        
+        setHistoryLink(getLink(context));
         
         context.addRunningActivity(getNext());
     }//doDeActivate()
