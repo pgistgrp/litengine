@@ -64,6 +64,7 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
         newGame.setCounts(0);
         newGame.setPrev(clonedPrev);
         newGame.setName(getName());
+        newGame.setTitle(getTitle());
         newGame.setDescription(getDescription());
         newGame.setTaskName(getTaskName());
         newGame.getDeclaration().duplicate(getDeclaration());

@@ -75,11 +75,17 @@ public class PGameParser {
         if (name.length()==0) throw new ParserException("attribute 'name' can't be empty");
         pgame.setName(name);
         
+        //title
+        String title = pgameElement.attributeValue("title");
+        if (title==null) throw new ParserException("attribute 'title' is required");
+        title = title.trim();
+        if (title.length()==0) throw new ParserException("attribute 'title' can't be empty");
+        pgame.setTitle(title);
+        
         //description
-        String desc = pgameElement.attributeValue("description");
-        if (desc==null) throw new ParserException("attribute 'description' is required");
+        String desc = pgameElement.elementTextTrim("description");
+        if (desc==null) desc = "";
         desc = desc.trim();
-        if (desc.length()==0) throw new ParserException("attribute 'description' can't be empty");
         pgame.setDescription(desc);
         
         //declaration

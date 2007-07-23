@@ -152,6 +152,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
         newGame.setCounts(0);
         newGame.setPrev(clonedPrev);
         newGame.setName(getName());
+        newGame.setTitle(getTitle());
         newGame.setDescription(getDescription());
         newGame.setActionName(getActionName());
         newGame.setAccess(getAccess());

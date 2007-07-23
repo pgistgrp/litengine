@@ -21,6 +21,8 @@ public abstract class PGameActivity extends Activity implements SingleIn, Single
     
     protected String name = null;
     
+    protected String title = null;
+    
     protected String description = null;
     
     protected Declaration declaration = new Declaration();
@@ -50,7 +52,21 @@ public abstract class PGameActivity extends Activity implements SingleIn, Single
 
     /**
      * @return
-     * @hibernate.property
+     * @hibernate.property not-null="true"
+     */
+    public String getTitle() {
+        return title;
+    }
+
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
+    /**
+     * @return
+     * @hibernate.property type="text"
      */
     public String getDescription() {
         return description;

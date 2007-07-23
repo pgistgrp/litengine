@@ -88,6 +88,7 @@ public class PMethodParser {
                     case Activity.TYPE_PAUTOGAME:
                         PAutoGameActivity auto = new PAutoGameActivity();
                         PAutoGameActivity oldAuto = (PAutoGameActivity) pgame;
+                        auto.setTitle(oldAuto.getTitle());
                         auto.setName(oldAuto.getName());
                         auto.setDescription(oldAuto.getDescription());
                         auto.setTaskName(oldAuto.getTaskName());
@@ -97,6 +98,7 @@ public class PMethodParser {
                         PManualGameActivity manual = new PManualGameActivity();
                         PManualGameActivity oldManual = (PManualGameActivity) pgame;
                         manual.setName(oldManual.getName());
+                        manual.setTitle(oldManual.getTitle());
                         manual.setDescription(oldManual.getDescription());
                         manual.setActionName(oldManual.getActionName());
                         manual.setAccess(oldManual.getAccess());
