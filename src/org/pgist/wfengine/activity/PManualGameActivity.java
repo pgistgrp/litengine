@@ -204,12 +204,10 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     
     
     protected void doDeActivate(RunningContext context) {
-        if (isRevisitable()) {
-            /*
-             * Record the history
-             */
-            context.getHistories().add(this);
-        }
+        /*
+         * Record the history
+         */
+        context.getHistories().add(this);
         
         setHistoryLink(getLink(context));
         
