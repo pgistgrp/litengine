@@ -1,6 +1,7 @@
 package org.pgist.wfengine.activity;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -180,9 +181,9 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
     }//saveState()
     
     
-    public void setFuture(List futures) {
-        getNext().setFuture(futures);
-        getLoop().getNext().setFuture(futures);
+    public void setFuture(List futures, Set embedding) {
+        getNext().setFuture(futures, embedding);
+        getLoop().getNext().setFuture(futures, embedding);
     }//setFuture()
 
 

@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -144,12 +145,10 @@ public class BranchActivity extends Activity implements SingleIn {
     }//saveState()
     
     
-    public void setFuture(List futures) {
+    public void setFuture(List futures, Set embedding) {
         for (Activity activity : getBranches()) {
-            activity.setFuture(futures);
+            activity.setFuture(futures, embedding);
         }//for
-        
-        getJoinActivity().getNext().setFuture(futures);
     }//setFuture()
     
     

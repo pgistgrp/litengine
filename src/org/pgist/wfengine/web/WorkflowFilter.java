@@ -38,7 +38,7 @@ public class WorkflowFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
         
-        System.out.println("\n---> starting workflow filter");
+        System.out.println("  ---> starting workflow filter");
         
         try {
             WebApplicationContext context = (WebApplicationContext) filterConfig.getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
@@ -48,7 +48,7 @@ public class WorkflowFilter implements Filter {
             throw new ServletException(e);
         }
         
-        System.out.println("\n---> workflow filter started");
+        System.out.println("  ---> workflow filter started");
         
     }//init()
     
@@ -77,11 +77,13 @@ public class WorkflowFilter implements Filter {
             
             result = engine.getURL(workflowId, contextId, activityId);
             
+            request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", result.get("status"));
+            
             /*
              * Future and History
              */
             RunningContext context = (RunningContext) result.get("context");
-            request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", result.get("status"));
+            request.setAttribute("org.pgist.wfengine.CURRENT", result.get("activity"));
             request.setAttribute("org.pgist.wfengine.HISTORIES", context.getHistories());
             request.setAttribute("org.pgist.wfengine.FUTURES", context.getFutureActivities());
             

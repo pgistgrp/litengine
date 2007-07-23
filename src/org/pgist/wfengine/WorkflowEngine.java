@@ -245,6 +245,8 @@ public class WorkflowEngine {
         
         if (activity==null) throw new WorkflowException("cannot find activity with id "+activityId);
         
+        results.put("activity", activity);
+        
         /*
          * TODO: check validity
          */

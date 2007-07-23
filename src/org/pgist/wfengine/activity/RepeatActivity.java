@@ -1,6 +1,7 @@
 package org.pgist.wfengine.activity;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -165,9 +166,9 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     }//saveState()
     
     
-    public void setFuture(List futures) {
-        getNext().setFuture(futures);
-        getUntil().getNext().setFuture(futures);
+    public void setFuture(List futures, Set embedding) {
+        getNext().setFuture(futures, embedding);
+        getUntil().getNext().setFuture(futures, embedding);
     }//setFuture()
     
     

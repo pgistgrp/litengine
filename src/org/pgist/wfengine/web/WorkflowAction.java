@@ -46,6 +46,7 @@ import org.pgist.wfengine.WorkflowEngine;
  *   <li>org.pgist.wfengine.WORKFLOW_ID - worfklowId</li>
  *   <li>org.pgist.wfengine.CONTEXT_ID - conextId</li>
  *   <li>org.pgist.wfengine.ACTIVITY_ID - activityId</li>
+ *   <li>org.pgist.wfengine.CURRENT - the current activity objects</li>
  *   <li>org.pgist.wfengine.HISTORIES - a set of RunningHistory objects</li>
  *   <li>org.pgist.wfengine.FUTURES - a set of PManualGameActivity objects</li>
  *   <li>org.pgist.wfengine.ACTIVITY_RUNNING - whether or not the current activity is in running state</li>
@@ -106,12 +107,13 @@ public class WorkflowAction extends Action {
              */
             result = engine.getURL(workflowId, contextId, activityId);
             forward.setPath((String) result.get("link"));
-            request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", true);
+            request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", result.get("status"));
             
             /*
              * Future and History
              */
             RunningContext context = (RunningContext) result.get("context");
+            request.setAttribute("org.pgist.wfengine.CURRENT", result.get("activity"));
             request.setAttribute("org.pgist.wfengine.HISTORIES", context.getHistories());
             request.setAttribute("org.pgist.wfengine.FUTURES", context.getFutureActivities());
             

@@ -1,6 +1,7 @@
 package org.pgist.wfengine.activity;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
@@ -167,9 +168,9 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     }//saveState()
     
     
-    public void setFuture(List futures) {
+    public void setFuture(List futures, Set embedding) {
         futures.add(this);
-        getNext().setFuture(futures);
+        getNext().setFuture(futures, embedding);
     }//setFuture()
     
     

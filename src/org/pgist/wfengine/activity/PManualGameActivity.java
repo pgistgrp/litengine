@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import org.pgist.wfengine.Activity;
@@ -41,7 +42,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
      * Whether this activity revisitable.
      * When a revisitable activity finishes running, it will add itself into the running history.
      */
-    protected boolean revisitable;
+    protected boolean revisitable = false;
     
     
     public PManualGameActivity() {
@@ -157,7 +158,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
         newGame.setTime(getTime());
         newGame.setExtension(getExtension());
         newGame.getDeclaration().duplicate(getDeclaration());
-        newGame.setRevisitable(isAutomatic());
+        newGame.setRevisitable(isRevisitable());
         
         Activity act = getNext();
         if (act!=null) {
@@ -234,9 +235,9 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     }//getLink()
     
     
-    public void setFuture(List futures) {
+    public void setFuture(List futures, Set embedding) {
         futures.add(this);
-        getNext().setFuture(futures);
+        getNext().setFuture(futures, embedding);
     }//setFuture()
     
     

@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -158,12 +159,10 @@ public class SwitchActivity extends Activity implements SingleIn {
     }//isAutomatic()
     
     
-    public void setFuture(List futures) {
+    public void setFuture(List futures, Set embedding) {
         for (Activity activity : getSwitches()) {
-            activity.setFuture(futures);
+            activity.setFuture(futures, embedding);
         }//for
-        
-        getEndSwitchActivity().getNext().setFuture(futures);
     }//setFuture()
 
 

@@ -358,20 +358,21 @@ public class RunningContext {
             running = true;
         }
         
-        List futures = new ArrayList();
+        List<Activity> futures = new ArrayList();
+        Set<Activity> embedding = new HashSet<Activity>();
         
         if (running) {
             for (Activity one : getRunningActivities()) {
-                one.setFuture(futures);
+                one.setFuture(futures, embedding);
                 futures.remove(one);
             }//for
             
             for (Activity one : getPendingActivities()) {
-                one.setFuture(futures);
+                one.setFuture(futures, embedding);
                 futures.remove(one);
             }//for
         } else {
-            getGroup().getHeadActivity().setFuture(futures);
+            getGroup().getHeadActivity().setFuture(futures, embedding);
         }
         
         futures.removeAll(getHistories());
