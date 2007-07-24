@@ -112,10 +112,9 @@ public class WorkflowAction extends Action {
             /*
              * Future and History
              */
-            RunningContext context = (RunningContext) result.get("context");
             request.setAttribute("org.pgist.wfengine.CURRENT", result.get("activity"));
-            request.setAttribute("org.pgist.wfengine.HISTORIES", context.getHistories());
-            request.setAttribute("org.pgist.wfengine.FUTURES", context.getFutureActivities());
+            request.setAttribute("org.pgist.wfengine.HISTORIES", result.get("histories"));
+            request.setAttribute("org.pgist.wfengine.FUTURES", result.get("futures"));
             
             /*
              * Inject workflow information to request

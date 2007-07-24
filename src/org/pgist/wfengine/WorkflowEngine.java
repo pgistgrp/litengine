@@ -236,7 +236,8 @@ public class WorkflowEngine {
         
         if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
         
-        results.put("context", context);
+        results.put("histories", context.getHistories());
+        results.put("futures", context.getFutureActivities());
         
         /*
          * get activity object
