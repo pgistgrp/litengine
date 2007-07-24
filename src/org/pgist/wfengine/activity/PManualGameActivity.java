@@ -1,5 +1,6 @@
 package org.pgist.wfengine.activity;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +36,10 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     protected String historyLink;
     
     protected long time;
+    
+    protected Date beginTime;
+    
+    protected Date endTime;
     
     protected long extension;
     
@@ -107,6 +112,36 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.property column="begin_time" not-null="true"
+     */
+    public Date getBeginTime() {
+        return beginTime;
+    }
+
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.property column="end_time" not-null="true"
+     */
+    public Date getEndTime() {
+        return endTime;
+    }
+
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
 
@@ -238,6 +273,13 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
         futures.add(this);
         getNext().setFuture(futures, embedding);
     }//setFuture()
+    
+    
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        activities.add(this);
+        getNext().getAgenda(activities);
+    }//getAgenda
     
     
 }//class PManualGameActivity

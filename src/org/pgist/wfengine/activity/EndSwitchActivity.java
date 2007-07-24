@@ -148,6 +148,12 @@ public class EndSwitchActivity extends Activity implements SingleOut {
             getNext().setFuture(futures, embedding);
         }
     }//setFuture()
+
+
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        getNext().getAgenda(activities);
+    }//getAgenda
     
     
 }//class EndSwitchActivity

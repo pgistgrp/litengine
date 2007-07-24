@@ -213,6 +213,8 @@ public abstract class Activity implements Serializable {
     abstract public Activity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop);
     
     abstract public Activity getEnd();
+    
+    abstract public void getAgenda(List<Activity> activities);
 
 
     public void setFuture(List futures, Set embedding) {}

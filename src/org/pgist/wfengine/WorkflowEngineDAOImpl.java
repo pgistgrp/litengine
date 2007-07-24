@@ -1,5 +1,6 @@
 package org.pgist.wfengine;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.pgist.wfengine.activity.MeetingActivity;
 import org.pgist.wfengine.activity.PGameActivity;
+import org.pgist.wfengine.activity.PManualGameActivity;
 import org.pgist.wfengine.activity.PMethodActivity;
 import org.pgist.wfengine.activity.SituationActivity;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -113,7 +115,15 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
     }//getRunningHistoryById()
 
 
-    
+    public void updateAgenda(Long id, Date begin, Date end) throws Exception {
+        PManualGameActivity activity = (PManualGameActivity) getActivityById(id);
+        activity.setBeginTime(begin);
+        activity.setEndTime(end);
+        
+        getHibernateTemplate().saveOrUpdate(activity);
+    }//updateAgenda()
+
+
     
     
     

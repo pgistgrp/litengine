@@ -153,4 +153,10 @@ public class JumpActivity extends Activity implements SingleIn, SingleOut {
     }//saveState()
 
 
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        //Do nothing
+    }//getAgenda
+    
+    
 }//class JumpActivity

@@ -1,5 +1,6 @@
 package org.pgist.wfengine.activity;
 
+import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -99,4 +100,10 @@ public class ReturnActivity extends Activity implements SingleIn {
     }//saveState()
 
 
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        //Do nothing
+    }//getAgenda
+    
+    
 }//class ReturnActivity

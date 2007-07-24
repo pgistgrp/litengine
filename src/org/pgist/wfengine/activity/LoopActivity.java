@@ -1,5 +1,6 @@
 package org.pgist.wfengine.activity;
 
+import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -165,5 +166,10 @@ public class LoopActivity extends Activity implements SingleIn, SingleOut {
     }//saveState()
 
 
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        getNext().getAgenda(activities);
+    }//getAgenda
+    
+    
 }//class LoopActivity
-

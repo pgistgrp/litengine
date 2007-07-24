@@ -172,4 +172,10 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     }//setFuture()
     
     
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        getNext().getAgenda(activities);
+    }//getAgenda
+    
+    
 }//class RepeatActivity

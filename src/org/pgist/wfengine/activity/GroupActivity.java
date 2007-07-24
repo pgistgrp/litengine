@@ -177,4 +177,11 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     abstract public void finish(RunningContext context);
     
     
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        getHeadActivity().getAgenda(activities);
+        getNext().getAgenda(activities);
+    }//getAgenda
+    
+    
 }//class GroupActivity

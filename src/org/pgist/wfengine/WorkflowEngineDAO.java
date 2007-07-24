@@ -1,5 +1,6 @@
 package org.pgist.wfengine;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,8 @@ public interface WorkflowEngineDAO {
     Activity getActivityById(Long activityId) throws Exception;
     
     RunningHistory getRunningHistoryById(Long historyId) throws Exception;
+
+    void updateAgenda(Long id, Date begin, Date end) throws Exception;
 
     
     //-------------

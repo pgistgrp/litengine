@@ -187,4 +187,10 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
     }//setFuture()
 
 
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        getNext().getAgenda(activities);
+    }//getAgenda
+    
+    
 }//class WhileActivity

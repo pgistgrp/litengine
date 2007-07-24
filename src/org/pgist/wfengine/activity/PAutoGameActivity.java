@@ -117,4 +117,10 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
     }//setFuture()
     
     
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        getNext().getAgenda(activities);
+    }//getAgenda
+    
+    
 }//class PAutoGameActivity

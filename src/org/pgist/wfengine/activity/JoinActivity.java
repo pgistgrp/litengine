@@ -178,4 +178,10 @@ public class JoinActivity extends Activity implements SingleOut {
     }//setFuture()
     
     
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        getNext().getAgenda(activities);
+    }//getAgenda
+    
+    
 }//class JoinActivity

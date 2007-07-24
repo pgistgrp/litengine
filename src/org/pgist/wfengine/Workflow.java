@@ -1,7 +1,9 @@
 package org.pgist.wfengine;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.pgist.wfengine.activity.SituationActivity;
 
@@ -263,6 +265,15 @@ public class Workflow implements Serializable {
         //run the given activity in the given context
         context.execute(activity);
     }//execute()
+
+
+    public List<Activity> getAgenda() {
+        List<Activity> activities = new ArrayList<Activity>();
+        
+        situation.getAgenda(activities);
+        
+        return activities;
+    }//getAgenda()
     
     
 }//class Workflow

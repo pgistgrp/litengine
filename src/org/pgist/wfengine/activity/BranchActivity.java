@@ -150,6 +150,16 @@ public class BranchActivity extends Activity implements SingleIn {
             activity.setFuture(futures, embedding);
         }//for
     }//setFuture()
+
+
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        for (Activity one : getBranches()) {
+            one.getAgenda(activities);
+        }//for
+        
+        getJoinActivity().getAgenda(activities);
+    }//getAgenda()
     
     
 }//class SwitchActivity

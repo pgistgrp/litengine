@@ -1,5 +1,6 @@
 package org.pgist.wfengine;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -313,6 +314,40 @@ public class WorkflowEngine {
     }//setEnvVars()
     
     
+    public List<Activity> getAgenda(Long workflowId) throws Exception {
+        /*
+         * get workflow object
+         */
+        Workflow workflow = getWorkflowById(workflowId);
+        
+        if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
+        
+        workflow.setEngine(this);
+        
+        return workflow.getAgenda();
+    }//getAgenda()
+
+
+    public void updateAgenda(Long workflowId, Map<Long, Date> beginTimes, Map<Long, Date> endTimes) throws Exception {
+        /*
+         * get workflow object
+         */
+        Workflow workflow = getWorkflowById(workflowId);
+        
+        if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
+        
+        workflow.setEngine(this);
+        
+        for (Map.Entry<Long, Date> entry : beginTimes.entrySet()) {
+            Long id = entry.getKey();
+            Date begin = beginTimes.get(id);
+            Date end = endTimes.get(id);
+            
+            engineDAO.updateAgenda(id, begin, end);
+        }//for
+    }//updateAgenda()
+
+
     
     
     

@@ -1,5 +1,6 @@
 package org.pgist.wfengine.activity;
 
+import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -172,6 +173,12 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
+    
+    
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        getNext().getAgenda(activities);
+    }//getAgenda
     
     
 }//class UntilActivity

@@ -166,4 +166,14 @@ public class SwitchActivity extends Activity implements SingleIn {
     }//setFuture()
 
 
+    @Override
+    public void getAgenda(List<Activity> activities) {
+        for (Activity one : activities) {
+            one.getAgenda(activities);
+        }//for
+        
+        getEndSwitchActivity().getAgenda(activities);
+    }//getAgenda
+    
+    
 }//class SwitchActivity
