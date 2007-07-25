@@ -314,7 +314,7 @@ public class WorkflowEngine {
     }//setEnvVars()
     
     
-    public List<Activity> getAgenda(Long workflowId) throws Exception {
+    public List<List<Activity>> getAgenda(Long workflowId) throws Exception {
         /*
          * get workflow object
          */

@@ -1,5 +1,7 @@
 package org.pgist.wfengine.activity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -151,6 +153,13 @@ public class PMethodActivity extends GroupActivity {
     public void finish(RunningContext context) {
         context.getPendingActivities().remove(this);
     }//finish()
+    
+    
+    @Override
+    public void getAgenda(List activities) {
+        getHeadActivity().getAgenda(activities);
+        if (getNext()!=null) getNext().getAgenda(activities);
+    }//getAgenda
     
     
 }//class PMethodActivity

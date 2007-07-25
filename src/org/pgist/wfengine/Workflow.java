@@ -267,8 +267,8 @@ public class Workflow implements Serializable {
     }//execute()
 
 
-    public List<Activity> getAgenda() {
-        List<Activity> activities = new ArrayList<Activity>();
+    public List<List<Activity>> getAgenda() {
+        List<List<Activity>> activities = new ArrayList<List<Activity>>();
         
         situation.getAgenda(activities);
         

@@ -118,7 +118,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     /**
      * @return
      * 
-     * @hibernate.property column="begin_time" not-null="true"
+     * @hibernate.property column="begin_time"
      */
     public Date getBeginTime() {
         return beginTime;
@@ -133,7 +133,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     /**
      * @return
      * 
-     * @hibernate.property column="end_time" not-null="true"
+     * @hibernate.property column="end_time"
      */
     public Date getEndTime() {
         return endTime;
@@ -276,7 +276,7 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     
     
     @Override
-    public void getAgenda(List<Activity> activities) {
+    public void getAgenda(List activities) {
         activities.add(this);
         getNext().getAgenda(activities);
     }//getAgenda

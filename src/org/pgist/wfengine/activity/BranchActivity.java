@@ -153,7 +153,7 @@ public class BranchActivity extends Activity implements SingleIn {
 
 
     @Override
-    public void getAgenda(List<Activity> activities) {
+    public void getAgenda(List activities) {
         for (Activity one : getBranches()) {
             one.getAgenda(activities);
         }//for

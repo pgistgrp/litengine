@@ -101,7 +101,7 @@ public class ReturnActivity extends Activity implements SingleIn {
 
 
     @Override
-    public void getAgenda(List<Activity> activities) {
+    public void getAgenda(List activities) {
         //Do nothing
     }//getAgenda
     

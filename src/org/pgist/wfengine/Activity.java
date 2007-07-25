@@ -214,7 +214,7 @@ public abstract class Activity implements Serializable {
     
     abstract public Activity getEnd();
     
-    abstract public void getAgenda(List<Activity> activities);
+    abstract public void getAgenda(List activities);
 
 
     public void setFuture(List futures, Set embedding) {}

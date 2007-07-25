@@ -118,7 +118,7 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
     
     
     @Override
-    public void getAgenda(List<Activity> activities) {
+    public void getAgenda(List activities) {
         getNext().getAgenda(activities);
     }//getAgenda
     

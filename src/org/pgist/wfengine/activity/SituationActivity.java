@@ -1,6 +1,7 @@
 package org.pgist.wfengine.activity;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -127,6 +128,12 @@ public class SituationActivity extends GroupActivity {
         getWorkflow().setStatus(Workflow.STATUS_FINISHED);
         getWorkflow().setEndTime(new Date());
     }//finish()
+    
+    
+    @Override
+    public void getAgenda(List activities) {
+        getHeadActivity().getAgenda(activities);
+    }//getAgenda
     
     
 }//class SituationActivity

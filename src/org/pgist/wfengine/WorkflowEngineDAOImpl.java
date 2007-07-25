@@ -12,6 +12,7 @@ import org.pgist.wfengine.activity.PGameActivity;
 import org.pgist.wfengine.activity.PManualGameActivity;
 import org.pgist.wfengine.activity.PMethodActivity;
 import org.pgist.wfengine.activity.SituationActivity;
+import org.pgist.wfengine.util.Utils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 
@@ -116,7 +117,7 @@ public class WorkflowEngineDAOImpl extends HibernateDaoSupport implements Workfl
 
 
     public void updateAgenda(Long id, Date begin, Date end) throws Exception {
-        PManualGameActivity activity = (PManualGameActivity) getActivityById(id);
+        PManualGameActivity activity = (PManualGameActivity) Utils.narrow(getActivityById(id));
         activity.setBeginTime(begin);
         activity.setEndTime(end);
         

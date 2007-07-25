@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -22,7 +23,7 @@ import org.pgist.wfengine.WorkflowEngine;
  * @author kenny
  *
  */
-public class AgendaManagerAction {
+public class AgendaManagerAction extends Action {
     
     
     WorkflowEngine engine;
@@ -53,21 +54,28 @@ public class AgendaManagerAction {
             
             Map<Long, Date> beginTimes = new HashMap<Long, Date>();
             Map<Long, Date> endTimes = new HashMap<Long, Date>();
-            DateFormat dateFormat = new SimpleDateFormat("MM-DD-YYYY");
+            DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
             
             for (String id : ids) {
-                beginTimes.put(new Long(id), dateFormat.parse(request.getParameter(id+"_begin")));
-                endTimes.put(new Long(id), dateFormat.parse(request.getParameter(id+"_begin")));
+                String time = request.getParameter(id+"_begin");
+                if (time!=null && time.trim().length()>0) {
+                    beginTimes.put(new Long(id), dateFormat.parse(time));
+                }
+                
+                time = request.getParameter(id+"_end");
+                if (time!=null && time.trim().length()>0) {
+                    endTimes.put(new Long(id), dateFormat.parse(time));
+                }
             }//for
             
             engine.updateAgenda(workflowId, beginTimes, endTimes);
             
-            List<Activity> activities = engine.getAgenda(workflowId);
+            List<List<Activity>> activities = engine.getAgenda(workflowId);
             request.setAttribute("activities", activities);
             
             return mapping.findForward("done");
         } else {
-            List<Activity> activities = engine.getAgenda(workflowId);
+            List<List<Activity>> activities = engine.getAgenda(workflowId);
             request.setAttribute("activities", activities);
             return mapping.findForward("view");
         }

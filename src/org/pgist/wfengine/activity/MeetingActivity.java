@@ -1,5 +1,7 @@
 package org.pgist.wfengine.activity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -165,6 +167,16 @@ public class MeetingActivity extends GroupActivity {
     
     public void finish(RunningContext context) {
     }//finish()
+    
+    
+    @Override
+    public void getAgenda(List activities) {
+        List<Activity> list = new ArrayList<Activity>();
+        getHeadActivity().getAgenda(list);
+        activities.add(list);
+        
+        if (getNext()!=null) getNext().getAgenda(activities);
+    }//getAgenda
     
     
 }//class MeetingActivity

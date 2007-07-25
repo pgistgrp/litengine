@@ -167,8 +167,8 @@ public class SwitchActivity extends Activity implements SingleIn {
 
 
     @Override
-    public void getAgenda(List<Activity> activities) {
-        for (Activity one : activities) {
+    public void getAgenda(List activities) {
+        for (Activity one : (List<Activity>) activities) {
             one.getAgenda(activities);
         }//for
         
