@@ -45,7 +45,6 @@ public class AgendaManagerAction extends Action {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws Exception {
-        System.out.println("----------> "+request.getParameterMap());
         Long workflowId = new Long((String) request.getParameter("workflowId"));
         
         String save = (String) request.getParameter("save");

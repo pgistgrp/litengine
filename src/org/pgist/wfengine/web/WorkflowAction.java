@@ -9,7 +9,6 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.pgist.wfengine.WorkflowEngine;
 
 
 /**
@@ -22,7 +21,6 @@ import org.pgist.wfengine.WorkflowEngine;
  *   <li>workflowId - workflow instance id</li>
  *   <li>contextId - workflow context id</li>
  *   <li>activityId - workflow activity id</li>
- *   <li>historyId - workflow history id</li>
  * </ul>
  * 
  * Parameters "workflowId" and "contextId" are required. Parameters "activityId" and "historyId"
@@ -34,10 +32,6 @@ import org.pgist.wfengine.WorkflowEngine;
  *      Execute one current activity:
  *      workflow.do?workflowId=1234&contextId=4321&activityId=5678
  *   </li>
- *   <li>
- *      Execute one completed (history) activity:
- *      workflow.do?workflowId=1234&contextId=4321&historyId=5678
- *   </li>
  * </ul>
  * 
  * Before turning to the real action, it puts the following data as the request attributes:
@@ -46,7 +40,8 @@ import org.pgist.wfengine.WorkflowEngine;
  *   <li>org.pgist.wfengine.CONTEXT_ID - conextId</li>
  *   <li>org.pgist.wfengine.ACTIVITY_ID - activityId</li>
  *   <li>org.pgist.wfengine.CURRENT - the current activity objects</li>
- *   <li>org.pgist.wfengine.HISTORIES - a set of RunningHistory objects</li>
+ *   <li>org.pgist.wfengine.PARALLEL - the parallel running activity objects</li>
+ *   <li>org.pgist.wfengine.HISTORIES - a set of activity objects</li>
  *   <li>org.pgist.wfengine.FUTURES - a set of PManualGameActivity objects</li>
  *   <li>org.pgist.wfengine.ACTIVITY_RUNNING - whether or not the current activity is in running state</li>
  * </ul>
@@ -56,14 +51,14 @@ import org.pgist.wfengine.WorkflowEngine;
 public class WorkflowAction extends Action {
     
     
-    WorkflowEngine engine;
+    WorkflowUtils workflowUtils;
     
     
-    public void setEngine(WorkflowEngine engine) {
-        this.engine = engine;
+    public void setWorkflowUtils(WorkflowUtils workflowUtils) {
+        this.workflowUtils = workflowUtils;
     }
-    
-    
+
+
     /*
      * ------------------------------------------------------------------------
      */
@@ -99,29 +94,9 @@ public class WorkflowAction extends Action {
             
             ActionForward forward = new ActionForward();
             
-            Map result = null;
+            Map result = workflowUtils.processWorkflowInfo(request, workflowId, contextId, activityId);
             
-            /*
-             * Running Activity
-             */
-            result = engine.getURL(workflowId, contextId, activityId);
             forward.setPath((String) result.get("link"));
-            request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", result.get("status"));
-            
-            /*
-             * Future and History
-             */
-            request.setAttribute("org.pgist.wfengine.CURRENT", result.get("activity"));
-            request.setAttribute("org.pgist.wfengine.HISTORIES", result.get("histories"));
-            request.setAttribute("org.pgist.wfengine.FUTURES", result.get("futures"));
-            
-            /*
-             * Inject workflow information to request
-             */
-            request.setAttribute("org.pgist.wfengine.WORKFLOW_ID", workflowId);
-            request.setAttribute("org.pgist.wfengine.CONTEXT_ID", contextId);
-            request.setAttribute("org.pgist.wfengine.ACTIVITY_ID", activityId);
-            
             return forward;
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,8 +2,10 @@ package org.pgist.wfengine;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -248,6 +250,11 @@ public class WorkflowEngine {
         if (activity==null) throw new WorkflowException("cannot find activity with id "+activityId);
         
         results.put("activity", activity);
+        
+        Set parallel = new HashSet();
+        parallel.addAll(context.getRunningActivities());
+        parallel.remove(activity);
+        results.put("parallel", parallel);
         
         /*
          * TODO: check validity

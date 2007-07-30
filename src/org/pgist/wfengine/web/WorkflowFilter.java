@@ -1,7 +1,6 @@
 package org.pgist.wfengine.web;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -11,8 +10,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.pgist.wfengine.RunningContext;
-import org.pgist.wfengine.WorkflowEngine;
 import org.springframework.web.context.WebApplicationContext;
 
 
@@ -24,7 +21,7 @@ import org.springframework.web.context.WebApplicationContext;
 public class WorkflowFilter implements Filter {
     
     
-    WorkflowEngine engine;
+    WorkflowUtils workflowUtils;
     
     
     /*
@@ -42,7 +39,7 @@ public class WorkflowFilter implements Filter {
         
         try {
             WebApplicationContext context = (WebApplicationContext) filterConfig.getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-            engine = (WorkflowEngine) context.getBean("txEngine");
+            workflowUtils = (WorkflowUtils) context.getBean("workflowUtils");
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServletException(e);
@@ -73,25 +70,7 @@ public class WorkflowFilter implements Filter {
             Long contextId = getParameter(request, "contextId");
             Long activityId = getParameter(request, "activityId");
             
-            Map result = null;
-            
-            result = engine.getURL(workflowId, contextId, activityId);
-            
-            request.setAttribute("org.pgist.wfengine.ACTIVITY_RUNNING", result.get("status"));
-            
-            /*
-             * Future and History
-             */
-            request.setAttribute("org.pgist.wfengine.CURRENT", result.get("activity"));
-            request.setAttribute("org.pgist.wfengine.HISTORIES", result.get("histories"));
-            request.setAttribute("org.pgist.wfengine.FUTURES", result.get("futures"));
-            
-            /*
-             * Inject workflow information to request
-             */
-            request.setAttribute("org.pgist.wfengine.WORKFLOW_ID", workflowId);
-            request.setAttribute("org.pgist.wfengine.CONTEXT_ID", contextId);
-            request.setAttribute("org.pgist.wfengine.ACTIVITY_ID", activityId);
+            workflowUtils.processWorkflowInfo(request, workflowId, contextId, activityId);
         } catch (Exception e) {
             e.printStackTrace();
         }
