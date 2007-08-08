@@ -172,7 +172,7 @@ public class SwitchActivity extends Activity implements SingleIn {
             one.getAgenda(activities);
         }//for
         
-        getEndSwitchActivity().getAgenda(activities);
+        getEndSwitchActivity().getNext().getAgenda(activities);
     }//getAgenda
     
     

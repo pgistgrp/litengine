@@ -35,6 +35,8 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     
     protected String description;
     
+    protected String access = "all";
+    
     protected Activity headActivity;
     
     protected Activity tailActivity;
@@ -79,6 +81,21 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     }
 
 
+    /**
+     * @return
+     * 
+     * @hibernate.property column="access" not-null="true"
+     */
+    public String getAccess() {
+        return access;
+    }
+
+
+    public void setAccess(String access) {
+        this.access = access;
+    }
+    
+    
     /**
      * @return
      * 

@@ -83,6 +83,7 @@ public class MeetingParser {
                 PMethodActivity newPmethod = new PMethodActivity();
                 newPmethod.setName(pmethod.getName());
                 newPmethod.setDescription(pmethod.getDescription());
+                newPmethod.setAccess(pmethod.getAccess());
                 newPmethod.setDefinition(pmethod);
                 
                 SingleIn singleIn = (SingleIn) newPmethod;
@@ -256,6 +257,13 @@ public class MeetingParser {
         desc = desc.trim();
         if (desc.length()==0) throw new ParserException("attribute 'description' for 'meeting' is required");
         meeting.setDescription(desc);
+        
+        //access
+        String access = rootElement.attributeValue("access");
+        if (access==null) access = "all";
+        desc = desc.trim();
+        if (desc.length()==0) access = "all";
+        meeting.setAccess(access);
         
         //environment
         Element envElement = rootElement.element("environment");

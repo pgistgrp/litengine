@@ -83,6 +83,7 @@ public class SituationParser {
                 MeetingActivity newMeeting = new MeetingActivity();
                 newMeeting.setName(meeting.getName());
                 newMeeting.setDescription(meeting.getDescription());
+                newMeeting.setAccess(meeting.getAccess());
                 newMeeting.setDefinition(meeting);
                 
                 SingleIn singleIn = (SingleIn) newMeeting;

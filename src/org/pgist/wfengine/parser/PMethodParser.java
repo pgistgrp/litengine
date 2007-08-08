@@ -287,6 +287,13 @@ public class PMethodParser {
         if (desc.length()==0) throw new ParserException("attribute 'description' for 'pmethod' is required");
         pmethod.setDescription(desc);
         
+        //access
+        String access = rootElement.attributeValue("access");
+        if (access==null) access = "all";
+        desc = desc.trim();
+        if (desc.length()==0) access = "all";
+        pmethod.setAccess(access);
+        
         //environment
         Element envElement = rootElement.element("environment");
         if (envElement!=null) {

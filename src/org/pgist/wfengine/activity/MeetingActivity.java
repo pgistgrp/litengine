@@ -80,6 +80,7 @@ public class MeetingActivity extends GroupActivity {
         meeting.setPrev(clonedPrev);
         meeting.setName(getName());
         meeting.setDescription(getDescription());
+        meeting.setAccess(getAccess());
         meeting.setDefinition(getDefinition());
         meeting.getContext().getDeclaration().duplicate(getContext().getDeclaration());
         meeting.getContext().getEnvironment().duplicate(getContext().getEnvironment());

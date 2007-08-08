@@ -46,7 +46,6 @@ public class WorkflowFilter implements Filter {
         }
         
         System.out.println("  ---> workflow filter started");
-        
     }//init()
     
     

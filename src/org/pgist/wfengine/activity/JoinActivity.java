@@ -180,7 +180,7 @@ public class JoinActivity extends Activity implements SingleOut {
     
     @Override
     public void getAgenda(List activities) {
-        getNext().getAgenda(activities);
+        //Do Nothing
     }//getAgenda
     
     

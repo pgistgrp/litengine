@@ -14,33 +14,31 @@
     </bean>
     
     
+    <!--
     <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="dataSource">
             <ref bean="dataSource" />
         </property>
         <property name="quartzProperties">
             <props>
-                <!-- Configure Main Scheduler Properties -->
                 <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
-                <!-- Configure JobStore -->
                 <prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
                 <prop key="org.quartz.jobStore.isClustered">false</prop>
                 <prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreCMT</prop>
                 <prop key="org.quartz.jobStore.driverDelegateClass">org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</prop>
                 <prop key="org.quartz.jobStore.useProperties">false</prop>
-                <!-- Configure Plugins -->
                 <prop key="org.quartz.plugin.shutdownHook.class">org.quartz.plugins.management.ShutdownHookPlugin</prop>
                 <prop key="org.quartz.plugin.shutdownHook.cleanShutdown">true</prop>
                 <prop key="org.quartz.plugin.triggHistory.class">org.quartz.plugins.history.LoggingJobHistoryPlugin</prop>
             </props>
         </property>
     </bean>
+    -->
     
     
     <bean id="engine" class="org.pgist.wfengine.WorkflowEngine">
         <property name="engineDAO" ref="engineDAO"/>
         <property name="registry" ref="workflow.registry"/>
-        <property name="scheduler" ref="scheduler"/>
     </bean>
     
     

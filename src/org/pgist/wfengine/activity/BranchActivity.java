@@ -158,7 +158,7 @@ public class BranchActivity extends Activity implements SingleIn {
             one.getAgenda(activities);
         }//for
         
-        getJoinActivity().getAgenda(activities);
+        getJoinActivity().getNext().getAgenda(activities);
     }//getAgenda()
     
     

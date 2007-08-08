@@ -62,6 +62,7 @@ public class PMethodActivity extends GroupActivity {
         pmethod.setPrev(clonedPrev);
         pmethod.setName(getName());
         pmethod.setDescription(getDescription());
+        pmethod.setAccess(getAccess());
         pmethod.setDefinition(getDefinition());
         pmethod.getContext().getDeclaration().duplicate(getContext().getDeclaration());
         pmethod.getContext().getEnvironment().duplicate(getContext().getEnvironment());
