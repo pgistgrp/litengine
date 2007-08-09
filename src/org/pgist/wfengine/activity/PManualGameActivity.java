@@ -282,4 +282,14 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     }//getAgenda
     
     
+    @Override
+    public Activity getNextStep(NextStepInfo nsi) {
+        if (this==nsi.getActivity()) nsi.setFlag();
+        
+        if (nsi.isFlag() && this!=nsi.getActivity() && getAccess().equals(nsi.getAccess())) return this;
+        
+        return getNext().getNextStep(nsi);
+    }//getNextStep()
+    
+    
 }//class PManualGameActivity

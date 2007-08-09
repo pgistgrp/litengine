@@ -39,11 +39,16 @@ import org.apache.struts.action.ActionMapping;
  *   <li>org.pgist.wfengine.WORKFLOW_ID - worfklowId</li>
  *   <li>org.pgist.wfengine.CONTEXT_ID - conextId</li>
  *   <li>org.pgist.wfengine.ACTIVITY_ID - activityId</li>
+ *   
+ *   <li>org.pgist.wfengine.CONTEXT - the WorkflowContext object of the current activity</li>
+ *   <li>org.pgist.wfengine.MEETING - the current meeting objects</li>
  *   <li>org.pgist.wfengine.CURRENT - the current activity objects</li>
+ *   <li>org.pgist.wfengine.NEXT - the next PManuGameActivity objects</li>
  *   <li>org.pgist.wfengine.PARALLEL - the parallel running activity objects</li>
  *   <li>org.pgist.wfengine.HISTORIES - a set of activity objects</li>
  *   <li>org.pgist.wfengine.FUTURES - a set of PManualGameActivity objects</li>
- *   <li>org.pgist.wfengine.ACTIVITY_RUNNING - whether or not the current activity is in running state</li>
+ *   
+ *   <li>org.pgist.wfengine.ACTIVITY_RUNNING - boolean, whether or not the current activity is in running state</li>
  * </ul>
  * 
  * @author kenny

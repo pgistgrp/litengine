@@ -160,6 +160,19 @@ public class BranchActivity extends Activity implements SingleIn {
         
         getJoinActivity().getNext().getAgenda(activities);
     }//getAgenda()
-    
-    
+
+
+    @Override
+    public Activity getNextStep(NextStepInfo nsi) {
+        Activity target = null;
+        
+        for (Activity one : getBranches()) {
+            target = one.getNextStep(nsi);
+            if (target!=null) return target;
+        }
+        
+        return getJoinActivity().getNextStep(nsi);
+    }//getNextStep()
+
+
 }//class SwitchActivity

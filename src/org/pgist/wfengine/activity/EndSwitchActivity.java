@@ -154,6 +154,12 @@ public class EndSwitchActivity extends Activity implements SingleOut {
     public void getAgenda(List activities) {
         //Do Nothing
     }//getAgenda
+
+
+    @Override
+    public Activity getNextStep(NextStepInfo nsi) {
+        return getNext().getNextStep(nsi);
+    }//getNextStep()
     
     
 }//class EndSwitchActivity

@@ -194,4 +194,10 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     abstract public void finish(RunningContext context);
     
     
+    @Override
+    public Activity getNextStep(NextStepInfo nsi) {
+        return getHeadActivity().getNextStep(nsi);
+    }//getNextStep()
+    
+    
 }//class GroupActivity

@@ -239,8 +239,12 @@ public class WorkflowEngine {
         
         if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
         
+        results.put("context", context);
+        results.put("meeting", context.getParent().getGroup());
         results.put("histories", context.getHistories());
-        results.put("futures", context.getFutureActivities());
+        
+        List<PManualGameActivity> futures = context.getFutureActivities();
+        results.put("futures", futures);
         
         /*
          * get activity object
@@ -250,6 +254,9 @@ public class WorkflowEngine {
         if (activity==null) throw new WorkflowException("cannot find activity with id "+activityId);
         
         results.put("activity", activity);
+        
+        Activity.NextStepInfo nsi = new Activity.NextStepInfo(activity, "all");
+        results.put("next", workflow.getSituation().getNextStep(nsi));
         
         Set parallel = new HashSet();
         parallel.addAll(context.getRunningActivities());

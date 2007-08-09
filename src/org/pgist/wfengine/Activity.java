@@ -215,9 +215,44 @@ public abstract class Activity implements Serializable {
     abstract public Activity getEnd();
     
     abstract public void getAgenda(List activities);
+    
+    
+    /**
+     * Static Inner class
+     */
+    public static class NextStepInfo {
+        
+        private boolean flag;
+        private String access;
+        private Activity activity;
+        
+        public NextStepInfo(Activity activity, String access) {
+            flag = false;
+            this.access = access;
+            this.activity = activity;
+        }
+        
+        public String getAccess() {
+            return access;
+        }
+        
+        public boolean isFlag() {
+            return flag;
+        }
+        public void setFlag() {
+            this.flag = true;
+        }
 
+        public Activity getActivity() {
+            return activity;
+        }
+        
+    }//class NextStepInfo
+    
+    abstract public Activity getNextStep(NextStepInfo nsi);
 
+    
     public void setFuture(List futures, Set embedding) {}
-    
-    
+
+
 }//abstract class Activity

@@ -40,6 +40,9 @@ public class WorkflowUtils {
         request.setAttribute("org.pgist.wfengine.PARALLEL", result.get("parallel"));
         request.setAttribute("org.pgist.wfengine.HISTORIES", result.get("histories"));
         request.setAttribute("org.pgist.wfengine.FUTURES", result.get("futures"));
+        request.setAttribute("org.pgist.wfengine.CONTEXT", result.get("context"));
+        request.setAttribute("org.pgist.wfengine.MEETING", result.get("meeting"));
+        request.setAttribute("org.pgist.wfengine.NEXT", result.get("next"));
         
         /*
          * Inject workflow information to request

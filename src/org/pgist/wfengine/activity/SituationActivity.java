@@ -134,6 +134,6 @@ public class SituationActivity extends GroupActivity {
     public void getAgenda(List activities) {
         getHeadActivity().getAgenda(activities);
     }//getAgenda
-    
-    
+
+
 }//class SituationActivity

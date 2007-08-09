@@ -123,4 +123,10 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
     }//getAgenda
     
     
+    @Override
+    public Activity getNextStep(NextStepInfo nsi) {
+        return getNext().getNextStep(nsi);
+    }//getNextStep()
+    
+    
 }//class PAutoGameActivity

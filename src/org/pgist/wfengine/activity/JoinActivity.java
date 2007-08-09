@@ -184,4 +184,10 @@ public class JoinActivity extends Activity implements SingleOut {
     }//getAgenda
     
     
+    @Override
+    public Activity getNextStep(NextStepInfo nsi) {
+        return getNext().getNextStep(nsi);
+    }//getNextStep()
+    
+    
 }//class JoinActivity

@@ -106,4 +106,10 @@ public class ReturnActivity extends Activity implements SingleIn {
     }//getAgenda
     
     
+    @Override
+    public Activity getNextStep(NextStepInfo nsi) {
+        return null;
+    }//getNextStep()
+    
+    
 }//class ReturnActivity

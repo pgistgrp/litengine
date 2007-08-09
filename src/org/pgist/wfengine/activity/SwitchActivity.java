@@ -176,4 +176,17 @@ public class SwitchActivity extends Activity implements SingleIn {
     }//getAgenda
     
     
+    @Override
+    public Activity getNextStep(NextStepInfo nsi) {
+        Activity target = null;
+        
+        for (Activity one : getSwitches()) {
+            target = one.getNextStep(nsi);
+            if (target!=null) return target;
+        }
+        
+        return getEndSwitchActivity().getNextStep(nsi);
+    }//getNextStep()
+
+
 }//class SwitchActivity

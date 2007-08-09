@@ -193,4 +193,10 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
     }//getAgenda
     
     
+    @Override
+    public Activity getNextStep(NextStepInfo nsi) {
+        return getNext().getNextStep(nsi);
+    }//getNextStep()
+    
+    
 }//class WhileActivity
