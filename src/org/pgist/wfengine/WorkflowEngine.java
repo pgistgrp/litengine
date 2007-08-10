@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.pgist.wfengine.activity.GroupActivity;
 import org.pgist.wfengine.activity.MeetingActivity;
 import org.pgist.wfengine.activity.PGameActivity;
 import org.pgist.wfengine.activity.PManualGameActivity;
@@ -240,7 +241,11 @@ public class WorkflowEngine {
         if (context==null) throw new WorkflowException("cannot find context with id "+contextId);
         
         results.put("context", context);
-        results.put("meeting", context.getParent().getGroup());
+        
+        GroupActivity group = context.getParent().getGroup();
+        //Here I have to preload group activity, or else the session will be unavalible!
+        group.getDescription();
+        results.put("meeting", group);
         results.put("histories", context.getHistories());
         
         List<PManualGameActivity> futures = context.getFutureActivities();
