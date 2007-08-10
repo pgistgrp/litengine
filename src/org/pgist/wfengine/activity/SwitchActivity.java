@@ -185,7 +185,7 @@ public class SwitchActivity extends Activity implements SingleIn {
             if (target!=null) return target;
         }
         
-        return getEndSwitchActivity().getNextStep(nsi);
+        return getEndSwitchActivity().getNext().getNextStep(nsi);
     }//getNextStep()
 
 

@@ -158,7 +158,7 @@ public class EndSwitchActivity extends Activity implements SingleOut {
 
     @Override
     public Activity getNextStep(NextStepInfo nsi) {
-        return getNext().getNextStep(nsi);
+        return null;
     }//getNextStep()
     
     

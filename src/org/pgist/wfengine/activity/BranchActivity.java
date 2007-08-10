@@ -171,7 +171,7 @@ public class BranchActivity extends Activity implements SingleIn {
             if (target!=null) return target;
         }
         
-        return getJoinActivity().getNextStep(nsi);
+        return getJoinActivity().getNext().getNextStep(nsi);
     }//getNextStep()
 
 
