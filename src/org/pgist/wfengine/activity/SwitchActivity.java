@@ -3,6 +3,7 @@ package org.pgist.wfengine.activity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -187,6 +188,16 @@ public class SwitchActivity extends Activity implements SingleIn {
         
         return getEndSwitchActivity().getNext().getNextStep(nsi);
     }//getNextStep()
+
+
+    @Override
+    public void setSerial(SortedSet set) {
+        for (Activity one : getSwitches()) {
+            one.setSerial(set);
+        }
+        
+        getEndSwitchActivity().getNext().setSerial(set);
+    }//setSerial()
 
 
 }//class SwitchActivity

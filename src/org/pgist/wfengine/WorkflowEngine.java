@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -267,6 +268,12 @@ public class WorkflowEngine {
         parallel.addAll(context.getRunningActivities());
         parallel.remove(activity);
         results.put("parallel", parallel);
+        
+        /*
+         * get serialized manual pgame activities
+         */
+        SortedSet<Activity> serial = context.getSerialActivities();
+        results.put("serial", serial);
         
         /*
          * TODO: check validity

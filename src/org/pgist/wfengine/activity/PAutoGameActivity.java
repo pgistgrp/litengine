@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
 
 import org.pgist.wfengine.Activity;
@@ -129,4 +130,10 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
     }//getNextStep()
     
     
+    @Override
+    public void setSerial(SortedSet set) {
+        getNext().setSerial(set);
+    }//setSerial()
+
+
 }//class PAutoGameActivity

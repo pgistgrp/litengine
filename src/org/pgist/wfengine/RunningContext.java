@@ -1,14 +1,18 @@
 package org.pgist.wfengine;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
+import java.util.TreeSet;
 
 import org.pgist.wfengine.activity.GroupActivity;
+import org.pgist.wfengine.activity.PManualGameActivity;
 import org.pgist.wfengine.activity.SituationActivity;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -381,6 +385,33 @@ public class RunningContext {
     }//getFutureActivities()
     
     
+    /**
+     * Get all activities in this level of context, order by title.
+     * @return
+     */
+    public SortedSet<Activity> getSerialActivities() {
+        SortedSet set = new TreeSet<Activity>(
+            new Comparator<Activity>() {
+                public int compare(Activity o1, Activity o2) {
+                    if (o1==null || o2==null) throw new ClassCastException();
+                    
+                    if (o1 instanceof PManualGameActivity && o2 instanceof PManualGameActivity) {
+                        PManualGameActivity act1 = (PManualGameActivity) o1;
+                        PManualGameActivity act2 = (PManualGameActivity) o2;
+                        return act1.getTitle().compareTo(act2.getTitle());
+                    }
+                    
+                    throw new ClassCastException();
+                }//compare()
+            }
+        );
+        
+        getGroup().setSerial(set);
+        
+        return set;
+    }//getSerialActivities()
+
+
     /*
      * ------------------------------------------------------------------------------
      */

@@ -3,6 +3,7 @@ package org.pgist.wfengine.activity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -173,6 +174,16 @@ public class BranchActivity extends Activity implements SingleIn {
         
         return getJoinActivity().getNext().getNextStep(nsi);
     }//getNextStep()
+    
+    
+    @Override
+    public void setSerial(SortedSet set) {
+        for (Activity one : getBranches()) {
+            one.setSerial(set);
+        }
+        
+        getJoinActivity().getNext().setSerial(set);
+    }//setSerial()
 
 
-}//class SwitchActivity
+}//class BranchActivity

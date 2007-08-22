@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
@@ -198,6 +199,12 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     public Activity getNextStep(NextStepInfo nsi) {
         return getHeadActivity().getNextStep(nsi);
     }//getNextStep()
-    
-    
+
+
+    @Override
+    public void setSerial(SortedSet set) {
+        getHeadActivity().setSerial(set);
+    }//setSerial()
+
+
 }//class GroupActivity

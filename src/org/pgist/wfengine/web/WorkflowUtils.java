@@ -38,6 +38,7 @@ public class WorkflowUtils {
          */
         request.setAttribute("org.pgist.wfengine.CURRENT", result.get("activity"));
         request.setAttribute("org.pgist.wfengine.PARALLEL", result.get("parallel"));
+        request.setAttribute("org.pgist.wfengine.SERIAL", result.get("serial"));
         request.setAttribute("org.pgist.wfengine.HISTORIES", result.get("histories"));
         request.setAttribute("org.pgist.wfengine.FUTURES", result.get("futures"));
         request.setAttribute("org.pgist.wfengine.CONTEXT", result.get("context"));

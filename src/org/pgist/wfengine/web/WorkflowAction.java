@@ -45,6 +45,7 @@ import org.apache.struts.action.ActionMapping;
  *   <li>org.pgist.wfengine.CURRENT - the current activity objects</li>
  *   <li>org.pgist.wfengine.NEXT - the next PManuGameActivity objects</li>
  *   <li>org.pgist.wfengine.PARALLEL - the parallel running activity objects</li>
+ *   <li>org.pgist.wfengine.SERIAL - the serialized activity objects in current context</li>
  *   <li>org.pgist.wfengine.HISTORIES - a set of activity objects</li>
  *   <li>org.pgist.wfengine.FUTURES - a set of PManualGameActivity objects</li>
  *   

@@ -3,6 +3,7 @@ package org.pgist.wfengine;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -255,4 +256,7 @@ public abstract class Activity implements Serializable {
     public void setFuture(List futures, Set embedding) {}
 
 
+    public void setSerial(SortedSet set) {};
+    
+    
 }//abstract class Activity

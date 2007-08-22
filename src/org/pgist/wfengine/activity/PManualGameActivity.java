@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
 
 import org.pgist.wfengine.Activity;
@@ -292,4 +293,12 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
     }//getNextStep()
     
     
+    @Override
+    public void setSerial(SortedSet set) {
+        set.add(this);
+        
+        getNext().setSerial(set);
+    }//setSerial()
+
+
 }//class PManualGameActivity

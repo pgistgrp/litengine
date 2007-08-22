@@ -2,6 +2,7 @@ package org.pgist.wfengine.activity;
 
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
 
 import org.hibernate.Session;
@@ -184,4 +185,10 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     }//getNextStep()
     
     
+    @Override
+    public void setSerial(SortedSet set) {
+        getNext().setSerial(set);
+    }//setSerial()
+
+
 }//class RepeatActivity
