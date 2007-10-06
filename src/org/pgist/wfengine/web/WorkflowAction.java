@@ -42,7 +42,7 @@ import org.apache.struts.action.ActionMapping;
  *   
  *   <li>org.pgist.wfengine.CONTEXT - the WorkflowContext object of the current activity</li>
  *   <li>org.pgist.wfengine.MEETING - the current meeting objects</li>
- *   <li>org.pgist.wfengine.CURRENT - the current activity objects</li>
+ *   <li>org.pgist.wfengine.CURRENT - the current activity object</li>
  *   <li>org.pgist.wfengine.NEXT - the next PManuGameActivity objects</li>
  *   <li>org.pgist.wfengine.PARALLEL - the parallel running activity objects</li>
  *   <li>org.pgist.wfengine.SERIAL - the serialized activity objects in current context</li>

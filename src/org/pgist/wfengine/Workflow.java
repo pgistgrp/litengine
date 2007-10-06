@@ -45,6 +45,8 @@ public class Workflow implements Serializable {
     
     private WorkflowEngine engine;
     
+    private boolean openAccess;
+    
     
     public Workflow() {
     }
@@ -152,6 +154,21 @@ public class Workflow implements Serializable {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+
+    /**
+     * @return
+     * 
+     * @hibernate.property not-null="true"
+     */
+    public boolean isOpenAccess() {
+        return openAccess;
+    }
+
+
+    public void setOpenAccess(boolean openAccess) {
+        this.openAccess = openAccess;
     }
 
 

@@ -374,6 +374,22 @@ public class WorkflowEngine {
     }//updateAgenda()
 
 
+    public void setOpenAccess(Long workflowId, boolean openAccess) throws Exception {
+        /*
+         * get workflow object
+         */
+        Workflow workflow = getWorkflowById(workflowId);
+        
+        if (workflow==null) throw new WorkflowException("cannot find workflow with id "+workflowId);
+        
+        workflow.setEngine(this);
+        
+        workflow.setOpenAccess(openAccess);
+        
+        engineDAO.saveWorkflow(workflow);
+    }//setOpenAccess()
+
+
     
     
     

@@ -253,9 +253,15 @@ public class MeetingParser {
         
         //desc
         String desc = rootElement.attributeValue("description");
-        if (desc==null) throw new ParserException("attribute 'description' for 'meeting' is required");
+        if (desc==null) {
+            //throw new ParserException("attribute 'description' for 'meeting' is required");
+            desc = "";
+        }
         desc = desc.trim();
-        if (desc.length()==0) throw new ParserException("attribute 'description' for 'meeting' is required");
+        if (desc.length()==0) {
+            //throw new ParserException("attribute 'description' for 'meeting' is required");
+            desc = "";
+        }
         meeting.setDescription(desc);
         
         //access

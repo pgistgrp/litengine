@@ -302,4 +302,38 @@ public class WorkflowAgent {
     }//nextStep()
     
     
+    /**
+     * Set the open access status for one workflow instance.
+     * 
+     * @param params A map contains:
+     *     <ul>
+     *         <li>workflowId - int, id of a Workflow object</li>
+     *         <li>openAccess - string, "true" | "false"</li>
+     *     </ul>
+     * 
+     * @return A map contains:
+     *     <ul>
+     *         <li>successful - boolean, whether the operation succeed</li>
+     *         <li>reason - string, the reason why it fails</li>
+     *     </ul>
+     */
+    public Map setOpenAccess(Map params) {
+        Map results = new HashMap();
+        results.put("successful", false);
+        
+        try {
+            Long workflowId = new Long((String) params.get("workflowId"));
+            
+            engine.setOpenAccess(workflowId, "true".equalsIgnoreCase((String) params.get("openAccess")));
+            
+            results.put("successful", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            results.put("reason", e.getMessage());
+        }
+        
+        return results;
+    }//nextStep()
+    
+    
 }//class WorkflowAgent
