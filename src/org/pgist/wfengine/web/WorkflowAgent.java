@@ -161,10 +161,13 @@ public class WorkflowAgent {
             }
             results.put("openRunningTotal", openRunningTotal);
             results.put("openInstanceId", openInstanceId);
+            request.setAttribute("openRunningTotal", openRunningTotal);
+            request.setAttribute("openInstanceId", openInstanceId);
             
             Collection finishedWorkflows = engine.getFinishedWorkflows();
             request.setAttribute("finishedWorkflows", finishedWorkflows);
             results.put("instanceTotal", finishedWorkflows.size());
+            request.setAttribute("instanceTotal", finishedWorkflows.size());
             
             if ("all".equalsIgnoreCase((String) params.get("type"))) {
                 /*
