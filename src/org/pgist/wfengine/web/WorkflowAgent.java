@@ -129,6 +129,8 @@ public class WorkflowAgent {
      *         <li>reason - string, the reason why it fails</li>
      *         <li>instanceTotal - total number of instances (runningWorkflows + finishedWorkflows)</li>
      *         <li>runningTotal - total number of running instances</li>
+     *         <li>openRunningTotal - total number of running and open accessed instances</li>
+     *         <li>openInstanceId - id of one open accessed instance, if there are many such instances, the id will be a random one.</li>
      *         <li>finishedTotal - total number of running instances</li>
      *         <li>instanceId - if runningTotal=1, this is the id of that instance</li>
      *         <li>
@@ -149,6 +151,16 @@ public class WorkflowAgent {
             Collection runningWorkflows = engine.getRunningWorkflows();
             request.setAttribute("runningWorkflows", runningWorkflows);
             results.put("runningTotal", runningWorkflows.size());
+            int openRunningTotal = 0;
+            long openInstanceId = -1;
+            for (Workflow one : (Collection<Workflow>) runningWorkflows) {
+                if (one.isOpenAccess()) {
+                    openRunningTotal++;
+                    openInstanceId = one.getId();
+                }
+            }
+            results.put("openRunningTotal", openRunningTotal);
+            results.put("openInstanceId", openInstanceId);
             
             Collection finishedWorkflows = engine.getFinishedWorkflows();
             request.setAttribute("finishedWorkflows", finishedWorkflows);
