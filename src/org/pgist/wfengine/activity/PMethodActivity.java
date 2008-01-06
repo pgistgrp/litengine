@@ -137,7 +137,7 @@ public class PMethodActivity extends GroupActivity {
         upEnv.merge(myEnv, myDecl);
         
         //clear my environment
-        getContext().getEnvironment().clear();
+        //getContext().getEnvironment().clear();
         
         getContext().getParent().getPendingActivities().remove(this);
         getContext().getParent().addRunningActivity(getNext());

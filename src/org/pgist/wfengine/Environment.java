@@ -207,7 +207,7 @@ public class Environment {
         /*
          * search the name in current env.
          */
-        value = getContext().getEnvironment().getIntValues().get(name);
+        value = getIntValues().get(name);
         
         if (value==null) {
             /*
@@ -234,7 +234,7 @@ public class Environment {
     public Double findDblValue(String name) {
         String realName = getContext().getDeclaration().getIns().get(name);
         if (realName==null || realName.length()==0) realName = name;
-        Double value = getContext().getEnvironment().getDblValues().get(realName);
+        Double value = getDblValues().get(realName);
         if (value==null) {
             value = getContext().getParent().getEnvironment().findDblValue(realName);
         }
@@ -246,7 +246,7 @@ public class Environment {
     public String findStrValue(String name) {
         String realName = getContext().getDeclaration().getIns().get(name);
         if (realName==null || realName.length()==0) realName = name;
-        String value = getContext().getEnvironment().getStrValues().get(realName);
+        String value = getStrValues().get(realName);
         if (value==null) {
             value = getContext().getParent().getEnvironment().findStrValue(realName);
         }
@@ -258,7 +258,7 @@ public class Environment {
     public Date findDateValue(String name) {
         String realName = getContext().getDeclaration().getIns().get(name);
         if (realName==null || realName.length()==0) realName = name;
-        Date value = getContext().getEnvironment().getDateValues().get(realName);
+        Date value = getDateValues().get(realName);
         if (value==null) {
             value = getContext().getParent().getEnvironment().findDateValue(realName);
         }
@@ -273,10 +273,10 @@ public class Environment {
         
         Object value = null;
         
-        value = getContext().getEnvironment().getIntValues().get(realName);
-        if (value==null) value = getContext().getEnvironment().getDblValues().get(realName);
-        if (value==null) value = getContext().getEnvironment().getStrValues().get(realName);
-        if (value==null) value = getContext().getEnvironment().getDateValues().get(realName);
+        value = getIntValues().get(realName);
+        if (value==null) value = getDblValues().get(realName);
+        if (value==null) value = getStrValues().get(realName);
+        if (value==null) value = getDateValues().get(realName);
         
         if (value==null && getContext().getParent()!=null) {
             value = getContext().getParent().getEnvironment().findValue(realName);

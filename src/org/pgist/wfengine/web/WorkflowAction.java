@@ -103,6 +103,9 @@ public class WorkflowAction extends Action {
             Map result = workflowUtils.processWorkflowInfo(request, workflowId, contextId, activityId);
             
             forward.setPath((String) result.get("link"));
+            
+            System.out.println("Workflow action forward to path: "+forward.getPath());
+            
             return forward;
         } catch (Exception e) {
             e.printStackTrace();
