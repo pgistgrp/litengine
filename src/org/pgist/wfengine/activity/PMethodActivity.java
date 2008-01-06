@@ -111,14 +111,14 @@ public class PMethodActivity extends GroupActivity {
     
     
     synchronized protected boolean doExecute(RunningContext context) throws Exception {
+        context.getPendingActivities().add(this);
+        
         //put head in the context
         getContext().addRunningActivity(getHeadActivity());
         
         getContext().setParent(context);
         
         getContext().execute();
-        
-        context.getPendingActivities().add(this);
         
         return false;
     }//doExecute()
@@ -130,7 +130,7 @@ public class PMethodActivity extends GroupActivity {
          */
         context.getHistories().add(this);
         
-        //oupout the declared environment
+        //output the declared environment
         Declaration myDecl = getContext().getDeclaration();
         Environment myEnv = getContext().getEnvironment();
         Environment upEnv = context.getEnvironment();

@@ -335,7 +335,7 @@ public class RunningContext {
     
     
     public void addRunningActivity(Activity activity) {
-        stack.push(activity);
+        if (activity!=null) stack.push(activity);
     }//addRunningActivity()
     
     
