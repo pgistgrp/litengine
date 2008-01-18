@@ -186,4 +186,14 @@ public class BranchActivity extends Activity implements SingleIn {
     }//setSerial()
 
 
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		for (Activity one : getBranches()) {
+            one.reEnable(context, start);
+        }
+		
+		getJoinActivity().reEnable(context, start);
+	}
+
+
 }//class BranchActivity

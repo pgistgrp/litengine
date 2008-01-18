@@ -191,4 +191,10 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     }//setSerial()
 
 
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		getNext().reEnable(context, start);
+	}
+
+
 }//class RepeatActivity

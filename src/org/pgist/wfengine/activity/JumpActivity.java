@@ -165,4 +165,12 @@ public class JumpActivity extends Activity implements SingleIn, SingleOut {
     }//getNextStep()
     
     
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		if (!getJumps().contains(start)) {
+			getNext().reEnable(context, start);
+		}
+	}
+
+
 }//class JumpActivity

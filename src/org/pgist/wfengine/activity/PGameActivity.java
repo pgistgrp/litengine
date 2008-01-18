@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.Declarable;
 import org.pgist.wfengine.Declaration;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
 
@@ -132,6 +133,13 @@ public abstract class PGameActivity extends Activity implements SingleIn, Single
         session.save(this);
         if (next!=null) next.saveState(session);
     }//saveState()
+
+
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		context.getHistories().remove(this);
+		getNext().reEnable(context, start);
+	}
 
 
 }//class PGameActivity

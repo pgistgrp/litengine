@@ -185,4 +185,12 @@ public class LoopActivity extends Activity implements SingleIn, SingleOut {
     }//setSerial()
 
 
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		if (getWhilst()!=start) {
+			getNext().reEnable(context, start);
+		}
+	}
+
+
 }//class LoopActivity

@@ -110,6 +110,12 @@ public class ReturnActivity extends Activity implements SingleIn {
     public Activity getNextStep(NextStepInfo nsi) {
         return null;
     }//getNextStep()
+
+
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		//do nothing
+	}
     
     
 }//class ReturnActivity

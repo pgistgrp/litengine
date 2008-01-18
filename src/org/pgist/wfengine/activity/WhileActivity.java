@@ -155,7 +155,13 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        context.addRunningActivity(next);
+        if (getExpression()==0) {//repeat
+        	//re-enable all activities between repeat and until
+        	getNext().reEnable(context, this);
+        	context.addRunningActivity(getNext());
+        } else {
+        	context.addRunningActivity(getLoop().getNext());
+        }
         
         return true;
     }//doActivate()
@@ -204,6 +210,12 @@ public class WhileActivity extends Activity implements SingleIn, SingleOut {
     public void setSerial(SortedSet set) {
         getNext().setSerial(set);
     }//setSerial()
+
+
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		getNext().reEnable(context, start);
+	}
 
 
 }//class WhileActivity

@@ -208,8 +208,9 @@ public abstract class Activity implements Serializable {
     }//proceed()
     
     
-    abstract public void saveState(Session session);
+    abstract public void reEnable(RunningContext context, Activity start);
     
+    abstract public void saveState(Session session);
     
     abstract public Activity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop);
     

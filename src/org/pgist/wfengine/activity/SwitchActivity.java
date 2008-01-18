@@ -200,4 +200,14 @@ public class SwitchActivity extends Activity implements SingleIn {
     }//setSerial()
 
 
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		for (Activity one : getSwitches()) {
+            one.reEnable(context, start);
+        }
+        
+        getEndSwitchActivity().reEnable(context, start);
+	}
+
+
 }//class SwitchActivity

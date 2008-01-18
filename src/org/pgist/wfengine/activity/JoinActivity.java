@@ -191,4 +191,12 @@ public class JoinActivity extends Activity implements SingleOut {
     }//getNextStep()
     
     
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		if (getBranchActivity()!=start) {
+			getNext().reEnable(context, start);
+		}
+	}
+
+
 }//class JoinActivity

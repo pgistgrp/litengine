@@ -158,18 +158,21 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     
     protected boolean doExecute(RunningContext context) throws Exception {
         if (getExpression()==0) {//repeat
+        	//re-enable all activities between repeat and until
+        	repeat.reEnable(context, getEnd());
+        	
         	context.addRunningActivity(getRepeat());
         } else {
         	context.addRunningActivity(getNext());
         }
         
-        return false;
+        return true;
     }//doExecute()
     
     
     protected void doDeActivate(Workflow workflow) {
         //reset loopCount before leaving the loop
-        repeat.setLoopCount(0);
+        //repeat.setLoopCount(0);
     }//doDeActivate()
     
     
@@ -195,6 +198,14 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     public void setSerial(SortedSet set) {
         getNext().setSerial(set);
     }//setSerial()
+
+
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		if (getRepeat()!=start) {
+			getNext().reEnable(context, start);
+		}
+	}
 
 
 }//class UntilActivity

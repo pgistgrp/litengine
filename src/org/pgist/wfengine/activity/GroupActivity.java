@@ -207,4 +207,14 @@ public abstract class GroupActivity extends Activity implements SingleIn, Single
     }//setSerial()
 
 
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		context.getHistories().remove(this);
+		
+		getHeadActivity().reEnable(getContext(), start);
+		
+		getNext().reEnable(context, start);
+	}
+
+
 }//class GroupActivity

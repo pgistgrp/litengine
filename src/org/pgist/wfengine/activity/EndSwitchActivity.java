@@ -163,4 +163,12 @@ public class EndSwitchActivity extends Activity implements SingleOut {
     }//getNextStep()
     
     
+	@Override
+	public void reEnable(RunningContext context, Activity start) {
+		if (getSwitchActivity()!=start) {
+			getNext().reEnable(context, start);
+		}
+	}
+
+
 }//class EndSwitchActivity
