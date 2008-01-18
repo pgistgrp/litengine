@@ -41,6 +41,7 @@ public class JoinActivity extends Activity implements SingleOut {
     
     
     public JoinActivity(BranchActivity branchActivity) {
+    	type = TYPE_JOIN;
         this.branchActivity = branchActivity;
     }
     

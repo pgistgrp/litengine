@@ -43,6 +43,12 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     }
     
     
+    public UntilActivity(RepeatActivity repeatActivity) {
+    	type = TYPE_UNTIL;
+    	this.repeat = repeatActivity;
+    }
+    
+    
     /**
      * @return
      * @hibernate.many-to-one column="next_id" class="org.pgist.wfengine.Activity" cascade="all"
@@ -151,13 +157,10 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        if (getExpression()==0) {//task is not finished
-        } else if (getExpression()>0) {
-            next.activate(context);
-            context.addRunningActivity(next);
+        if (getExpression()==0) {//repeat
+        	context.addRunningActivity(getRepeat());
         } else {
-            repeat.activate(context);
-            context.addRunningActivity(repeat);
+        	context.addRunningActivity(getNext());
         }
         
         return false;

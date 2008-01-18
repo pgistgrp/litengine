@@ -30,7 +30,7 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     
     protected int expression;
     
-    protected UntilActivity until = new UntilActivity();
+    protected UntilActivity until = new UntilActivity(this);
     
     protected Activity prev;
     
