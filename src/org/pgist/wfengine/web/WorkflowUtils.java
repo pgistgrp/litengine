@@ -51,6 +51,7 @@ public class WorkflowUtils {
         request.setAttribute("org.pgist.wfengine.WORKFLOW_ID", workflowId);
         request.setAttribute("org.pgist.wfengine.CONTEXT_ID", contextId);
         request.setAttribute("org.pgist.wfengine.ACTIVITY_ID", activityId);
+        request.setAttribute("org.pgist.wfengine.INOUTS", result.get("inouts"));
         
         return result;
     }//processWorkflowInfo()

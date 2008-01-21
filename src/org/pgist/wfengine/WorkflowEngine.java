@@ -281,6 +281,8 @@ public class WorkflowEngine {
         
         if (activity.getType()==Activity.TYPE_PMANUALGAME) {
             PManualGameActivity manual = (PManualGameActivity) Utils.narrow(activity);
+            results.put("inouts", new EnvironmentInOuts(context, manual.getDeclaration()));
+            
             if (context.getHistories().contains(activity)) {
                 //history activity
                 results.put("link", manual.getHistoryLink()+"workflowId="+workflowId+"&contextId="+contextId+"&activityId="+activityId);
