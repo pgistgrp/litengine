@@ -247,7 +247,7 @@ public class Environment {
         String realName = getContext().getDeclaration().getIns().get(name);
         if (realName==null || realName.length()==0) realName = name;
         String value = getStrValues().get(realName);
-        if (value==null) {
+        if (value==null && getContext().getParent()!=null) {
             value = getContext().getParent().getEnvironment().findStrValue(realName);
         }
         
