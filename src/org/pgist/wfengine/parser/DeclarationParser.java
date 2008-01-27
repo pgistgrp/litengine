@@ -80,7 +80,10 @@ public class DeclarationParser {
                 
                 //value
                 String value = prop.attributeValue("value");
-                if (value==null) value = "";
+                if (value==null) {
+                	value = prop.getTextTrim();
+                	if (value==null) value = "";
+                }
                 else {
                     value = value.trim();
                 }
