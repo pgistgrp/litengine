@@ -174,6 +174,10 @@ public class PMethodParser {
                 until.setCounts(0);
                 until.setRepeat(repeat);
                 
+                //exitCondition
+                String exitCondition = node.attributeValue("exitCondition");
+                until.setExitCondition(exitCondition);
+                
                 FlowPiece body = parseSequence(node.element("sequence"));
                 
                 if (body!=null) {

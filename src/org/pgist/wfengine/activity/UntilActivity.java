@@ -6,6 +6,7 @@ import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.EnvironmentInOuts;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
@@ -36,6 +37,8 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     private Activity prev;
     
     protected Activity next;
+    
+    protected String exitCondition;
     
     
     public UntilActivity() {
@@ -119,6 +122,20 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     }
     
     
+    /**
+     * @return
+     * @hibernate.property
+     */
+    public String getExitCondition() {
+        return exitCondition;
+    }
+
+
+    public void setExitCondition(String exitCondition) {
+        this.exitCondition = exitCondition;
+    }
+
+
     /*
      * ------------------------------------------------------------------------------
      */
@@ -157,13 +174,16 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
-        if (getExpression()==0) {//repeat
-        	//re-enable all activities between repeat and until
-        	repeat.reEnable(context, getEnd());
-        	
-        	context.addRunningActivity(getRepeat());
-        } else {
-        	context.addRunningActivity(getNext());
+        EnvironmentInOuts inouts = new EnvironmentInOuts(context, context.getDeclaration());
+        String exitNow = inouts.getStrValue(getExitCondition());
+
+        if ("true".equalsIgnoreCase(exitNow)) {//exit
+            context.addRunningActivity(getNext());
+        } else {//repeat
+            //re-enable all activities between repeat and until
+            repeat.reEnable(context, getEnd());
+            
+            context.addRunningActivity(getRepeat());
         }
         
         return true;

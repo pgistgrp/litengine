@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import org.hibernate.Session;
 import org.pgist.wfengine.Activity;
+import org.pgist.wfengine.EnvironmentInOuts;
 import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.SingleIn;
 import org.pgist.wfengine.SingleOut;
@@ -147,6 +148,14 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     /*
      * ------------------------------------------------------------------------------
      */
+    
+    
+    protected void doActivate(RunningContext context) {
+        loopCount = 0;
+        
+        EnvironmentInOuts inouts = new EnvironmentInOuts(context, context.getDeclaration());
+        inouts.setStrValue(until.getExitCondition(), "false");
+    }//doActivate()
     
     
     protected boolean doExecute(RunningContext context) throws Exception {
