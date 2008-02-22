@@ -144,6 +144,7 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     public UntilActivity clone(Activity clonedPrev, Stack<Activity> clonedStop, Stack<Activity> stop) {
         UntilActivity newUntil = (UntilActivity) clonedStop.peek();
         newUntil.setPrev(clonedPrev);
+        newUntil.setExitCondition(getExitCondition());
         
         clonedStop.pop();
         stop.pop();
@@ -176,7 +177,7 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
     protected boolean doExecute(RunningContext context) throws Exception {
         EnvironmentInOuts inouts = new EnvironmentInOuts(context, context.getDeclaration());
         String exitNow = inouts.getStrValue(getExitCondition());
-
+        
         if ("true".equalsIgnoreCase(exitNow)) {//exit
             context.addRunningActivity(getNext());
         } else {//repeat
