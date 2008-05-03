@@ -103,6 +103,7 @@ public class PMethodParser {
                         manual.setActionName(oldManual.getActionName());
                         manual.setAccess(oldManual.getAccess());
                         manual.setExtension(oldManual.getExtension());
+                        manual.setRevisitable(oldManual.isRevisitable());
                         newPgame = manual;
                         break;
                     default:
@@ -198,6 +199,21 @@ public class PMethodParser {
                     piece.getTail().setNext(repeat);
                     piece.setTail(until);
                 }
+                
+                //flowback process
+                FlowPiece flowback = parseSequence(node.element("flowback"));
+                if (flowback!=null) {
+                    repeat.setHeadActivity((Activity) flowback.getHead());
+                    repeat.setTailActivity((Activity) flowback.getTail());
+                    flowback.getHead().setPrev(repeat.getUntil());
+                    //for template, tail next is intentionally kept to null,
+                    //to prevent dead loop when cloning
+                    //flowback.getTail().setNext(repeat);
+                } else {
+                    repeat.setNext(until);
+                    until.setPrev(repeat);
+                }
+                
             } else if ("branch".equalsIgnoreCase(nodeName)) {
                 BranchActivity branch = new BranchActivity();
                 JoinActivity join = new JoinActivity();

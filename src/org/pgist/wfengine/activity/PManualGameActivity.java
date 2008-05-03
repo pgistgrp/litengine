@@ -244,7 +244,11 @@ public class PManualGameActivity extends PGameActivity implements Linkable {
         /*
          * Record the history
          */
-        context.getHistories().add(this);
+        System.out.println("  ---> "+isRevisitable());
+        
+        if (isRevisitable()) {
+            context.getHistories().add(this);
+        }
         
         setHistoryLink(getLink(context));
         

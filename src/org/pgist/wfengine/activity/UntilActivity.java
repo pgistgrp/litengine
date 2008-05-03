@@ -184,7 +184,7 @@ public class UntilActivity extends Activity implements SingleIn, SingleOut {
             //re-enable all activities between repeat and until
             repeat.reEnable(context, getEnd());
             
-            context.addRunningActivity(getRepeat());
+            context.addRunningActivity(getRepeat().getHeadActivity());
         }
         
         return true;

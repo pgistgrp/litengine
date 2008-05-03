@@ -32,6 +32,12 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     
     protected UntilActivity until = new UntilActivity(this);
     
+    // head activity of the flow-back process
+    protected Activity headActivity;
+    
+    // tail activity of the flow-back process
+    protected Activity tailActivity;
+    
     protected Activity prev;
     
     protected Activity next;
@@ -114,6 +120,36 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
     }
     
     
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="head_id" lazy="true" cascade="all"
+     */
+    public Activity getHeadActivity() {
+        return headActivity;
+    }
+    
+    
+    public void setHeadActivity(Activity headActivity) {
+        this.headActivity = headActivity;
+    }
+    
+    
+    /**
+     * @return
+     * 
+     * @hibernate.many-to-one column="tail_id" lazy="true" cascade="all"
+     */
+    public Activity getTailActivity() {
+        return tailActivity;
+    }
+    
+    
+    public void setTailActivity(Activity tailActivity) {
+        this.tailActivity = tailActivity;
+    }
+
+
     /*
      * ------------------------------------------------------------------------------
      */
@@ -133,6 +169,15 @@ public class RepeatActivity extends Activity implements SingleIn, SingleOut {
         if (act!=null) {
             Activity newAct = act.clone(newRepeat, clonedStop, stop);
             newRepeat.setNext(newAct);
+        }
+        
+        //clone flowback process
+        if (getHeadActivity()!=null) {
+            Activity newHead = getHeadActivity().clone(newRepeat.getUntil(), new Stack<Activity>(), new Stack<Activity>());
+            Activity newTail = newHead.getEnd();
+            ((SingleOut) newTail).setNext(newRepeat);
+            newRepeat.setHeadActivity(newHead);
+            newRepeat.setTailActivity(newTail);
         }
         
         return newRepeat;
