@@ -93,6 +93,21 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
     protected boolean doExecute(RunningContext context) throws Exception {
         WorkflowTask task = null;
         
+        task = context.getRegistry().getTask(getTaskName());
+        if (task!=null) {
+            WorkflowInfo info = new WorkflowInfo(context.getWorkflow(), context, this);
+            EnvironmentInOuts inouts = new EnvironmentInOuts(context, getDeclaration());
+            task.execute(info, inouts);
+            context.merge(inouts);
+        }
+        
+        context.addRunningActivity(getNext());
+        
+        return true;
+        
+        /*
+         * Maybe we should not catch the exception.
+         * 
         try {
             task = context.getRegistry().getTask(getTaskName());
             if (task!=null) {
@@ -110,6 +125,7 @@ public class PAutoGameActivity extends PGameActivity implements SingleIn, Single
             context.getHaltingActivities().add(this);
             return false;
         }
+        */
     }//doExecute()
     
     
