@@ -1,12 +1,15 @@
 package org.pgist.wfengine.web;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.directwebremoting.WebContextFactory;
+import org.pgist.wfengine.OpenWorkflow;
 import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEngine;
 import org.pgist.wfengine.activity.SituationActivity;
@@ -196,6 +199,39 @@ public class WorkflowAgent {
         return results;
     }//getWorkflows()
     
+    /**
+     * JSONP implementation: Get situation list.
+     * 
+     */
+    public Map getOpenWorkflows() {
+        Map results = new HashMap();
+        results.put("successful", false);
+        
+        try {
+            Collection runningWorkflows = engine.getRunningWorkflows();
+            List openWorkflows = new ArrayList();
+            
+            int openRunningTotal = 0;
+            for (Workflow one : (Collection<Workflow>) runningWorkflows) {
+                if (one.isOpenAccess()) {
+                    openRunningTotal++;
+                    OpenWorkflow ow = new OpenWorkflow(one.getName(), one.getId());
+                    openWorkflows.add(ow);         
+                }
+            }
+            results.put("openWorkflows", openWorkflows);
+            results.put("openRunningTotal", openRunningTotal);
+         
+            
+            results.put("successful", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            results.put("reason", e.getMessage());
+        }
+        
+        return results;
+    }//getWorkflows()
+    
     
     /**
      * Start the given workflow instance.
@@ -349,6 +385,5 @@ public class WorkflowAgent {
         
         return results;
     }//nextStep()
-    
-    
+        
 }//class WorkflowAgent
