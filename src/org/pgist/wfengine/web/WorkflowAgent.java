@@ -2,17 +2,32 @@ package org.pgist.wfengine.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.directwebremoting.WebContextFactory;
+import org.pgist.wfengine.Activity;
 import org.pgist.wfengine.OpenWorkflow;
+import org.pgist.wfengine.RunningContext;
 import org.pgist.wfengine.Workflow;
 import org.pgist.wfengine.WorkflowEngine;
+import org.pgist.wfengine.WorkflowAgendaItem;
+import org.pgist.wfengine.activity.GroupActivity;
+import org.pgist.wfengine.activity.MeetingActivity;
+import org.pgist.wfengine.activity.PGameActivity;
+import org.pgist.wfengine.activity.PManualGameActivity;
+import org.pgist.wfengine.activity.PMethodActivity;
 import org.pgist.wfengine.activity.SituationActivity;
+import org.pgist.wfengine.util.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -306,6 +321,136 @@ public class WorkflowAgent {
         }
         
         return results;
+    }//getWorkflow()
+    
+    /**
+     * For SPT implementation, need to get workflow and iterate through steps (completed, active, future)
+     * in code. In standalone web implementation this was done in ws_workflow.js with the help of taglibs and JavaScript.
+     * @param workflow_id
+     * @return Map of workflow steps
+     */
+    
+    
+    public List getWorkflow(Long workflowId){
+    	List workflowSequence = new ArrayList();
+        
+        try {
+            //Long workflowId = new Long((String) workflow_id);
+            
+            Workflow workflow = engine.getWorkflowById(workflowId);
+            
+            //Iterate workflow and create JSON object
+            
+           /* //Get finished steps workflow.situation.context.histories
+           List <Activity> sHistory = workflow.getSituation().getContext().getHistories();
+            
+            for (Iterator sit=sHistory.iterator(); sit.hasNext(); ) {
+                //Actually a MeetingActivity, but need to be more generic? 
+            	//Need to call getContext rather than getRunningContext which abstract type Activity doesn't offer.
+            	GroupActivity sone = (GroupActivity)Utils.narrow(sit.next());
+                
+                List <Activity> mHistory = sone.getContext().getHistories();
+                for (Iterator mit=mHistory.iterator(); mit.hasNext(); ) {
+                	//Actually a PMethodActivity
+                	GroupActivity mone = (GroupActivity)Utils.narrow(mit.next());
+                	workflowSequence.put("mHistoryActivity", mone);
+                	
+                	List <Activity> gHistory = mone.getContext().getHistories();
+                	for (Iterator git=gHistory.iterator(); git.hasNext(); ) {
+                    	PManualGameActivity gone = (PManualGameActivity) Utils.narrow(git.next());
+                    	workflowSequence.put("gHistoryActivity", gone);
+                    }
+                }
+                
+            }*/
+            
+            Set <Activity> sActive = workflow.getSituation().getContext().getPendingActivities();
+            for (Iterator sit=sActive.iterator(); sit.hasNext(); ) {
+                GroupActivity sone = (GroupActivity) Utils.narrow(sit.next());
+               
+                Set <Activity> mActive = sone.getContext().getPendingActivities();
+                for (Iterator mit=mActive.iterator(); mit.hasNext(); ) {
+                	GroupActivity mone = (GroupActivity)Utils.narrow(mit.next());
+                	WorkflowAgendaItem item = new WorkflowAgendaItem();
+                	item.setWorkflowId(workflowId);
+                	item.setType(mone.getType());
+                	item.setStatus("active");
+                	item.setDescription(mone.getDescription());
+                	item.setContextId(mone.getContext().getId());
+                	
+                	List pgameActivityList = new ArrayList();
+                	
+                	List <Activity> gActiveHistoryActivities = mone.getContext().getHistories();
+                	for (Iterator git=gActiveHistoryActivities.iterator(); git.hasNext(); ) {
+                    	PManualGameActivity gone = (PManualGameActivity) Utils.narrow(git.next());
+                    	WorkflowAgendaItem gameItem = new WorkflowAgendaItem();
+                    	gameItem.setType(gone.getType());
+                    	gameItem.setStatus("activehistory");
+                    	gameItem.setTitle(gone.getTitle());
+                    	gameItem.setContextId(mone.getContext().getId());
+                    	gameItem.setActivityId(gone.getId());
+                    	gameItem.setBeginTime(gone.getBeginTime());
+                    	gameItem.setEndTime(gone.getEndTime());
+                    	pgameActivityList.add(gameItem);
+                    }
+                	
+                	Set <Activity> gActive = mone.getContext().getRunningActivities();
+                	for (Iterator git=gActive.iterator(); git.hasNext(); ) {
+                		PManualGameActivity gone = (PManualGameActivity) Utils.narrow(git.next());
+                		WorkflowAgendaItem gameItem = new WorkflowAgendaItem();
+                    	gameItem.setType(gone.getType());
+                    	gameItem.setStatus("active");
+                    	gameItem.setTitle(gone.getTitle());
+                    	gameItem.setContextId(mone.getContext().getId());
+                    	gameItem.setActivityId(gone.getId());
+                    	gameItem.setBeginTime(gone.getBeginTime());
+                    	gameItem.setEndTime(gone.getEndTime());
+                    	pgameActivityList.add(gameItem);
+                    }
+                	
+                	List <Activity> gActiveFuture = mone.getContext().getFutureActivities();
+                	for (Iterator git=gActiveFuture.iterator(); git.hasNext(); ) {
+                		PManualGameActivity gone = (PManualGameActivity) Utils.narrow(git.next());
+                		WorkflowAgendaItem gameItem = new WorkflowAgendaItem();
+                    	gameItem.setType(gone.getType());
+                    	gameItem.setStatus("future");
+                    	gameItem.setTitle(gone.getTitle());
+                    	gameItem.setContextId(mone.getContext().getId());
+                    	gameItem.setActivityId(gone.getId());
+                    	gameItem.setBeginTime(gone.getBeginTime());
+                    	gameItem.setEndTime(gone.getEndTime());
+                    	pgameActivityList.add(gameItem);
+                    }
+                	
+                	item.setPgameActivityList(pgameActivityList);
+                	workflowSequence.add(item);
+                }
+            }
+                
+           /* List <Activity> sFuture = workflow.getSituation().getContext().getFutureActivities();
+            for (Iterator sfit=sFuture.iterator(); sfit.hasNext(); ) {
+            	MeetingActivity sfone = (MeetingActivity) Utils.narrow(sfit.next());
+
+            	List <Activity> mFuture = sfone.getContext().getFutureActivities();
+            	for (Iterator mit=mFuture.iterator(); mit.hasNext(); ) {
+            		PMethodActivity mone = (PMethodActivity) Utils.narrow(mit.next());
+            		workflowSequence.put("mFuture", mone);
+
+            		List <Activity> gFuture = mone.getContext().getFutureActivities();
+            		for (Iterator git=gFuture.iterator(); git.hasNext(); ) {
+            			PManualGameActivity gone = (PManualGameActivity) Utils.narrow(git.next());
+            			workflowSequence.put("gFuture", gone);
+            		}
+            	}
+
+            } */
+            
+           
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return workflowSequence;
     }//getWorkflow()
     
     
