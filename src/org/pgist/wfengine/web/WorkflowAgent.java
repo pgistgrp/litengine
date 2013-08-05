@@ -159,7 +159,7 @@ public class WorkflowAgent {
      *         </li>
      *     </ul>
      */
-    public Map getWorkflows(HttpServletRequest request, Map params) {
+    public Map getWorkflows(Map params,HttpServletRequest request) {
         Map results = new HashMap();
         results.put("successful", false);
         
@@ -299,7 +299,7 @@ public class WorkflowAgent {
      *         </li>
      *     </ul>
      */
-    public Map getWorkflow(HttpServletRequest request, Map params) {
+    public Map getWorkflow(Map params, HttpServletRequest request) {
         Map results = new HashMap();
         results.put("successful", false);
         
