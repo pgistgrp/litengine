@@ -25,7 +25,6 @@
 	<classpathentry kind="lib" path="lib/quartz-all-1.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/spring-aop.jar"/>
-	<classpathentry kind="lib" path="lib/spring-beans.dtd"/>
 	<classpathentry kind="lib" path="lib/spring-beans.jar"/>
 	<classpathentry kind="lib" path="lib/spring-context.jar"/>
 	<classpathentry kind="lib" path="lib/spring-core.jar"/>
