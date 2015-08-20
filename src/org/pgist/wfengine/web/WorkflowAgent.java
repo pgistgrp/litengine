@@ -329,11 +329,11 @@ public class WorkflowAgent {
      */
     
     
-    public List getWorkflow(Long workflowId){
+    public List getWorkflow(String workflow_id){
     	List workflowSequence = new ArrayList();
         
         try {
-            //Long workflowId = new Long((String) workflow_id);
+            Long workflowId = new Long((String) workflow_id);
             
             Workflow workflow = engine.getWorkflowById(workflowId);
             
